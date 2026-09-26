@@ -1,0 +1,18 @@
+TRACE D-0418  (INPUT → AGENT → GOVERNANCE → HUMAN → ACTION → OUTCOME → KPI)
+
+INPUT        completeness 100.0% · {'pms_occupancy': 'ok', 'reservations': 'ok', 'pos_history': 'ok', 'inventory': 'ok', 'shelf_life': 'ok', 'waste_history': 'ok', 'event_schedule': 'ok', 'guest_experience_signal': 'ok'}
+AGENT        Reduce breakfast production by 12.2% (188 → 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16%
+             why: Expected covers up 12% vs last Saturday (375 → 420). Historical waste shows chronic overproduction in Pastry & bread (avg leftover 30%). Hot line stocked out recently, so it is raised.
+             confidence 92.7% · risk MEDIUM · reversibility HIGH
+GOVERNANCE   Context completeness 100.0% (threshold 95%)
+             Policy: all hard constraints pass
+             Risk MEDIUM · reversibility HIGH · confidence 92.7%
+             Decision rights for MEDIUM risk → Agent recommends · manager approves
+             High confidence (93%) does not grant authority for MEDIUM risk
+             Agent conflict: Demand +12% but production draft -12%. Resolved: Waste Agent shows chronic overproduction in Pastry & bread, so the plan raises what guests eat and cuts what they leave.
+             Current autonomy level: DELEGATED
+             FINAL: Agent recommends · manager approves
+HUMAN        APPROVE by F&B Manager (demo) at 08:07
+ACTION       Reduce breakfast production by 12.2% (188 → 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16% → EXECUTED
+OUTCOME      409 actual covers vs 420 predicted (2.7% error) · waste 23.3 kg vs 47.3 kg on the standing plan
+KPI          {'forecast_ape': 0.0269, 'escalated': True, 'escalation_required': True}

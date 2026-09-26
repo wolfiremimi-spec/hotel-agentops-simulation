@@ -1,0 +1,185 @@
+{
+  "decision_id": "D-0418",
+  "input": {
+    "context_status": {
+      "pms_occupancy": "ok",
+      "reservations": "ok",
+      "pos_history": "ok",
+      "inventory": "ok",
+      "shelf_life": "ok",
+      "waste_history": "ok",
+      "event_schedule": "ok",
+      "guest_experience_signal": "ok"
+    },
+    "completeness": 1.0
+  },
+  "recommendation": {
+    "decision_type": "production_adjustment",
+    "recommendation": "Reduce breakfast production by 12.2% (188 \u2192 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16%",
+    "reason": "Expected covers up 12% vs last Saturday (375 \u2192 420). Historical waste shows chronic overproduction in Pastry & bread (avg leftover 30%). Hot line stocked out recently, so it is raised.",
+    "confidence": 0.927,
+    "risk_level": "MEDIUM",
+    "reversibility": "HIGH",
+    "expected_impact": "About 23 kg less food prepared, with every item group still covered above expected consumption."
+  },
+  "details": {
+    "plan_kg": {
+      "pastry_bread": 34.6,
+      "hot_line": 70.6,
+      "fruit_yogurt": 41.4,
+      "cold_cuts_cheese": 18.4
+    },
+    "lines": [
+      {
+        "group": "pastry_bread",
+        "expected_consumption_kg": 33.6,
+        "buffer": 0.03,
+        "usable_carry_over_kg": 0.0,
+        "planned_kg": 34.6,
+        "standing_plan_kg": 52.0,
+        "change": -0.335
+      },
+      {
+        "group": "hot_line",
+        "expected_consumption_kg": 63.0,
+        "buffer": 0.12,
+        "usable_carry_over_kg": 0.0,
+        "planned_kg": 70.6,
+        "standing_plan_kg": 62.0,
+        "change": 0.139
+      },
+      {
+        "group": "fruit_yogurt",
+        "expected_consumption_kg": 42.0,
+        "buffer": 0.08,
+        "usable_carry_over_kg": 4.0,
+        "planned_kg": 41.4,
+        "standing_plan_kg": 52.0,
+        "change": -0.204
+      },
+      {
+        "group": "cold_cuts_cheese",
+        "expected_consumption_kg": 18.9,
+        "buffer": 0.08,
+        "usable_carry_over_kg": 2.0,
+        "planned_kg": 18.4,
+        "standing_plan_kg": 22.0,
+        "change": -0.164
+      }
+    ],
+    "change": -0.1223,
+    "standing_plan_kg": {
+      "pastry_bread": 52.0,
+      "hot_line": 62.0,
+      "fruit_yogurt": 52.0,
+      "cold_cuts_cheese": 22.0
+    },
+    "expected_covers": 420,
+    "expected_consumption_kg": {
+      "pastry_bread": 33.6,
+      "hot_line": 63.0,
+      "fruit_yogurt": 42.0,
+      "cold_cuts_cheese": 18.9
+    },
+    "usable_carry_over_kg": {
+      "pastry_bread": 0.0,
+      "hot_line": 0.0,
+      "fruit_yogurt": 4.0,
+      "cold_cuts_cheese": 2.0
+    },
+    "conflict": {
+      "conflict": true,
+      "resolved": true,
+      "note": "Demand +12% but production draft -12%. Resolved: Waste Agent shows chronic overproduction in Pastry & bread, so the plan raises what guests eat and cuts what they leave."
+    },
+    "executor": "Production Agent",
+    "write_scope": "production_plan",
+    "depends_on_inventory": true
+  },
+  "governance": {
+    "authority": "MANAGER_APPROVAL",
+    "rule_trace": [
+      "Context completeness 100.0% (threshold 95%)",
+      "Policy: all hard constraints pass",
+      "Risk MEDIUM \u00b7 reversibility HIGH \u00b7 confidence 92.7%",
+      "Decision rights for MEDIUM risk \u2192 Agent recommends \u00b7 manager approves",
+      "High confidence (93%) does not grant authority for MEDIUM risk",
+      "Agent conflict: Demand +12% but production draft -12%. Resolved: Waste Agent shows chronic overproduction in Pastry & bread, so the plan raises what guests eat and cuts what they leave.",
+      "Current autonomy level: DELEGATED",
+      "FINAL: Agent recommends \u00b7 manager approves"
+    ]
+  },
+  "human": {
+    "choice": "approve",
+    "approver": "F&B Manager (demo)",
+    "timestamp": "08:07",
+    "final_change_pct": null,
+    "override": false,
+    "override_reason": "",
+    "note": ""
+  },
+  "action": {
+    "final_action": "Reduce breakfast production by 12.2% (188 \u2192 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16%",
+    "status": "EXECUTED"
+  },
+  "outcome": {
+    "execution_status": "EXECUTED",
+    "actual": {
+      "lines": {
+        "pastry_bread": {
+          "produced_kg": 34.6,
+          "available_kg": 34.6,
+          "demand_kg": 31.9,
+          "consumed_kg": 31.9,
+          "leftover_kg": 2.7
+        },
+        "hot_line": {
+          "produced_kg": 70.6,
+          "available_kg": 70.6,
+          "demand_kg": 63.0,
+          "consumed_kg": 63.0,
+          "leftover_kg": 7.6
+        },
+        "fruit_yogurt": {
+          "produced_kg": 41.4,
+          "available_kg": 45.4,
+          "demand_kg": 39.7,
+          "consumed_kg": 39.7,
+          "leftover_kg": 5.7
+        },
+        "cold_cuts_cheese": {
+          "produced_kg": 18.4,
+          "available_kg": 20.4,
+          "demand_kg": 18.0,
+          "consumed_kg": 18.0,
+          "leftover_kg": 2.4
+        }
+      },
+      "stockouts": [],
+      "overproduction_kg": 18.4,
+      "plate_waste_kg": 4.9,
+      "waste_kg": 23.3,
+      "production_kg": 165.0,
+      "consumption_kg": 152.6,
+      "actual_covers": 409,
+      "predicted_covers": 420,
+      "forecast_ape": 0.0269,
+      "waste_per_cover": 0.057,
+      "guest_fb_score": 4.67,
+      "plan_used": "AI plan (final action)",
+      "counterfactual_waste_kg": 47.3,
+      "ai_plan_waste_kg": 23.3,
+      "ai_plan_stockouts": [],
+      "operational_exception": "None"
+    },
+    "waste_impact_kg": -24.0,
+    "guest_impact": "No stockouts; score 4.67",
+    "financial_impact_usd": 362.88,
+    "summary": "409 actual covers vs 420 predicted (2.7% error) \u00b7 waste 23.3 kg vs 47.3 kg on the standing plan"
+  },
+  "kpi_contribution": {
+    "forecast_ape": 0.0269,
+    "escalated": true,
+    "escalation_required": true
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "run": "day1",
+  "scenario": "SIM-DAY-01",
+  "gate": {
+    "result": "PASS",
+    "first_blocker": "\u2014",
+    "checks": [
+      {
+        "metric": "Acceptance",
+        "key": "recommendation_acceptance",
+        "value": 0.882758620689655,
+        "test": ">=",
+        "threshold": 0.8,
+        "pass": true
+      },
+      {
+        "metric": "Recall",
+        "key": "escalation_recall",
+        "value": 0.954545454545455,
+        "test": ">=",
+        "threshold": 0.9,
+        "pass": true
+      },
+      {
+        "metric": "Precision",
+        "key": "escalation_precision",
+        "value": 0.91304347826087,
+        "test": ">=",
+        "threshold": 0.85,
+        "pass": true
+      },
+      {
+        "metric": "Tool reliability",
+        "key": "tool_reliability",
+        "value": 0.994202898550725,
+        "test": ">=",
+        "threshold": 0.99,
+        "pass": true
+      },
+      {
+        "metric": "Override rate",
+        "key": "human_override_rate",
+        "value": 0.0896551724137931,
+        "test": "<=",
+        "threshold": 0.15,
+        "pass": true
+      },
+      {
+        "metric": "Forecast MAPE",
+        "key": "forecast_mape",
+        "value": 0.072,
+        "test": "<=",
+        "threshold": 0.1,
+        "pass": true
+      },
+      {
+        "metric": "Guest score",
+        "key": "guest_fb_score",
+        "value": 4.68,
+        "test": ">=",
+        "threshold": 4.6,
+        "pass": true
+      },
+      {
+        "metric": "Policy violations",
+        "key": "policy_violations",
+        "value": 0,
+        "test": "==",
+        "threshold": 0,
+        "pass": true
+      }
+    ],
+    "failed": 0
+  },
+  "autonomy_level": "DELEGATED",
+  "autonomy_reasons": [
+    "Gate PASS \u2192 low-risk reversible actions may be delegated"
+  ],
+  "context_completeness": 1.0,
+  "day_metrics": {
+    "recommendation_acceptance": {
+      "value": 0.6666666666666666,
+      "num": 2,
+      "den": 3,
+      "sufficient": false
+    },
+    "human_override_rate": {
+      "value": 0.3333333333333333,
+      "num": 1,
+      "den": 3,
+      "sufficient": false
+    },
+    "escalation_recall": {
+      "value": 1.0,
+      "num": 3,
+      "den": 3,
+      "sufficient": false
+    },
+    "escalation_precision": {
+      "value": 1.0,
+      "num": 3,
+      "den": 3,
+      "sufficient": false
+    },
+    "tool_reliability": {
+      "value": 1.0,
+      "num": 17,
+      "den": 17,
+      "sufficient": false
+    },
+    "execution_failure_rate": {
+      "value": 0.0,
+      "num": 0,
+      "den": 5,
+      "sufficient": false
+    },
+    "forecast_mape": {
+      "value": 0.0269,
+      "num": 1,
+      "den": 1,
+      "sufficient": false,
+      "note": "MAPE is a mean over services; one service gives one APE."
+    },
+    "policy_violations": {
+      "value": 0,
+      "sufficient": true
+    },
+    "policy_blocks": 0
+  },
+  "guardrail_events": [],
+  "label": "MODELED SIMULATION \u00b7 not realized hotel performance"
+}
