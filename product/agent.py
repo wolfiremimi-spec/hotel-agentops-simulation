@@ -12,7 +12,7 @@ class AgentError(Exception):
 
 
 def call_model(contents, system, declarations, api_key, models, state):
-    tried = []
+    tried, busy = [], False
     for model in dict.fromkeys([m for m in [state.get("model")] + list(models) if m]):
         tried.append(model)
         try:
@@ -23,16 +23,17 @@ def call_model(contents, system, declarations, api_key, models, state):
                                     "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1200}})
         except requests.RequestException as ex:
             raise AgentError(f"Could not reach the model service ({type(ex).__name__}).") from ex
-        if r.status_code == 404:
-            continue                                             # retired model name: try the next one
-        if r.status_code == 429:
-            raise AgentError("The free AI quota is busy right now. Please wait a minute and ask again.")
+        if r.status_code in (404, 429):
+            busy = busy or r.status_code == 429
+            continue                                             # retired, or not in this key's quota: try the next one
         if r.status_code in (401, 403):
             raise AgentError("The AI key was rejected. The site owner needs to check GEMINI_API_KEY.")
         if r.status_code >= 400:
             raise AgentError(f"The model service returned an error (HTTP {r.status_code}).")
         state["model"] = model
         return r.json()
+    if busy:
+        raise AgentError("The free AI quota is busy right now. Please wait a minute and try again.")
     raise AgentError("No available Gemini model answered (tried: " + ", ".join(tried) + ").")
 
 
