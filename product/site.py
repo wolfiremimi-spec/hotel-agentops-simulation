@@ -260,6 +260,22 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-about .prog {{ color: {MUTE}; font-size: .86rem; line-height: 1.5; margin: 0; }}
 .ws-about blockquote {{ margin: 0; border-left: 3px solid {SAND}; padding: 4px 0 4px 18px; color: {FOREST}; font-size: 1.05rem; line-height: 1.55; font-weight: 600; }}
 .ws-about .ws-contact {{ border-top: 1px solid {LINE}; padding-top: 20px; }}
+html, [data-testid="stMain"], [data-testid="stAppViewContainer"], section.main {{ scroll-behavior: smooth; }}
+.ws-sec, #top, #about {{ scroll-margin-top: 24px; }}
+.ws-rail {{ position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 999; display: flex; flex-direction: column; gap: 4px; padding: 10px 8px; background: rgba(251,250,246,.86); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid {LINE}; border-radius: 999px; box-shadow: 0 8px 24px -16px rgba(31,58,47,.35); }}
+.ws-rail a {{ position: relative; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; text-decoration: none !important; }}
+.ws-rail i {{ width: 8px; height: 8px; border-radius: 50%; background: {SAGE}; transition: all .18s ease; }}
+.ws-rail a:hover i, .ws-rail a:focus i {{ background: {FOREST}; transform: scale(1.35); }}
+.ws-rail .lbl {{ position: absolute; right: 30px; white-space: nowrap; font-size: .76rem; font-weight: 600; color: {FOREST}; background: {WHITE}; border: 1px solid {LINE}; border-radius: 8px; padding: 4px 9px; opacity: 0; transform: translateX(6px); pointer-events: none; transition: all .16s ease; box-shadow: 0 6px 16px -10px rgba(31,58,47,.35); }}
+.ws-rail a:hover .lbl, .ws-rail a:focus .lbl {{ opacity: 1; transform: none; }}
+@media (min-width: 1640px) {{
+  .ws-rail {{ right: 28px; background: transparent; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; gap: 2px; }}
+  .ws-rail a {{ width: auto; justify-content: flex-end; gap: 10px; height: 26px; }}
+  .ws-rail .lbl {{ position: static; opacity: .55; transform: none; border: 0; background: transparent; box-shadow: none; padding: 0; color: {INK}; }}
+  .ws-rail a:hover .lbl, .ws-rail a:focus .lbl {{ opacity: 1; color: {FOREST}; }}
+}}
+.ws-top {{ display: none; position: fixed; right: 16px; bottom: 18px; z-index: 999; width: 44px; height: 44px; border-radius: 50%; background: {FOREST}; color: {WHITE} !important; text-decoration: none !important; font-size: 1.2rem; font-weight: 700; align-items: center; justify-content: center; box-shadow: 0 10px 24px -12px rgba(23,33,28,.6); }}
+@media (max-width: 1320px) {{ .ws-rail {{ display: none; }} .ws-top {{ display: flex; }} }}
 /* motion: sections glide in as they scroll into view (progressive enhancement), cards lift on hover */
 @supports (animation-timeline: view()) {{
   @media (prefers-reduced-motion: no-preference) {{
@@ -574,3 +590,15 @@ def connected() -> None:
        'connect guests, kitchen, dining, inventory, suppliers, reporting and recycling, labelled with demand forecasting, '
        'inventory intelligence, multi-agent orchestration, human approval, governance and decision rights, waste reduction '
        'and measurable business value"></div>')
+
+
+SECTIONS = [("top", "Overview"), ("system", "The system"), ("get-started", "Get started"), ("how", "How it works"),
+            ("agents", "Agents"), ("governance", "Governance"), ("results", "Results"), ("project", "The project"),
+            ("about", "About")]
+
+
+def side_nav() -> None:
+    """Fixed section rail for the long landing page (wide screens) and a back-to-top button (small screens)."""
+    items = "".join(f'<a href="#{a}"><span class="lbl">{e(t)}</span><i></i></a>' for a, t in SECTIONS)
+    md(f'<nav class="ws-rail" aria-label="Page sections">{items}</nav>'
+       '<a class="ws-top" href="#top" aria-label="Back to top">↑</a>')

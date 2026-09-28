@@ -14,6 +14,7 @@ def open_demo():
 
 
 site.nav()
+site.side_nav()
 
 # ---------------------------------------------------------------- hero
 left, right = st.columns([1.05, 1], gap="large", vertical_alignment="center")
