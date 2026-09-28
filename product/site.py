@@ -260,6 +260,20 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-about .prog {{ color: {MUTE}; font-size: .86rem; line-height: 1.5; margin: 0; }}
 .ws-about blockquote {{ margin: 0; border-left: 3px solid {SAND}; padding: 4px 0 4px 18px; color: {FOREST}; font-size: 1.05rem; line-height: 1.55; font-weight: 600; }}
 .ws-about .ws-contact {{ border-top: 1px solid {LINE}; padding-top: 20px; }}
+/* motion: sections glide in as they scroll into view (progressive enhancement), cards lift on hover */
+@supports (animation-timeline: view()) {{
+  @media (prefers-reduced-motion: no-preference) {{
+    .ws-sec, .ws-system, .ws-steps, .ws-grid4, .ws-orch, .ws-split, .ws-proof, .ws-project, .ws-gallery, .ws-truth, .ws-about, .ws-banner, .ws-stats {{
+      animation: ws-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }}
+  }}
+}}
+@keyframes ws-rise {{ from {{ opacity: .35; transform: translateY(28px); }} to {{ opacity: 1; transform: none; }} }}
+.ws-step, .ws-card, .ws-point {{ transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }}
+.ws-step:hover, .ws-card:hover, .ws-point:hover {{ transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(31,58,47,.35); border-color: {SAGE}; }}
+.ws-window {{ animation: ws-float 7s ease-in-out infinite; }}
+@keyframes ws-float {{ 0%, 100% {{ transform: translateY(0); }} 50% {{ transform: translateY(-6px); }} }}
+@media (prefers-reduced-motion: reduce) {{ .ws-window {{ animation: none; }} }}
+.ws-banner {{ min-height: 360px; }}
 @media (max-width: 900px) {{
   .ws-project, .ws-about {{ grid-template-columns: 1fr; }} .ws-project .ph img {{ min-height: 240px; max-height: 320px; }} .ws-about .pic img {{ min-height: 220px; max-height: 280px; }} .ws-about .body {{ padding: 26px 22px; }}
   .ws-gallery {{ grid-template-columns: 1fr 1fr; }} .ws-brandwrap {{ flex-direction: column; align-items: flex-start; gap: 2px; }} .ws-by {{ border-left: 0; padding-left: 40px; font-size: .76rem; }} .ws-banner .in {{ padding: 28px 24px; }}

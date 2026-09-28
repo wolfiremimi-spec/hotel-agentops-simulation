@@ -29,6 +29,8 @@ with right:
 
 site.stats()
 
+site.connected()
+
 # ---------------------------------------------------------------- get started
 site.get_started_header()
 db = S.database_configured()
@@ -81,9 +83,8 @@ with c3:
                 S.open_workspace("live", row)
                 st.rerun()
 
-site.connected()
-site.banner()
 site.how_it_works()
+site.banner()
 site.agents()
 site.governance()
 site.proof()
