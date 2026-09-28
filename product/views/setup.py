@@ -103,6 +103,13 @@ def page():
                                            format="%.3f", key=f"su_per_{g}")
                 par[g] = c[i].number_input(f"{GL[g]} standing par (kg)", 0.0, 2000.0, float(p["standing_plan_kg"][g]), 0.5,
                                            key=f"su_par_{g}")
+            st.caption("Menu items staff can search for when they record stock and supplier orders (one per line). "
+                       "Each item is planned under its group.")
+            c = st.columns(4)
+            menu = {}
+            current = core.menu_items(p)
+            for i, g in enumerate(core.GROUPS):
+                menu[g] = c[i].text_area(f"{GL[g]} items", "\n".join(current[g]), height=220, key=f"su_menu_{g}")
         with t3:
             c = st.columns(2)
             cth = c[0].slider("Context completeness required (%)", 75, 100, int(round(p["context_threshold"] * 100)),
@@ -142,7 +149,9 @@ def page():
                    alternative_outlet=outlet.strip(), waste_cost_per_kg=float(cost), consumption_kg_per_cover=per,
                    standing_plan_kg=par, context_threshold=cth / 100, delegated_range=drange / 100,
                    baseline_history=rows, hotel_name=name.strip(), defaults_from_case_study=False,
-                   agent_mode="ai" if mode.startswith("AI") else "rules")
+                   agent_mode="ai" if mode.startswith("AI") else "rules",
+                   menu_items={g: list(dict.fromkeys(x.strip() for x in menu[g].splitlines() if x.strip())) or core.FOOD_ITEMS[g]
+                               for g in core.GROUPS})
         S.save_profile(new, name=name.strip(), actor=approver.strip())
         st.success("Setup saved. It applies from the next morning you plan.")
 

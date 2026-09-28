@@ -110,6 +110,10 @@ def show_saved(day, date):
 def inputs_form(date, base):
     p = S.profile()
     k = f"_{date}"
+    groups_of = core.item_groups(p)
+    for r in (base.get("near_expiry") or []) + (base.get("open_orders") or []):   # keep items saved before a menu edit
+        if r.get("item") and r.get("group"):
+            groups_of.setdefault(r["item"], r["group"])
     with st.form(f"td_form{k}"):
         t1, t2, t3, t4 = st.tabs(["Occupancy & reservations", "Inventory", "Events", "Guest signal"])
         with t1:
@@ -143,19 +147,28 @@ def inputs_form(date, base):
                 shelf[g] = c[i].checkbox("Within shelf life", bool(base["within_shelf_life"].get(g, True)), key=f"td_shelf_{g}{k}")
             kit_notes = st.text_area("Kitchen notes (quality issues, deliveries, equipment)", base.get("kitchen_notes") or "",
                                      key=f"td_kitnotes{k}", help="The AI Inventory Agent reads these.")
-            st.caption("Near-expiry stock that could go to another outlet")
-            near = st.data_editor(table(base.get("near_expiry"), {"item": "text", "group": "text", "kg": NUM, "expires_in_days": NUM,
-                                                        "alternative_outlet": "text"}),
+            items = sorted(groups_of, key=str.lower)
+            item_col = st.column_config.SelectboxColumn("Item (type to search)", options=items, required=True, width="medium",
+                                                        help="Start typing, e.g. 'yog', and pick from the suggestions. "
+                                                             "Edit this list in Hotel setup → Menu & par levels.")
+            st.caption("Near-expiry stock that could go to another outlet · click **+** to add a row, then type the item name")
+            near = st.data_editor(table(base.get("near_expiry"), {"item": "text", "kg": NUM, "expires_in_days": NUM,
+                                                                  "alternative_outlet": "text"}),
                                   num_rows="dynamic", use_container_width=True, key=f"td_near{k}",
-                                  column_config={"group": st.column_config.SelectboxColumn(options=core.GROUPS),
-                                                 "kg": st.column_config.NumberColumn(min_value=0.0, step=0.5),
-                                                 "expires_in_days": st.column_config.NumberColumn(min_value=0, step=1)})
+                                  column_config={"item": item_col,
+                                                 "kg": st.column_config.NumberColumn("kg", min_value=0.0, step=0.5),
+                                                 "expires_in_days": st.column_config.NumberColumn("Expires in (days)", min_value=0,
+                                                                                                  max_value=30, step=1),
+                                                 "alternative_outlet": st.column_config.SelectboxColumn(
+                                                     "Could go to", options=core.outlets(p))})
             st.caption("Open supplier orders (the agents may recommend reducing chronic-waste items)")
-            orders = st.data_editor(table(base.get("open_orders"), {"order_id": "text", "item": "text", "group": "text", "kg": NUM,
-                                                           "delivery": "text", "supplier": "text"}),
+            orders = st.data_editor(table(base.get("open_orders"), {"order_id": "text", "item": "text", "kg": NUM,
+                                                                    "delivery": "text", "supplier": "text"}),
                                     num_rows="dynamic", use_container_width=True, key=f"td_orders{k}",
-                                    column_config={"group": st.column_config.SelectboxColumn(options=core.GROUPS),
-                                                   "kg": st.column_config.NumberColumn(min_value=0.0, step=1.0)})
+                                    column_config={"order_id": st.column_config.TextColumn("Order #"), "item": item_col,
+                                                   "kg": st.column_config.NumberColumn("kg", min_value=0.0, step=1.0),
+                                                   "delivery": st.column_config.TextColumn("Delivery"),
+                                                   "supplier": st.column_config.TextColumn("Supplier")})
         with t3:
             ev_ok = st.checkbox("I have checked the events calendar (tick even if there are no events)",
                                 bool(base.get("events_confirmed")), key=f"td_evok{k}")
@@ -177,11 +190,19 @@ def inputs_form(date, base):
 
     def rows(df):
         return [{kk: (None if pd.isna(v) else v) for kk, v in r.items()} for r in df.to_dict("records")]
+
+    def item_rows(df):
+        out = []
+        for r in rows(df):
+            if r.get("item") in groups_of:
+                r["group"] = groups_of[r["item"]]          # the group comes from the menu, not from typing
+                out.append(r)
+        return out
     return {
         "service_date": date, "occupied_rooms": occ, "in_house_guests": guests, "pms_age_hours": pms_age,
         "breakfast_inclusive_rooms": bi, "outside_breakfast_bookings": ob, "reservations_age_hours": res_age,
         "inventory_age_hours": inv_age, "carry_over_kg": carry, "within_shelf_life": shelf,
-        "near_expiry": rows(near), "open_orders": rows(orders), "events": rows(events), "events_confirmed": ev_ok,
+        "near_expiry": item_rows(near), "open_orders": item_rows(orders), "events": rows(events), "events_confirmed": ev_ok,
         "events_age_hours": 1, "guest_fb_score": gs, "open_fb_complaints": cm, "guest_age_hours": 12,
         "front_desk_notes": fd_notes, "kitchen_notes": kit_notes,
     }

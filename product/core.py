@@ -29,6 +29,38 @@ EVIDENCE_WINDOW_DAYS = 28                         # the hotel's own track record
 MIN_CLOSEOUTS = 4                                 # closed-out services before forecast accuracy counts
 WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
+# Starting menu: the items staff can search for when they record stock. Each hotel can edit its own list in Setup.
+FOOD_ITEMS = {
+    "pastry_bread": ["Pastry & bread", "Croissants", "Pain au chocolat", "Danish pastries", "Muffins", "Scones", "Bagels",
+                     "Sourdough loaf", "Whole-grain rolls", "White sandwich bread", "Gluten-free bread", "Banana bread",
+                     "Pancake batter", "Waffle batter"],
+    "hot_line": ["Scrambled eggs", "Shell eggs (egg station)", "Bacon", "Pork sausages", "Chicken sausages",
+                 "Vegetarian sausages", "Hash browns", "Roasted potatoes", "Baked beans", "Grilled tomatoes",
+                 "Sautéed mushrooms", "Porridge / oatmeal", "Smoked tofu"],
+    "fruit_yogurt": ["Greek yogurt", "Plain yogurt", "Flavoured yogurt", "Plant-based yogurt", "Fresh fruit salad",
+                     "Sliced melon", "Pineapple", "Mixed berries", "Bananas", "Whole apples & oranges", "Granola",
+                     "Bircher muesli", "Chia pudding", "Fresh orange juice"],
+    "cold_cuts_cheese": ["Sliced ham", "Smoked turkey", "Salami", "Prosciutto", "Smoked salmon", "Cheddar",
+                         "Swiss / Emmental", "Brie", "Fresh mozzarella", "Cream cheese", "Cottage cheese", "Hummus"],
+}
+OUTLETS = ["Lobby cafe (lunch)", "Staff canteen", "Room service", "Banquets & events", "Pool bar", "Food donation partner"]
+
+
+def menu_items(profile: dict) -> dict:
+    """The hotel's searchable item list per group (the starting menu until the hotel edits it)."""
+    saved = profile.get("menu_items") or {}
+    return {g: list(saved.get(g) or FOOD_ITEMS[g]) for g in GROUPS}
+
+
+def item_groups(profile: dict) -> dict:
+    """Item name → the group the agents plan it under."""
+    return {item: g for g, items in menu_items(profile).items() for item in items}
+
+
+def outlets(profile: dict) -> list:
+    own = (profile.get("alternative_outlet") or "").strip()
+    return ([own] if own else []) + [o for o in OUTLETS if o != own]
+
 
 # ---------------------------------------------------------------------------
 # Hotel profile
