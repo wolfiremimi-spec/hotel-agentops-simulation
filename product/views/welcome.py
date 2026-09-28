@@ -7,9 +7,10 @@ from product import core
 st.markdown(
     '<div class="ha-hero"><div class="k">HOTEL AGENTOPS · PILOT</div>'
     "<h1>Cut breakfast waste without cutting guest experience.</h1>"
-    "<p>Four specialist agents read your hotel's occupancy, reservations, inventory, waste history and events each "
-    "morning and recommend the production plan. Governance rules decide what they may do alone and what needs your "
-    "approval. Every decision is logged, every service is scored, and autonomy is earned from your own results.</p></div>",
+    "<p>Four AI specialist agents (Demand, Inventory, Waste and Production), each with access only to the data its role "
+    "needs, analyse your hotel's morning in parallel, including the notes your team writes. An orchestrator combines "
+    "them. Every AI output is verified, governance rules decide what may run alone and what needs your approval, and "
+    "autonomy is earned from your own results.</p></div>",
     unsafe_allow_html=True,
 )
 ui.flow(["Enter this morning's data", "Agents recommend", "Governance routes", "You approve", "Kitchen serves",
@@ -77,7 +78,8 @@ st.markdown(
     "close-out each evening, and everything is stored and auditable.\n"
     "- **It isn't** connected to your PMS, POS or inventory system. Those integrations would come in a funded "
     "pilot, and until then the manager enters the figures.\n"
-    "- **The agents are rule-based and deterministic.** The optional copilot uses an AI model to explain and "
-    "run what-ifs, but it never decides who may act.\n"
+    "- **The specialist agents are AI models (Google Gemini) held in check by rules.** Each can only read its own "
+    "sources; every output is verified and may only make the system more cautious; if one fails, a rule-based agent "
+    "takes over. Decision rights, approvals and the readiness gate are deterministic rules, never AI.\n"
     "- **Access is by private workspace code:** a pilot-grade control, not single sign-on.")
 ui.footer("Hotel AgentOps pilot application.")

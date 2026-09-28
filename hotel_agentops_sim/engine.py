@@ -5,6 +5,7 @@ HOTEL DATA → CONTEXT → SPECIALIST AGENTS → ORCHESTRATOR → RECOMMENDATION
 """
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
 from . import governance
@@ -60,9 +61,11 @@ def _scaled_plan(rec: Recommendation, new_change_pct: float) -> dict:
 
 def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, override_history: list | None = None,
                 failures: dict | None = None, mode: str = "scripted", approval: ApprovalQueue | None = None,
-                say=print, gate_result: tuple | None = None) -> RunResult:
+                say=print, gate_result: tuple | None = None, agents: dict | None = None) -> RunResult:
     """gate_result: optional precomputed (gate, level, why) from the hotel's own track record, used instead of
-    evaluating `evidence` (e.g. SUPERVISED while a new hotel has too few decisions to evaluate the gate)."""
+    evaluating `evidence` (e.g. SUPERVISED while a new hotel has too few decisions to evaluate the gate).
+    agents: optional replacements for the specialist agents ("demand", "inventory", "waste", "production") with the same
+    interface, plus an optional "conflict_review" callable. Governance is never replaceable."""
     th = load_thresholds(params)
     ctx_threshold = value(params, "context_completeness_threshold")
     delegated_range = value(params, "delegated_prep_range")
@@ -187,10 +190,14 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
         return _finish(scenario, records, traces, tool_calls, executions, gate, level, level_why, ctx, params, guardrail)
 
     # ---- Specialist agents ---------------------------------------------------------------------
-    demand = DemandAgent().run(ctx.view(DemandAgent.READS))
-    inventory = InventoryAgent().run(ctx.view(InventoryAgent.READS))
-    waste = WasteAgent().run(ctx.view(WasteAgent.READS))
-    producer = ProductionAgent()
+    agents = agents or {}
+    # Case study p.6: the three specialists run in parallel, each on a least-privilege view of the shared context.
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        f_demand = pool.submit((agents.get("demand") or DemandAgent()).run, ctx.view(DemandAgent.READS))
+        f_inventory = pool.submit((agents.get("inventory") or InventoryAgent()).run, ctx.view(InventoryAgent.READS))
+        f_waste = pool.submit((agents.get("waste") or WasteAgent()).run, ctx.view(WasteAgent.READS))
+        demand, inventory, waste = f_demand.result(), f_inventory.result(), f_waste.result()
+    producer = agents.get("production") or ProductionAgent()
     draft = producer.draft(demand, inventory, waste, standing)
     tool_calls += [ToolCall(f"agent:{a}", ok=True) for a in ("demand", "inventory", "waste", "production.draft")]
     say("\n③ SPECIALIST AGENTS")
@@ -206,6 +213,8 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
     recs, conflict = orch.coordinate(number=number, clock=clock.now, service=scenario["service"],
                                      completeness=ctx.completeness, demand=demand, inventory=inventory,
                                      waste=waste, production=draft, standing_plan=standing)
+    if agents.get("conflict_review"):
+        conflict.update(agents["conflict_review"](dict(conflict), demand, waste, draft))
     say(f"\n④ ORCHESTRATOR · {len(recs)} recommendations · conflict check: {conflict['note']}")
 
     for rec in recs:

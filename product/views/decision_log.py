@@ -65,6 +65,17 @@ def page():
              f"ACTION       {t['action']['final_action']} → {t['action']['status']}",
              f"OUTCOME      {o.get('summary', '')}"]
     st.markdown('<div class="cr-trace">' + ui.e("\n".join(lines)) + "</div>", unsafe_allow_html=True)
+    day_of = next(d for d in days if did in d["run"]["traces"])
+    reps = day_of["run"].get("ai_agents") or []
+    st.caption(f"Agents that morning: {day_of['run'].get('agent_mode', 'Rule-based agents')}")
+    if reps:
+        with st.expander("What each AI agent concluded that morning, and what verification allowed"):
+            for r in reps:
+                st.markdown(f"**{ui.e(r['agent'])}** · {ui.e(r['status'])}" + (f" · {ui.e(r['model'])}" if r.get("model") else "")
+                            + (f"  \n_{ui.e(r['rationale'])}_" if r.get("rationale") else "")
+                            + (f"  \nChanged: {ui.e('; '.join(r['changes']))}" if r.get("changes") else "")
+                            + (f"  \nVerification: {ui.e('; '.join(r['verification']))}" if r.get("verification") else "")
+                            + (f"  \nFallback reason: {ui.e(r['error'])}" if r.get("error") else ""), unsafe_allow_html=True)
 
     learning = [c_ for d in days for c_ in d["run"].get("learning", [])]
     if learning:

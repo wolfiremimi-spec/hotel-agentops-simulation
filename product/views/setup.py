@@ -108,6 +108,12 @@ def page():
                               key="su_cth", help="Below this share of the eight data sources, the system abstains.")
             drange = c[1].slider("Delegated production range (± %)", 5, 25, int(round(p["delegated_range"] * 100)),
                                  key="su_drange", help="Plan changes inside this range are LOW risk; larger ones need a manager.")
+            mode = st.radio("Specialist agents", ["AI agents (Gemini) with output verification", "Rule-based agents"],
+                            index=0 if p.get("agent_mode", "ai") == "ai" else 1, key="su_mode", horizontal=True,
+                            help="AI agents reason over your data and notes; every output is verified and can only make "
+                                 "the system more cautious. If an AI agent fails, the rule-based agent is used.")
+            if not S.ai_available():
+                st.caption("AI agents need a GEMINI_API_KEY on this deployment; until then the rule-based agents run.")
             st.caption("Escalation policy (which decision types must always reach a person). Used to score escalation "
                        "recall and precision.")
             st.dataframe(pd.DataFrame([{"Decision type": sim.TYPE_LABEL.get(k, k), "Must reach a person": "Yes" if v else "No"}
@@ -134,7 +140,8 @@ def page():
         new = dict(p, rooms=int(rooms), service_name=service.strip() or "Breakfast", approver=approver.strip() or "F&B Manager",
                    alternative_outlet=outlet.strip(), waste_cost_per_kg=float(cost), consumption_kg_per_cover=per,
                    standing_plan_kg=par, context_threshold=cth / 100, delegated_range=drange / 100,
-                   baseline_history=rows, hotel_name=name.strip(), defaults_from_case_study=False)
+                   baseline_history=rows, hotel_name=name.strip(), defaults_from_case_study=False,
+                   agent_mode="ai" if mode.startswith("AI") else "rules")
         S.save_profile(new, name=name.strip(), actor=approver.strip())
         st.success("Setup saved. It applies from the next morning you plan.")
 

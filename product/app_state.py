@@ -93,3 +93,20 @@ def guard(fn):
     except StoreError as ex:
         st.error(str(ex))
         st.caption("Your work on this page was not saved. Fix the issue above and try again.")
+
+
+def ai_available() -> bool:
+    return bool(secret("GEMINI_API_KEY"))
+
+
+def ai_config():
+    """AI agents for this workspace, or None to use the rule-based agents. Proposals are cached per workspace so the
+    preview and the saved plan use the same agent outputs."""
+    if not ai_available() or profile().get("agent_mode", "ai") != "ai":
+        return None
+    from product import agent as llm
+    from product.ai_agents import AIConfig
+    models = [m for m in [secret("GEMINI_MODEL")] if m] + list(llm.FALLBACK_MODELS)
+    cache = st.session_state.setdefault(f"ha_ai_cache_{hotel()['id']}", {})
+    state = st.session_state.setdefault("ha_ai_state", {})
+    return AIConfig(api_key=secret("GEMINI_API_KEY"), models=models, cache=cache, state=state)

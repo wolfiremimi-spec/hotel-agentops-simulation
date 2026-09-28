@@ -180,6 +180,8 @@ def build_scenario(profile: dict, inputs: dict, days: list[dict], number_start: 
         hd["reservations"] = {"as_of_hours": inputs.get("reservations_age_hours") or 0,
                               "breakfast_inclusive_rooms": int(inputs["breakfast_inclusive_rooms"]),
                               "outside_breakfast_bookings": int(inputs.get("outside_breakfast_bookings") or 0)}
+        if (inputs.get("front_desk_notes") or "").strip():
+            hd["reservations"]["front_desk_notes"] = inputs["front_desk_notes"].strip()[:2000]
     if hx["has_pos"]:
         hd["pos_history"] = {"as_of_hours": 0,
                              "last_4_saturdays": [{"occupied_rooms": int(r["occupied_rooms"]), "covers": int(r["covers"])}
@@ -198,6 +200,8 @@ def build_scenario(profile: dict, inputs: dict, days: list[dict], number_start: 
                                             "group": o["group"], "kg": _whole(o["kg"]), "delivery": o.get("delivery", ""),
                                             "supplier": o.get("supplier", "")}
                                            for i, o in enumerate(inputs.get("open_orders", [])) if o.get("group") and o.get("kg")]}
+        if (inputs.get("kitchen_notes") or "").strip():
+            hd["inventory"]["kitchen_notes"] = inputs["kitchen_notes"].strip()[:2000]
         hd["shelf_life"] = {"as_of_hours": inputs["inventory_age_hours"],
                             "carry_over_within_shelf_life": {g: bool(inputs["within_shelf_life"].get(g, True)) for g in GROUPS}}
     if hx["has_waste"]:
@@ -243,14 +247,25 @@ def next_decision_number(profile: dict, days: list[dict]) -> int:
 
 
 def run_morning(profile: dict, inputs: dict, days: list[dict], choices: dict | None, approver: str, gate_result: tuple,
-                run_clock: str | None = None):
-    """Run the governed morning. With choices=None, returns what would be routed to a human (nothing is saved)."""
+                run_clock: str | None = None, ai=None):
+    """Run the governed morning. With choices=None, returns what would be routed to a human (nothing is saved).
+    ai: an ai_agents.AIConfig to run the specialists as AI agents (with verification and rule-based fallback)."""
     prior = [d for d in days if d["service_date"] != inputs["service_date"]]
     scenario, meta = build_scenario(profile, inputs, prior, next_decision_number(profile, prior),
                                     run_clock or dt.datetime.now().strftime("%H:%M"))
+    agents = None
+    if ai is not None:
+        from product.ai_agents import build_agents
+        ai.reports = []
+        agents = build_agents(ai)
     approval = WebApproval(choices or {}, approver=approver)
     res = run_service(scenario, params_for(profile), mode="scripted", approval=approval,
-                      say=lambda *a, **k: None, gate_result=gate_result)
+                      say=lambda *a, **k: None, gate_result=gate_result, agents=agents)
+    meta["agent_mode"] = "AI agents (Gemini) with output verification" if ai is not None else "Rule-based agents"
+    meta["ai_agents"] = sorted(list(ai.reports), key=lambda r: ["Demand Agent", "Inventory Agent", "Waste Agent",
+                                                               "Production Agent", "Orchestrator"].index(r["agent"])
+                               if r["agent"] in ("Demand Agent", "Inventory Agent", "Waste Agent", "Production Agent",
+                                                 "Orchestrator") else 9) if ai is not None else []
     return res, approval.seen, scenario, meta
 
 
@@ -265,6 +280,7 @@ def serialize_run(res, scenario: dict, meta: dict) -> dict:
                     "missing": res.context.missing, "stale": res.context.stale, "fallback": res.context.fallback},
         "learning": res.learning, "scenario": scenario, "sources_provided": meta["provided"],
         "per_cover_source": meta["history"]["per_cover_source"],
+        "agent_mode": meta.get("agent_mode", "Rule-based agents"), "ai_agents": meta.get("ai_agents", []),
     }
 
 

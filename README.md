@@ -90,6 +90,21 @@ same engine on **a real hotel's own data**, day after day:
 | Performance & autonomy | The eight-check readiness gate computed from the hotel's own last 28 days; autonomy starts SUPERVISED and is earned |
 | Ops copilot (optional) | A Gemini model that answers from the workspace's records and re-runs a morning as a what-if; it never decides who may act |
 
+**AI specialist agents (case study layers 3–5).** With a `GEMINI_API_KEY`, the Demand, Inventory, Waste and Production
+agents are language-model agents, and the Orchestrator reviews how their signals combine:
+- Each agent answers its case-study question with tools. It can only read the sources its role grants; reads go through
+  the engine's least-privilege view, so a request for anything else is denied in code, not by prompt.
+- Demand, Inventory and Waste run in parallel (the case study's `asyncio.gather`), then Production sizes the plan from
+  their signals only.
+- They read what rules can't: the front-desk and kitchen notes a manager types each morning.
+- **Output verification:** every proposal is checked before use, and AI can make the system more cautious, never less.
+  Forecasts may move at most ±15% from the statistical forecast; confidence may only go down; a group is "chronic
+  overproduction" only with ≥15% average leftover; stockout-prone flags can't be dropped; buffers stay within 2–15%; the
+  Orchestrator may escalate a plan but never resolve a conflict the rules left open.
+- If a model fails or its output fails verification, the rule-based agent is used and the fallback is logged.
+- Decision rights, the policy check, approvals and the readiness gate are deterministic rules, never AI.
+Every agent's rationale, changes and verification result are saved with the day's decisions.
+
 How it stays honest:
 - **Data comes in by form or CSV.** There are no PMS/POS/inventory integrations; those would come in a funded pilot.
 - **Autonomy is earned from the hotel's own record.** A new hotel stays SUPERVISED until it has 20 manager decisions and 4 closed-out services; then all eight gate checks must pass.
@@ -145,6 +160,7 @@ The case study didn't specify everything a running system needs. Each missing pi
 - **Waste scope is narrower than the pilot's.** The simulation models buffet overproduction and plate waste for four item groups. It does not model spoilage or prep waste, so its waste per cover is not comparable to the pilot's total.
 - **Some outcomes are pending.** Purchasing and banquet decisions are marked PENDING because their effect happens after the simulated day.
 - **The pilot application is decision support, not a live integration.** It runs on figures the hotel enters; it has not been validated in a real hotel.
+- **AI agent outputs vary between runs.** Verification bounds what they can change, and the proposals a manager reviews are the ones that are saved, but two mornings with identical data may get slightly different AI reasoning.
 - **The escalation labels are analyst-set.** Escalation recall and precision are scored against modeled ground-truth labels, which are listed in the scenario file.
 
 ## Layout
@@ -170,6 +186,7 @@ product/
   core.py             hotel profile → scenario, morning run, close-out, earned autonomy from the hotel's record
   store.py            Supabase (REST) and in-memory storage with the same interface
   schema.sql          database tables, row-level security, append-only audit log
-  agent.py            Gemini tool-calling loop for the copilot
+  agent.py            Gemini tool-calling loop (copilot and agents)
+  ai_agents.py        AI specialist agents with scoped tools, output verification and rule-based fallback
   views/              welcome · today · closeout · decision_log · performance · setup · copilot
 ```

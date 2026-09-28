@@ -42,6 +42,38 @@ def kitchen_sheet(run):
     return pd.DataFrame(rows)
 
 
+STATUS_KIND = {"accepted": "ok", "adjusted": "warn", "rejected": "hold", "fallback": "neutral"}
+STATUS_TEXT = {"accepted": "ACCEPTED", "adjusted": "ADJUSTED · VERIFIED", "rejected": "REJECTED BY VERIFICATION",
+               "fallback": "RULE-BASED FALLBACK"}
+
+
+def agent_panel(mode, reports):
+    """What each AI agent concluded, what it changed, and what verification allowed."""
+    st.markdown(f"**How the agents reasoned** · {ui.e(mode or 'Rule-based agents')}", unsafe_allow_html=True)
+    if not reports:
+        st.caption("Rule-based agents: fixed, auditable logic (the case study's deterministic baseline)." +
+                   ("" if S.ai_available() else " Add a GEMINI_API_KEY to run the specialists as AI agents."))
+        return
+    for r in reports:
+        with st.container(border=True):
+            st.markdown(f"{ui.pill(STATUS_TEXT.get(r['status'], r['status']).upper(), STATUS_KIND.get(r['status'], 'neutral'))} "
+                        f"&nbsp;<b>{ui.e(r['agent'])}</b>" + (f" · {ui.e(r['model'])}" if r.get("model") else ""),
+                        unsafe_allow_html=True)
+            if r.get("rationale"):
+                st.markdown(f"_{ui.e(r['rationale'])}_", unsafe_allow_html=True)
+            bits = []
+            if r.get("changes"):
+                bits.append("Changed: " + "; ".join(r["changes"]))
+            if r.get("verification"):
+                bits.append("Verification: " + "; ".join(r["verification"]))
+            if r.get("tools"):
+                bits.append("Tools used: " + ", ".join(t for t in r["tools"] if t != "submit"))
+            if r.get("error"):
+                bits.append("Why the fallback: " + r["error"])
+            if bits:
+                st.caption(" · ".join(bits))
+
+
 def show_saved(day, date):
     run = day["run"]
     rec = core.production_record(run)
@@ -54,6 +86,8 @@ def show_saved(day, date):
                        "text/csv", key=f"td_dl_{date}")
     if rec is not None and rec["Decision Type"] == "abstain_missing_context":
         st.warning("The system abstained this morning (not enough data), so the kitchen serves its standing par.")
+    with st.expander(f"How the agents reasoned · {run.get('agent_mode', 'Rule-based agents')}"):
+        agent_panel(run.get("agent_mode"), run.get("ai_agents"))
     st.markdown("**Decisions this morning**")
     st.dataframe(pd.DataFrame([{"ID": r["Decision ID"], "Decision": sim.TYPE_LABEL.get(r["Decision Type"], r["Decision Type"]),
                                 "Recommendation": r["Recommendation"], "Authority": r["Required Authority"],
@@ -91,6 +125,9 @@ def inputs_form(date, base):
                                    key=f"td_ob{k}")
             res_age = c[2].number_input("Reservations age (hours)", 0.0, 72.0, float(base.get("reservations_age_hours") or 1),
                                         0.5, key=f"td_resage{k}")
+            fd_notes = st.text_area("Front-desk notes (groups arriving, early check-outs, anything unusual)",
+                                    base.get("front_desk_notes") or "", key=f"td_fdnotes{k}",
+                                    help="The AI Demand Agent reads these; the rule-based agents can't.")
         with t2:
             inv_age = st.number_input(f"Hours since the inventory count (more than {core.STALE_AFTER_HOURS['inventory']} "
                                       "hours counts as stale and blocks inventory-dependent actions)", 0.0, 240.0,
@@ -103,6 +140,8 @@ def inputs_form(date, base):
                 carry[g] = c[i].number_input(f"{GL[g]} (kg)", 0.0, 500.0, float(base["carry_over_kg"].get(g) or 0.0), 0.5,
                                              key=f"td_carry_{g}{k}")
                 shelf[g] = c[i].checkbox("Within shelf life", bool(base["within_shelf_life"].get(g, True)), key=f"td_shelf_{g}{k}")
+            kit_notes = st.text_area("Kitchen notes (quality issues, deliveries, equipment)", base.get("kitchen_notes") or "",
+                                     key=f"td_kitnotes{k}", help="The AI Inventory Agent reads these.")
             st.caption("Near-expiry stock that could go to another outlet")
             near = st.data_editor(table(base.get("near_expiry"), {"item": "text", "group": "text", "kg": NUM, "expires_in_days": NUM,
                                                         "alternative_outlet": "text"}),
@@ -143,12 +182,16 @@ def inputs_form(date, base):
         "inventory_age_hours": inv_age, "carry_over_kg": carry, "within_shelf_life": shelf,
         "near_expiry": rows(near), "open_orders": rows(orders), "events": rows(events), "events_confirmed": ev_ok,
         "events_age_hours": 1, "guest_fb_score": gs, "open_fb_complaints": cm, "guest_age_hours": 12,
+        "front_desk_notes": fd_notes, "kitchen_notes": kit_notes,
     }
 
 
 def recommend_and_approve(date, inputs, perf):
     p = S.profile()
-    res, pending, scenario, meta = core.run_morning(p, inputs, S.days(), None, p["approver"], core.gate_tuple(perf))
+    ai = S.ai_config()
+    with st.spinner("The agents are analysing this morning…" if ai else "Running the agents…"):
+        res, pending, scenario, meta = core.run_morning(p, inputs, S.days(), None, p["approver"], core.gate_tuple(perf), ai=ai)
+    agent_panel(meta.get("agent_mode"), meta.get("ai_agents"))
     ctx = res.context
     cols = st.columns(4)
     for i, s in enumerate(core.SOURCES):
@@ -228,7 +271,8 @@ def recommend_and_approve(date, inputs, perf):
         if not approver.strip():
             st.error("Enter who approved the plan.")
             return
-        final, _, scen, meta2 = core.run_morning(p, inputs, S.days(), choices, approver.strip(), core.gate_tuple(perf))
+        final, _, scen, meta2 = core.run_morning(p, inputs, S.days(), choices, approver.strip(), core.gate_tuple(perf),
+                                                 ai=S.ai_config())
         run = core.serialize_run(final, scen, meta2)
         store, hid = S.get_store(), S.hotel()["id"]
         store.save_day(hid, date, status="approved", inputs=inputs, run=run, closeout=None)
