@@ -86,6 +86,7 @@ same engine on **a real hotel's own data**, day after day:
 | Hotel setup | Rooms, consumption per cover, standing par, waste cost, governance policy, and four weeks of baseline history (typed in or imported from a CSV template) |
 | Today's plan | Enters this morning's occupancy, reservations, inventory, events and guest signal; the agents recommend; governance routes each decision; the manager approves, modifies, rejects or asks for more context; the kitchen gets a production sheet |
 | Close out service | Records actual covers, leftovers and stockouts after breakfast; the day is scored (recorded waste, forecast error, estimated waste vs standing par) |
+| Next week's order | Suggests next week's supplier order per item group from the hotel's own close-outs (less where food is usually left over, more where guests ran short); an optional AI Procurement Agent explains it and may only raise orders for guest safety; a manager approves every order, and it is logged with a downloadable purchase order |
 | Decision log & audit | Every decision with its rule trace, human decision and outcome; learning cases from overrides; an append-only audit trail; CSV/JSON export |
 | Performance & autonomy | The eight-check readiness gate computed from the hotel's own last 28 days; autonomy starts SUPERVISED and is earned |
 | Ops copilot (optional) | A Gemini model that answers from the workspace's records and re-runs a morning as a what-if; it never decides who may act |

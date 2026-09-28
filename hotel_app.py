@@ -36,6 +36,7 @@ else:
         "Daily operations": [
             st.Page("product/views/today.py", title="Today's plan", icon=":material/wb_sunny:", default=True),
             st.Page("product/views/closeout.py", title="Close out service", icon=":material/task_alt:"),
+            st.Page("product/views/orders.py", title="Next week's order", icon=":material/local_shipping:"),
         ],
         "Evidence": [
             st.Page("product/views/decision_log.py", title="Decision log & audit", icon=":material/fact_check:"),
