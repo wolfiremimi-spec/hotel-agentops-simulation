@@ -18,8 +18,10 @@ FOREST, FOREST2, MOSS, SAGE, SAND = "#1F3A2F", "#2B4E3F", "#4F7A63", "#A9BFAE", 
 LINEN, PAPER, INK, MUTE, LINE, WHITE, ALERT = "#F5F2EA", "#FBFAF6", "#17211C", "#5F6B63", "#E4E1D8", "#FFFFFF", "#A4493D"
 CONTROL_ROOM_URL = "https://hotel-agentops-control-room.streamlit.app"
 GITHUB_URL = "https://github.com/wolfiremimi-spec/hotel-agentops-simulation"
-CASE_STUDY_URL = GITHUB_URL + "/blob/main/Hospitality%20x%20Sustainability%20x%20Agentic%20AI%20Case%20Study%20.pdf"
-EXCEL_MODEL_URL = GITHUB_URL + "/blob/main/Amelia_Wolfire_Hotel_Food_Waste_Excel_Model.pdf"
+# PDFs open directly in the browser (served from the repo through the jsDelivr CDN), not on a GitHub page
+PDF_BASE = "https://cdn.jsdelivr.net/gh/wolfiremimi-spec/hotel-agentops-simulation@main/"
+CASE_STUDY_URL = PDF_BASE + "Hospitality%20x%20Sustainability%20x%20Agentic%20AI%20Case%20Study%20.pdf"
+EXCEL_MODEL_URL = PDF_BASE + "Amelia_Wolfire_Hotel_Food_Waste_Excel_Model.pdf"
 AUTHOR = "Amelia Wolfire"
 LINKEDIN_URL = "https://www.linkedin.com/in/amelia-wolfire-34354a273"
 EMAIL = "wolfiremimi@gmail.com"
