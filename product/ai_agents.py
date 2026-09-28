@@ -82,6 +82,7 @@ def _ask(cfg: AIConfig, name: str, system: str, brief: dict, tools: dict, submit
                 result = {"error": f"PERMISSION DENIED: {ex}"}
             except Exception as ex:                              # keep the loop alive; the model sees the error
                 result = {"error": f"{type(ex).__name__}: {ex}"}
+            result = json.loads(json.dumps(result, default=str))
             steps.append({"tool": nm, "args": args, "result_summary": str(result)[:200]})
             fr = {"name": nm, "response": {"result": result}}
             if c.get("id"):

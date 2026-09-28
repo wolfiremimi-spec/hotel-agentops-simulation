@@ -85,7 +85,10 @@ def t_what_if(args):
     for g, kg in (args.get("carry_over_kg") or {}).items():
         if g in core.GROUPS:
             inputs["carry_over_kg"][g] = float(kg)
-    for name, cov in (args.get("event_revised_covers") or {}).items():
+    revised = args.get("event_revised_covers") or []
+    if isinstance(revised, dict):                                # older shape: {"name": covers}
+        revised = [{"name": n, "revised_covers": c} for n, c in revised.items()]
+    for name, cov in ((r.get("name") or "", r.get("revised_covers")) for r in revised if isinstance(r, dict)):
         hit = [e for e in inputs.get("events", []) if (e.get("name") or "").lower() == name.lower()]
         if hit:
             hit[0]["revised_covers"] = int(cov)
@@ -132,7 +135,10 @@ DECLS = [
          "inventory_age_hours": {"type": "number", "description": f"Over {core.STALE_AFTER_HOURS['inventory']} hours is stale"},
          "guest_fb_score": {"type": "number"},
          "carry_over_kg": {"type": "object", "properties": {g: {"type": "number"} for g in core.GROUPS}},
-         "event_revised_covers": {"type": "object", "description": "Event name → revised covers"},
+         "event_revised_covers": {"type": "array", "description": "Revised cover counts for named events that morning",
+                                  "items": {"type": "object", "properties": {"name": {"type": "string"},
+                                                                             "revised_covers": {"type": "integer"}},
+                                            "required": ["name", "revised_covers"]}},
          "remove_sources": {"type": "array", "items": {"type": "string", "enum": list(DROPPABLE)}},
          "context_threshold_pct": {"type": "number"}, "delegated_range_pct": {"type": "number"},
          "manager_choices": {"type": "object", "properties": {"production_adjustment": CHOICE, "purchasing_adjustment": CHOICE,
