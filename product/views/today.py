@@ -111,7 +111,7 @@ def inputs_form(date, base):
     p = S.profile()
     k = f"_{date}"
     groups_of = core.item_groups(p)
-    for r in (base.get("near_expiry") or []) + (base.get("open_orders") or []):   # keep items saved before a menu edit
+    for r in (base.get("near_expiry") or []) + (base.get("open_orders") or []) + core.carry_over_rows(base):   # keep items saved before a menu edit
         if r.get("item") and r.get("group"):
             groups_of.setdefault(r["item"], r["group"])
     with st.form(f"td_form{k}"):
@@ -134,23 +134,28 @@ def inputs_form(date, base):
                                     base.get("front_desk_notes") or "", key=f"td_fdnotes{k}",
                                     help="The AI Demand Agent reads these; the rule-based agents can't.")
         with t2:
-            inv_age = st.number_input(f"Hours since the inventory count (more than {core.STALE_AFTER_HOURS['inventory']} "
-                                      "hours counts as stale and blocks inventory-dependent actions)", 0.0, 240.0,
-                                      value=None if base.get("inventory_age_hours") is None else float(base["inventory_age_hours"]),
-                                      step=0.5, key=f"td_invage{k}", placeholder="required")
-            st.caption("Carry-over from yesterday, and whether it is still within shelf life")
-            c = st.columns(4)
-            carry, shelf = {}, {}
-            for i, g in enumerate(core.GROUPS):
-                carry[g] = c[i].number_input(f"{GL[g]} (kg)", 0.0, 500.0, float(base["carry_over_kg"].get(g) or 0.0), 0.5,
-                                             key=f"td_carry_{g}{k}")
-                shelf[g] = c[i].checkbox("Within shelf life", bool(base["within_shelf_life"].get(g, True)), key=f"td_shelf_{g}{k}")
-            kit_notes = st.text_area("Kitchen notes (quality issues, deliveries, equipment)", base.get("kitchen_notes") or "",
-                                     key=f"td_kitnotes{k}", help="The AI Inventory Agent reads these.")
             items = sorted(groups_of, key=str.lower)
             item_col = st.column_config.SelectboxColumn("Item (type to search)", options=items, required=True, width="medium",
                                                         help="Start typing, e.g. 'yog', and pick from the suggestions. "
                                                              "Edit this list in Hotel setup → Menu & par levels.")
+            inv_age = st.number_input(f"Hours since the inventory count (more than {core.STALE_AFTER_HOURS['inventory']} "
+                                      "hours counts as stale and blocks inventory-dependent actions)", 0.0, 240.0,
+                                      value=None if base.get("inventory_age_hours") is None else float(base["inventory_age_hours"]),
+                                      step=0.5, key=f"td_invage{k}", placeholder="required")
+            st.caption("Carry-over from yesterday · click **+** to add a row, type the item, enter the kg and untick "
+                       "anything past its shelf life (it won't be counted as usable)")
+            carry_df = pd.DataFrame(core.carry_over_rows(base) or [], columns=["item", "kg", "within_shelf_life"])
+            carry_df["item"] = carry_df["item"].astype("object")
+            carry_df["kg"] = pd.to_numeric(carry_df["kg"], errors="coerce").astype("float64")
+            carry_df["within_shelf_life"] = carry_df["within_shelf_life"].fillna(True).astype("bool")
+            carry_ed = st.data_editor(carry_df, num_rows="dynamic", use_container_width=True, key=f"td_carry{k}",
+                                      column_config={"item": item_col,
+                                                     "kg": st.column_config.NumberColumn("kg", min_value=0.0, max_value=500.0,
+                                                                                         step=0.5, required=True),
+                                                     "within_shelf_life": st.column_config.CheckboxColumn(
+                                                         "Within shelf life", default=True)})
+            kit_notes = st.text_area("Kitchen notes (quality issues, deliveries, equipment)", base.get("kitchen_notes") or "",
+                                     key=f"td_kitnotes{k}", help="The AI Inventory Agent reads these.")
             st.caption("Near-expiry stock that could go to another outlet · click **+** to add a row, then type the item name")
             near = st.data_editor(table(base.get("near_expiry"), {"item": "text", "kg": NUM, "expires_in_days": NUM,
                                                                   "alternative_outlet": "text"}),
@@ -198,10 +203,13 @@ def inputs_form(date, base):
                 r["group"] = groups_of[r["item"]]          # the group comes from the menu, not from typing
                 out.append(r)
         return out
+    carry_items = [dict(r, within_shelf_life=bool(r.get("within_shelf_life", True))) for r in item_rows(carry_ed)
+                   if r.get("kg")]
+    carry, shelf = core.carry_over_totals(carry_items)
     return {
         "service_date": date, "occupied_rooms": occ, "in_house_guests": guests, "pms_age_hours": pms_age,
         "breakfast_inclusive_rooms": bi, "outside_breakfast_bookings": ob, "reservations_age_hours": res_age,
-        "inventory_age_hours": inv_age, "carry_over_kg": carry, "within_shelf_life": shelf,
+        "inventory_age_hours": inv_age, "carry_over_kg": carry, "within_shelf_life": shelf, "carry_over_items": carry_items,
         "near_expiry": item_rows(near), "open_orders": item_rows(orders), "events": rows(events), "events_confirmed": ev_ok,
         "events_age_hours": 1, "guest_fb_score": gs, "open_fb_complaints": cm, "guest_age_hours": 12,
         "front_desk_notes": fd_notes, "kitchen_notes": kit_notes,

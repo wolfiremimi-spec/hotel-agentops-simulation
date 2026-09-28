@@ -34,13 +34,13 @@ FOOD_ITEMS = {
     "pastry_bread": ["Pastry & bread", "Croissants", "Pain au chocolat", "Danish pastries", "Muffins", "Scones", "Bagels",
                      "Sourdough loaf", "Whole-grain rolls", "White sandwich bread", "Gluten-free bread", "Banana bread",
                      "Pancake batter", "Waffle batter"],
-    "hot_line": ["Scrambled eggs", "Shell eggs (egg station)", "Bacon", "Pork sausages", "Chicken sausages",
+    "hot_line": ["Hot line (assorted)", "Scrambled eggs", "Shell eggs (egg station)", "Bacon", "Pork sausages", "Chicken sausages",
                  "Vegetarian sausages", "Hash browns", "Roasted potatoes", "Baked beans", "Grilled tomatoes",
                  "Sautéed mushrooms", "Porridge / oatmeal", "Smoked tofu"],
-    "fruit_yogurt": ["Greek yogurt", "Plain yogurt", "Flavoured yogurt", "Plant-based yogurt", "Fresh fruit salad",
+    "fruit_yogurt": ["Fruit & yogurt (assorted)", "Greek yogurt", "Plain yogurt", "Flavoured yogurt", "Plant-based yogurt", "Fresh fruit salad",
                      "Sliced melon", "Pineapple", "Mixed berries", "Bananas", "Whole apples & oranges", "Granola",
                      "Bircher muesli", "Chia pudding", "Fresh orange juice"],
-    "cold_cuts_cheese": ["Sliced ham", "Smoked turkey", "Salami", "Prosciutto", "Smoked salmon", "Cheddar",
+    "cold_cuts_cheese": ["Cold cuts & cheese (assorted)", "Sliced ham", "Smoked turkey", "Salami", "Prosciutto", "Smoked salmon", "Cheddar",
                          "Swiss / Emmental", "Brie", "Fresh mozzarella", "Cream cheese", "Cottage cheese", "Hummus"],
 }
 OUTLETS = ["Lobby cafe (lunch)", "Staff canteen", "Room service", "Banquets & events", "Pool bar", "Food donation partner"]
@@ -55,6 +55,32 @@ def menu_items(profile: dict) -> dict:
 def item_groups(profile: dict) -> dict:
     """Item name → the group the agents plan it under."""
     return {item: g for g, items in menu_items(profile).items() for item in items}
+
+
+GENERIC_ITEM = {"pastry_bread": "Pastry & bread", "hot_line": "Hot line (assorted)",
+                "fruit_yogurt": "Fruit & yogurt (assorted)", "cold_cuts_cheese": "Cold cuts & cheese (assorted)"}
+
+
+def carry_over_rows(inputs: dict) -> list:
+    """Item-level carry-over for the form (older days only stored group totals)."""
+    if inputs.get("carry_over_items"):
+        return [dict(r) for r in inputs["carry_over_items"]]
+    return [{"item": GENERIC_ITEM[g], "group": g, "kg": float(kg),
+             "within_shelf_life": bool((inputs.get("within_shelf_life") or {}).get(g, True))}
+            for g, kg in (inputs.get("carry_over_kg") or {}).items() if kg]
+
+
+def carry_over_totals(items: list) -> tuple[dict, dict]:
+    """Group totals the agents plan from. Stock within shelf life is usable; if a group only has stock past its
+    shelf life, it is reported (and excluded by the Inventory Agent)."""
+    ok = {g: 0.0 for g in GROUPS}
+    past = {g: 0.0 for g in GROUPS}
+    for r in items:
+        if r.get("group") in ok and r.get("kg"):
+            (ok if r.get("within_shelf_life", True) else past)[r["group"]] += float(r["kg"])
+    kg = {g: round(ok[g] if ok[g] or not past[g] else past[g], 2) for g in GROUPS}
+    shelf = {g: bool(ok[g] or not past[g]) for g in GROUPS}
+    return kg, shelf
 
 
 def outlets(profile: dict) -> list:
