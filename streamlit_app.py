@@ -11,15 +11,16 @@ pages = {
         st.Page("control_room/views/02_live_service.py", title="Live Service: You Decide"),
         st.Page("control_room/views/03_scenario_lab.py", title="Scenario Lab"),
         st.Page("control_room/views/04_failure_lab.py", title="Failure Lab"),
+        st.Page("control_room/views/05_procurement.py", title="Procurement: Next Week's Order"),
     ],
     "Govern and prove": [
-        st.Page("control_room/views/05_readiness_gate.py", title="Readiness Gate & Autonomy"),
-        st.Page("control_room/views/06_agentops.py", title="AgentOps & Learning"),
-        st.Page("control_room/views/07_business_value.py", title="Business Value"),
+        st.Page("control_room/views/06_readiness_gate.py", title="Readiness Gate & Autonomy"),
+        st.Page("control_room/views/07_agentops.py", title="AgentOps & Learning"),
+        st.Page("control_room/views/08_business_value.py", title="Business Value"),
     ],
     "How it works": [
-        st.Page("control_room/views/08_architecture.py", title="Architecture & Decision Rights"),
-        st.Page("control_room/views/09_methodology.py", title="Methodology & Limits"),
+        st.Page("control_room/views/09_architecture.py", title="Architecture & Decision Rights"),
+        st.Page("control_room/views/10_methodology.py", title="Methodology & Limits"),
     ],
 }
 nav = st.navigation(pages)

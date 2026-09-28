@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from control_room import sim, ui
 
-ui.header("09", "Methodology & limits", "How this was built, and what it cannot tell you")
+ui.header("10", "Methodology & limits", "How this was built, and what it cannot tell you")
 st.markdown("#### Evidence labels")
 st.markdown(" ".join(ui.tag(t) for t in ui.TAGS), unsafe_allow_html=True)
 st.markdown("""

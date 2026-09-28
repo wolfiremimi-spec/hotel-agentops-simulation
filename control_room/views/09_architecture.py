@@ -2,7 +2,7 @@ import streamlit as st
 from control_room import sim, ui
 from hotel_agentops_sim.agents import DemandAgent, InventoryAgent, ProductionAgent, WasteAgent
 
-ui.header("08", "Architecture & decision rights", "AI is the mechanism, not the goal",
+ui.header("09", "Architecture & decision rights", "AI is the mechanism, not the goal",
           "Seven layers, four specialists with least-privilege access, one orchestrator with no purchasing authority, and explicit rules for who may act.")
 
 LAYERS = [("1 · Enterprise data", "PMS / occupancy · POS covers and consumption · inventory · procurement · waste tracking · events · guest experience"),

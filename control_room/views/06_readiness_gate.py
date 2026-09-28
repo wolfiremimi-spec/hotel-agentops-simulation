@@ -7,7 +7,7 @@ TH = sim.thresholds(sim.PARAMS); WEEKS = list(sim.PARAMS["gate_evidence_by_week"
 FMT = {"guest_fb_score": lambda v: f"{v:.2f}", "policy_violations": lambda v: f"{v:.0f}"}
 fmt = lambda k, v: FMT.get(k, lambda x: f"{x:.1%}")(v)
 
-ui.header("05", "Readiness gate & autonomy", "Autonomy is earned week by week, and one failed metric is enough to hold it",
+ui.header("06", "Readiness gate & autonomy", "Autonomy is earned week by week, and one failed metric is enough to hold it",
           "Eight mandatory metrics. All must pass; there is no averaging. The first failure is the blocker, and the gate sets how much the agents may do alone.")
 ui.banner()
 

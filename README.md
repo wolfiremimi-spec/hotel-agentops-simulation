@@ -60,6 +60,7 @@ A browser front end on the same simulation code, built for people who will never
 | Live Service: You Decide | Play the F&B manager: approve, modify, reject or ask for more context on each decision, then see the outcome, the AgentOps metrics, the learning cases and the full audit trail (downloadable) |
 | Scenario Lab | Change occupancy, forecast error, waste history, event demand, any of the 8 data feeds, the governance policy and the evidence week, and compare with the case-study scenario |
 | Failure Lab | The three failure tests and all ten failure modes, executed live |
+| Procurement: Next Week's Order | The Procurement Agent's supplier order per item group from the recorded services (less where food is left over, more where guests ran short), policy what-ifs on the safety buffers, and your Approve / Modify / Reject decision with its governance trace |
 | Readiness Gate & Autonomy | The 8-metric gate for every pilot week, a what-if gate you control, the autonomy ladder and the drift rule |
 | AgentOps & Learning | Weekly quality, safety and reliability metrics; every override reason mapped to a system improvement |
 | Business Value | The workbook's economics, recalculated live with its own formulas |

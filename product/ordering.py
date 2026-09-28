@@ -77,14 +77,16 @@ def classify(ev: dict, g: str) -> tuple[str, str]:
     return "normal", ("no stockouts; " + (f"{lp:.0f}% average leftover" if lp is not None else "no leftover data yet"))
 
 
-def recommend(profile: dict, ev: dict, covers: list[dict], on_hand: dict) -> dict:
-    """The rule-based order for the week, per item group, against ordering at standing par."""
+def recommend(profile: dict, ev: dict, covers: list[dict], on_hand: dict, buffers: dict | None = None) -> dict:
+    """The rule-based order for the week, per item group, against ordering at standing par. `buffers` overrides the
+    default buffer per pattern (clamped to 2–15%, the Production Agent's range)."""
+    buffers = {k: min(max(float((buffers or {}).get(k, v)), 0.02), MAX_BUFFER) for k, v in BUFFER.items()}
     total_covers = sum(int(c["expected_covers"] or 0) for c in covers)
     cost = float(profile["waste_cost_per_kg"])
     lines = {}
     for g in GROUPS:
         cls, why = classify(ev, g)
-        buf = BUFFER[cls]
+        buf = buffers[cls]
         need = total_covers * ev["per_cover"][g]
         oh = max(float(on_hand.get(g) or 0.0), 0.0)
         suggested = max(need * (1 + buf) - oh, 0.0)

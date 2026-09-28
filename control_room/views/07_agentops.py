@@ -5,7 +5,7 @@ from control_room import ui
 
 W = ui.WB; ao = W["agentops_weekly"]; wk = [a["week"] for a in ao]
 
-ui.header("06", "AgentOps & learning", "Operating an agent system means measuring it like a team member",
+ui.header("07", "AgentOps & learning", "Operating an agent system means measuring it like a team member",
           "Quality, safety, reliability and business value, tracked every week, with every human override turned into a system improvement.")
 ui.banner()
 

@@ -4,7 +4,7 @@ from control_room import ui
 
 W = ui.WB; E = W["economics"]; WC = W["waste_cost"]; CASES = W["sensitivity_cases"]
 
-ui.header("07", "Business value", "Is it worth it, net of the AI's own cost?",
+ui.header("08", "Business value", "Is it worth it, net of the AI's own cost?",
           "The economics from the case-study workbook, recalculated live with the same formulas. Food cost avoided is avoided cost, not new revenue.")
 ui.banner("<b>Modeled economics.</b> Scenario drivers and cost lines are illustrative assumptions from the workbook; edit them to test the case.")
 
