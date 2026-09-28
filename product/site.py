@@ -5,8 +5,10 @@ case study's specification. HTML is emitted on single lines because Streamlit's 
 """
 from __future__ import annotations
 
+import base64
 import functools
 import html
+from pathlib import Path
 
 import streamlit as st
 
@@ -17,6 +19,17 @@ LINEN, PAPER, INK, MUTE, LINE, WHITE, ALERT = "#F5F2EA", "#FBFAF6", "#17211C", "
 CONTROL_ROOM_URL = "https://hotel-agentops-control-room.streamlit.app"
 GITHUB_URL = "https://github.com/wolfiremimi-spec/hotel-agentops-simulation"
 CASE_STUDY_URL = GITHUB_URL + "/blob/main/Hospitality%20x%20Sustainability%20x%20Agentic%20AI%20Case%20Study%20.pdf"
+EXCEL_MODEL_URL = GITHUB_URL + "/blob/main/Amelia_Wolfire_Hotel_Food_Waste_Excel_Model.pdf"
+AUTHOR = "Amelia Wolfire"
+LINKEDIN_URL = "https://www.linkedin.com/in/amelia-wolfire-34354a273"
+EMAIL = "wolfiremimi@gmail.com"
+ASSETS = Path(__file__).resolve().parent / "assets"
+
+
+@functools.lru_cache(maxsize=None)
+def img(name: str) -> str:
+    """Inline image (data URI), so it renders anywhere the app runs."""
+    return "data:image/jpeg;base64," + base64.b64encode((ASSETS / name).read_bytes()).decode()
 
 e = lambda x: html.escape(str(x))  # noqa: E731
 
@@ -37,6 +50,12 @@ LOGO = (f'<svg class="ws-logo" viewBox="0 0 32 32" aria-hidden="true"><rect widt
 CHECK = (f'<svg viewBox="0 0 20 20" class="ws-ic" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="{MOSS}"/>'
          f'<path d="M6 10.2l2.6 2.6L14 7.6" fill="none" stroke="{WHITE}" stroke-width="2" stroke-linecap="round" '
          'stroke-linejoin="round"/></svg>')
+
+LI_ICON = ('<svg viewBox="0 0 24 24" class="ws-ic" aria-hidden="true"><path fill="currentColor" d="M4.98 3.5a2.5 2.5 0 1 1 0 5 '
+           '2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4-.03'
+           '-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z"/></svg>')
+MAIL_ICON = ('<svg viewBox="0 0 24 24" class="ws-ic" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" '
+             'd="M3 6h18v12H3z M3 7l9 7 9-7"/></svg>')
 
 CSS = f"""
 <style>
@@ -139,7 +158,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-stats span {{ font-size: .86rem; color: {MUTE}; }}
 .ws-sec {{ margin: 76px 0 26px; text-align: center; }}
 .ws-sec .k {{ font-size: .76rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: {MOSS}; }}
-.ws-sec h2 {{ font-size: 2.2rem !important; font-weight: 800; line-height: 1.12; margin: 10px auto 12px !important; padding: 0 !important; max-width: 30ch; }}
+.ws-sec h2 {{ font-size: 2.2rem !important; font-weight: 800; line-height: 1.12; margin: 10px auto 12px !important; padding: 0 !important; max-width: 30ch; text-wrap: balance; }}
 .ws-sec p {{ color: {MUTE}; font-size: 1.05rem; line-height: 1.6; max-width: 44rem; margin: 0 auto; }}
 .ws-steps {{ display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }}
 .ws-step {{ background: {WHITE}; border: 1px solid {LINE}; border-radius: 14px; padding: 18px 16px; position: relative; }}
@@ -201,6 +220,47 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-foot .cols .h {{ color: {SAND}; font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }}
 .ws-foot a {{ color: {WHITE} !important; text-decoration: none !important; }}
 .ws-foot .legal {{ border-top: 1px solid rgba(255,255,255,.14); margin-top: 26px; padding-top: 16px; font-size: .76rem; color: #B9C8BE; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }}
+.ws-brandwrap {{ display: flex; align-items: center; gap: 12px; }}
+.ws-by {{ font-size: .86rem; color: {MUTE} !important; text-decoration: none !important; border-left: 1px solid {LINE}; padding-left: 12px; white-space: nowrap; }}
+.ws-by b {{ color: {FOREST}; font-weight: 700; }}
+.ws-banner {{ margin: 60px 0 0; border-radius: 20px; min-height: 300px; background-size: cover; background-position: center 60%; display: flex; align-items: center; overflow: hidden; }}
+.ws-banner .in {{ padding: 40px 44px; max-width: 34rem; }}
+.ws-banner .k {{ color: {SAND}; font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }}
+.ws-banner h3 {{ text-wrap: balance; color: {WHITE} !important; font-size: 1.9rem !important; line-height: 1.15; font-weight: 800; margin: 10px 0 12px !important; padding: 0 !important; }}
+.ws-banner p {{ color: #E8EFE9; font-size: 1rem; line-height: 1.6; margin: 0; }}
+.ws-banner .src {{ display: inline-block; margin-top: 14px; font-size: .74rem; color: #C9D6CD; }}
+.ws-project {{ display: grid; grid-template-columns: .9fr 1.1fr; gap: 0; background: {WHITE}; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; }}
+.ws-project .ph img {{ width: 100%; height: 100%; object-fit: cover; display: block; min-height: 420px; }}
+.ws-project .tx {{ padding: 32px 34px; }}
+.ws-project .k, .ws-about .k {{ font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: {MOSS}; }}
+.ws-project h3 {{ font-size: 1.6rem !important; font-weight: 800; margin: 8px 0 10px !important; padding: 0 !important; }}
+.ws-project p {{ color: {MUTE}; line-height: 1.6; margin: 0 0 14px; }}
+.ws-project ul {{ margin: 0 0 18px; padding-left: 1.1rem; font-size: .92rem; line-height: 1.55; color: {INK}; }}
+.ws-project li {{ margin-bottom: 6px; }}
+.ws-pills, .ws-contact {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+.ws-pill {{ display: inline-flex; align-items: center; gap: 7px; font-size: .86rem; font-weight: 600; border-radius: 999px; padding: 8px 14px; border: 1px solid {LINE}; color: {FOREST} !important; background: {WHITE}; text-decoration: none !important; }}
+.ws-pill:hover {{ border-color: {FOREST}; }}
+.ws-pill.dark {{ background: {FOREST}; color: {WHITE} !important; border-color: {FOREST}; }}
+.ws-gallery {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 16px; }}
+.ws-slide {{ background: {WHITE}; border: 1px solid {LINE}; border-radius: 14px; overflow: hidden; text-decoration: none !important; transition: transform .15s ease, box-shadow .15s ease; }}
+.ws-slide:hover {{ transform: translateY(-2px); box-shadow: 0 12px 28px -14px rgba(31,58,47,.35); }}
+.ws-slide img {{ width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: top; display: block; border-bottom: 1px solid {LINE}; }}
+.ws-slide div {{ padding: 12px 14px 14px; }}
+.ws-slide b {{ display: block; color: {FOREST}; font-size: .95rem; }}
+.ws-slide span {{ color: {MUTE}; font-size: .82rem; line-height: 1.45; }}
+.ws-about {{ margin-top: 76px; background: {WHITE}; border: 1px solid {LINE}; border-radius: 20px; padding: 34px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 26px 40px; align-items: center; }}
+.ws-about .me {{ display: flex; gap: 18px; align-items: flex-start; }}
+.ws-about .mono {{ width: 72px; height: 72px; flex: none; border-radius: 20px; background: {FOREST}; color: {SAND}; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; letter-spacing: .02em; }}
+.ws-about h3 {{ font-size: 1.7rem !important; font-weight: 800; margin: 4px 0 4px !important; padding: 0 !important; }}
+.ws-about .role {{ color: {INK}; font-weight: 600; font-size: .9rem; margin: 0 0 6px; text-wrap: balance; }}
+.ws-about .prog {{ color: {MUTE}; font-size: .86rem; line-height: 1.5; margin: 0; }}
+.ws-about blockquote {{ margin: 0; border-left: 3px solid {SAND}; padding: 4px 0 4px 18px; color: {FOREST}; font-size: 1.05rem; line-height: 1.55; font-weight: 600; }}
+.ws-about .ws-contact {{ grid-column: 1 / -1; border-top: 1px solid {LINE}; padding-top: 20px; }}
+@media (max-width: 900px) {{
+  .ws-project, .ws-about {{ grid-template-columns: 1fr; }} .ws-project .ph img {{ min-height: 240px; max-height: 320px; }}
+  .ws-gallery {{ grid-template-columns: 1fr 1fr; }} .ws-brandwrap {{ flex-direction: column; align-items: flex-start; gap: 2px; }} .ws-by {{ border-left: 0; padding-left: 40px; font-size: .76rem; }} .ws-banner .in {{ padding: 28px 24px; }}
+  .ws-banner h3 {{ font-size: 1.45rem !important; }}
+}}
 @media (max-width: 900px) {{
   .ws-h1 {{ font-size: 2.3rem; }} .ws-links a:not(.cta), .ws-brand .tag {{ display: none; }}
   .ws-stats, .ws-grid4 {{ grid-template-columns: 1fr 1fr; }} .ws-stats div:nth-child(2) {{ border-right: 0; }}
@@ -277,9 +337,10 @@ def snapshot() -> dict:
 
 
 def nav() -> None:
-    md(f'<div class="ws-nav"><a class="ws-brand" href="#top">{LOGO}<b>Hotel AgentOps</b><span class="tag">PILOT</span></a>'
-       '<div class="ws-links"><a href="#how">How it works</a><a href="#agents">Agents</a><a href="#governance">Governance</a>'
-       f'<a href="{CONTROL_ROOM_URL}" target="_blank">Control Room</a><a href="#get-started" class="cta">Get started</a></div></div>')
+    md(f'<div class="ws-nav"><div class="ws-brandwrap"><a class="ws-brand" href="#top">{LOGO}<b>Hotel AgentOps</b></a>'
+       f'<a class="ws-by" href="#about">by <b>{AUTHOR}</b></a></div>'
+       '<div class="ws-links"><a href="#how">How it works</a><a href="#agents">Agents</a><a href="#project">The project</a>'
+       '<a href="#about">About</a><a href="#get-started" class="cta">Get started</a></div></div>')
 
 
 def hero_text() -> None:
@@ -429,6 +490,58 @@ def footer() -> None:
        '<div class="cols"><div><span class="h">Product</span><a href="#how">How it works</a><a href="#agents">Agents</a>'
        '<a href="#governance">Governance</a></div><div><span class="h">Evidence</span>'
        f'<a href="{CONTROL_ROOM_URL}" target="_blank">Control Room ↗</a><a href="{CASE_STUDY_URL}" target="_blank">Case study ↗</a>'
-       f'<a href="{GITHUB_URL}" target="_blank">Source code ↗</a></div></div></div>'
-       '<div class="legal"><span>Built by Amelia Wolfire · Hospitality · Sustainability · Agentic AI</span>'
+       f'<a href="{GITHUB_URL}" target="_blank">Source code ↗</a></div><div><span class="h">Contact</span>'
+       f'<a href="{LINKEDIN_URL}" target="_blank">LinkedIn ↗</a><a href="mailto:{EMAIL}">{EMAIL}</a></div></div></div>'
+       f'<div class="legal"><span>© 2026 {AUTHOR} · Hospitality · Sustainability · Agentic AI</span>'
        '<span>Modeled implementation simulation · no live hotel systems are connected</span></div></div>')
+
+
+def banner() -> None:
+    md(f'<div class="ws-banner" style="background-image:linear-gradient(90deg, rgba(23,33,28,.86) 0%, rgba(23,33,28,.55) 48%, '
+       f'rgba(23,33,28,.05) 100%), url({img("buffet_band.jpg")})"><div class="in"><div class="k">The opportunity</div>'
+       '<h3>Food waste is more than a sustainability problem.</h3><p>Every wasted ingredient represents purchasing, '
+       'forecasting, production, labor and operational capacity that failed to create guest value. The problem isn\'t a '
+       'lack of data. It\'s disconnected decision-making.</p><span class="src">From the case study</span></div></div>')
+
+
+def project() -> None:
+    section("project", "The project", "Learn more about the project",
+            "Hotel AgentOps is the working product built from my case study, Agentic AI for Sustainable Hospitality. "
+            "The case study designed the system; the simulation proved it; this application puts it in a hotel's hands.")
+    built = [("Identified the problem", "Hotel food waste and fragmented operational decision-making."),
+             ("Designed the system", "A multi-agent architecture coordinating demand, inventory, production and waste."),
+             ("Designed the governance", "Decision rights, thresholds, escalation, permissions, reversibility and human oversight."),
+             ("Built the measurement model", "An Excel pilot analysis connecting agent behavior to operational KPIs."),
+             ("Built the simulation", "An executable Python engine testing decisions, governance, approvals, failure modes and AgentOps."),
+             ("Built this product", "Daily planning, AI agents with verification, close-out scoring and earned autonomy.")]
+    items = "".join(f'<li><b>{e(h)}.</b> {e(p)}</li>' for h, p in built)
+    links = (f'<a class="ws-pill dark" href="{CASE_STUDY_URL}" target="_blank">Read the case study ↗</a>'
+             f'<a class="ws-pill" href="{CONTROL_ROOM_URL}" target="_blank">Explore the Control Room ↗</a>'
+             f'<a class="ws-pill" href="{EXCEL_MODEL_URL}" target="_blank">Excel measurement model ↗</a>'
+             f'<a class="ws-pill" href="{GITHUB_URL}" target="_blank">Source code ↗</a>')
+    md(f'<div class="ws-project"><div class="ph"><img src="{img("breakfast.jpg")}" alt="A hotel breakfast buffet on a '
+       'sunlit terrace"></div><div class="tx"><div class="k">What I built</div><h3>From strategy to a working system.</h3>'
+       '<p>I framed hotel food waste as a constrained business optimization problem, not an AI project: reduce waste '
+       'and unnecessary cost without compromising guest experience, food safety or human decision rights.</p>'
+       f'<ul>{items}</ul><div class="ws-pills">{links}</div></div></div>')
+    slides = [("cs_operating_model.jpg", "The operating model", "Seven layers, from enterprise data to AgentOps."),
+              ("cs_decision_rights.jpg", "Decision rights", "Autonomy is assigned by decision, not by agent."),
+              ("cs_readiness_gate.jpg", "Readiness gate", "Autonomy is earned through evidence."),
+              ("cs_decision_trace.jpg", "Decision trace", "One decision, end to end: D-0418.")]
+    md('<div class="ws-gallery">' + "".join(
+        f'<a class="ws-slide" href="{CASE_STUDY_URL}" target="_blank"><img src="{img(f)}" alt="{e(t)} slide from the case '
+        f'study"><div><b>{e(t)}</b><span>{e(c)}</span></div></a>' for f, t, c in slides) + "</div>"
+       '<div class="ws-note">Slides from the case study · click any slide to open the full PDF</div>')
+
+
+def about() -> None:
+    md(f'<div class="ws-about" id="about"><div class="me"><div class="mono">AW</div><div><div class="k">Designed and built by'
+       f'</div><h3>{AUTHOR}</h3><p class="role">Hospitality · Sustainability · Brand &amp; Business Strategy · Agentic AI</p>'
+       '<p class="prog">MIT Sloan × MIT Schwarzman College of Computing · <i>Implementing Agentic AI: Building Your '
+       'Organizational Playbook</i> executive program, 2026</p></div></div>'
+       '<blockquote>“I didn\'t design a chatbot. I designed an operating system for decisions. The goal isn\'t maximum '
+       'autonomy. It\'s better decisions, measurable business value, and the right level of autonomy for the risk.”</blockquote>'
+       '<div class="ws-contact">'
+       f'<a class="ws-pill dark" href="{LINKEDIN_URL}" target="_blank">{LI_ICON} Connect on LinkedIn</a>'
+       f'<a class="ws-pill" href="mailto:{EMAIL}">{MAIL_ICON} {EMAIL}</a>'
+       f'<a class="ws-pill" href="{CASE_STUDY_URL}" target="_blank">Case study ↗</a></div></div>')

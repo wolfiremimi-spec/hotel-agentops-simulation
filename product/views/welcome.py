@@ -28,10 +28,12 @@ with right:
     site.preview()
 
 site.stats()
+site.banner()
 site.how_it_works()
 site.agents()
 site.governance()
 site.proof()
+site.project()
 
 # ---------------------------------------------------------------- get started
 site.get_started_header()
@@ -86,4 +88,5 @@ with c3:
                 st.rerun()
 
 site.truth()
+site.about()
 site.footer()
