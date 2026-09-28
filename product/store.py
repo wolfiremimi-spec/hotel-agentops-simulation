@@ -95,7 +95,10 @@ class SupabaseStore:
     persistent = True
 
     def __init__(self, url: str, key: str, salt: str):
-        self.base = url.rstrip("/") + "/rest/v1"
+        base = url.strip().rstrip("/")
+        if base.endswith("/rest/v1"):                  # accept the API URL form Supabase also shows
+            base = base[: -len("/rest/v1")]
+        self.base = base + "/rest/v1"
         self.salt = salt
         self.headers = {"apikey": key, "Content-Type": "application/json"}
         if key.startswith("eyJ"):                      # legacy service_role JWT also needs the bearer header
