@@ -3,13 +3,14 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
+from product import site
 from product import core
 
 GL = sim.GROUP_LABEL
 
 
 def page():
-    ui.header("HOTEL AGENTOPS", "Close out service", "What actually happened at breakfast",
+    site.page_header("Close out service", "What actually happened at breakfast",
               "Record actual covers and what was left over. This scores the day's decisions, measures real waste and "
               "forecast accuracy, and builds the track record that autonomy is earned from.")
     if S.is_demo():
@@ -109,4 +110,4 @@ def show_result(day):
 
 
 page()
-ui.footer("Hotel AgentOps pilot application.")
+site.app_footer()

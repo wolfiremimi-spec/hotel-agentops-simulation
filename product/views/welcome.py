@@ -1,29 +1,56 @@
 import streamlit as st
 
-from control_room import ui
 from product import app_state as S
-from product import core
+from product import core, site
 
-st.markdown(
-    '<div class="ha-hero"><div class="k">HOTEL AGENTOPS · PILOT</div>'
-    "<h1>Cut breakfast waste without cutting guest experience.</h1>"
-    "<p>Four AI specialist agents (Demand, Inventory, Waste and Production), each with access only to the data its role "
-    "needs, analyse your hotel's morning in parallel, including the notes your team writes. An orchestrator combines "
-    "them. Every AI output is verified, governance rules decide what may run alone and what needs your approval, and "
-    "autonomy is earned from your own results.</p></div>",
-    unsafe_allow_html=True,
-)
-ui.flow(["Enter this morning's data", "Agents recommend", "Governance routes", "You approve", "Kitchen serves",
-         "Close out", "Autonomy earned"])
 
+def open_demo():
+    store = S.get_store("demo")
+    p = core.demo_profile()
+    hid, _ = store.create_hotel(p["hotel_name"], p)
+    store.log(hid, "Demo", "workspace_created", {"demo": True})
+    S.open_workspace("demo", store.get_hotel(hid))
+    st.rerun()
+
+
+site.nav()
+
+# ---------------------------------------------------------------- hero
+left, right = st.columns([1.05, 1], gap="large", vertical_alignment="center")
+with left:
+    site.hero_text()
+    b1, b2, _ = st.columns([1.1, 1, 0.4])
+    if b1.button("Try the live demo →", type="primary", use_container_width=True, key="ha_demo"):
+        open_demo()
+    b2.markdown('<a class="ws-btn ghost" href="#get-started">Set up your hotel</a>', unsafe_allow_html=True)
+    site.hero_fine()
+with right:
+    site.preview()
+
+site.stats()
+site.how_it_works()
+site.agents()
+site.governance()
+site.proof()
+
+# ---------------------------------------------------------------- get started
+site.get_started_header()
 db = S.database_configured()
-c1, c2, c3 = st.columns(3)
+c1, c2, c3 = st.columns(3, gap="medium")
 
 with c1:
     with st.container(border=True):
-        st.markdown("**Set up your hotel**")
-        st.caption("Create a private workspace. You'll get an access code; keep it safe, it's how you and your team get back in.")
-        with st.form("ha_create"):
+        site.md('<div class="ws-start-h">Explore the demo hotel</div><p class="ws-start-p">The 250-room hotel from the case '
+                'study with its modeled history, on the D-0418 Saturday morning. Plan, approve, close out and audit a full '
+                'day. Nothing is saved.</p>')
+        if st.button("Open the demo", use_container_width=True, key="ha_demo_card", type="primary"):
+            open_demo()
+
+with c2:
+    with st.container(border=True):
+        site.md('<div class="ws-start-h">Create a workspace</div><p class="ws-start-p">A private workspace for your '
+                'property. You\'ll receive an access code: it\'s how you and your team get back in.</p>')
+        with st.form("ha_create", border=False):
             name = st.text_input("Hotel name", key="ha_new_name")
             rooms = st.number_input("Rooms", 10, 3000, 250, 1, key="ha_new_rooms")
             approver = st.text_input("Who approves the plan? (name or role)", "F&B Manager", key="ha_new_approver")
@@ -43,11 +70,11 @@ with c1:
                 st.session_state.ha_new_code = code
                 st.rerun()
 
-with c2:
+with c3:
     with st.container(border=True):
-        st.markdown("**Open your workspace**")
-        st.caption("Enter the access code you received when the workspace was created.")
-        with st.form("ha_open"):
+        site.md('<div class="ws-start-h">Open your workspace</div><p class="ws-start-p">Already set up? Enter the access '
+                'code you received when the workspace was created.</p>')
+        with st.form("ha_open", border=False):
             code = st.text_input("Access code", placeholder="XXXX-XXXX-XXXX", key="ha_code_in")
             go = st.form_submit_button("Open", use_container_width=True, disabled=not db)
         if go:
@@ -58,28 +85,5 @@ with c2:
                 S.open_workspace("live", row)
                 st.rerun()
 
-with c3:
-    with st.container(border=True):
-        st.markdown("**Try the demo hotel**")
-        st.caption("The 250-room hotel from the case study, preloaded with its modeled history and the D-0418 Saturday "
-                   "morning. Run a full day: approve, close out, see the audit trail. Nothing is saved.")
-        if st.button("Open the demo", use_container_width=True, key="ha_demo"):
-            store = S.get_store("demo")
-            p = core.demo_profile()
-            hid, _ = store.create_hotel(p["hotel_name"], p)
-            store.log(hid, "Demo", "workspace_created", {"demo": True})
-            S.open_workspace("demo", store.get_hotel(hid))
-            st.rerun()
-
-st.markdown("")
-st.markdown("**What it is, and what it isn't**")
-st.markdown(
-    "- **It is** a working decision-support tool for a hotel pilot. Data comes in by form each morning, results by "
-    "close-out each evening, and everything is stored and auditable.\n"
-    "- **It isn't** connected to your PMS, POS or inventory system. Those integrations would come in a funded "
-    "pilot, and until then the manager enters the figures.\n"
-    "- **The specialist agents are AI models (Google Gemini) held in check by rules.** Each can only read its own "
-    "sources; every output is verified and may only make the system more cautious; if one fails, a rule-based agent "
-    "takes over. Decision rights, approvals and the readiness gate are deterministic rules, never AI.\n"
-    "- **Access is by private workspace code:** a pilot-grade control, not single sign-on.")
-ui.footer("Hotel AgentOps pilot application.")
+site.truth()
+site.footer()

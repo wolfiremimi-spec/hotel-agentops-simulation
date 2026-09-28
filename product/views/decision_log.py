@@ -7,10 +7,11 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
+from product import site
 
 
 def page():
-    ui.header("HOTEL AGENTOPS", "Decision log & audit", "Every decision, who made it, and why",
+    site.page_header("Decision log & audit", "Every decision, who made it, and why",
               "Each recommendation is logged with its authority, the human decision, what was executed and the rule "
               "trace behind it. Close-outs add the actual outcome.")
     days = [d for d in S.days() if d.get("run")]
@@ -92,4 +93,4 @@ def page():
 
 
 page()
-ui.footer("Hotel AgentOps pilot application.")
+site.app_footer()

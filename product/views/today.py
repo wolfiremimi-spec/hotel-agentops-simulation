@@ -5,6 +5,7 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
+from product import site
 from product import core
 
 GL = sim.GROUP_LABEL
@@ -287,7 +288,7 @@ def recommend_and_approve(date, inputs, perf):
 
 
 def page():
-    ui.header("HOTEL AGENTOPS", "Today's plan", "This morning's production plan",
+    site.page_header("Today's plan", "This morning's production plan",
               "Enter this morning's figures. The agents recommend, governance routes each decision, and you approve "
               "what needs you. The saved plan becomes the kitchen's production sheet.")
     if S.is_demo():
@@ -329,4 +330,4 @@ def page():
 
 
 page()
-ui.footer("Hotel AgentOps pilot application.")
+site.app_footer()

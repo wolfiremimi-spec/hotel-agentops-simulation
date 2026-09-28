@@ -6,6 +6,7 @@ import streamlit as st
 from control_room import sim, ui
 from product import agent, core
 from product import app_state as S
+from product import site
 
 MAX_QUESTIONS = 25
 DROPPABLE = {"pms_occupancy": ("occupied_rooms", None), "reservations": ("breakfast_inclusive_rooms", None),
@@ -155,7 +156,7 @@ Rules:
 
 
 def page():
-    ui.header("HOTEL AGENTOPS", "Ops copilot", "Ask about your plans, decisions and results",
+    site.page_header("Ops copilot", "Ask about your plans, decisions and results",
               "An AI assistant that answers from this workspace's records and can re-run a morning with different "
               "figures. It explains; governance rules still decide who may act.")
     key = S.secret("GEMINI_API_KEY")
@@ -205,4 +206,4 @@ def steps(items):
 
 
 page()
-ui.footer("Hotel AgentOps pilot application. The copilot uses Google Gemini to explain; decisions come from the governed engine.")
+site.app_footer("The copilot uses Google Gemini to explain; decisions come from the governed engine.")

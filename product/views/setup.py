@@ -6,6 +6,7 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
+from product import site
 from product import core
 
 GL = sim.GROUP_LABEL
@@ -73,7 +74,7 @@ def rows_from_frame(df):
 
 
 def page():
-    ui.header("HOTEL AGENTOPS", "Hotel setup", "Your hotel, your menu, your rules",
+    site.page_header("Hotel setup", "Your hotel, your menu, your rules",
               "The agents plan from these figures, and governance applies your policy. Changes apply from the next "
               "morning you plan; past decisions keep the settings they were made under.")
     p = dict(S.profile())
@@ -176,4 +177,4 @@ def page():
 
 
 page()
-ui.footer("Hotel AgentOps pilot application.")
+site.app_footer()
