@@ -251,8 +251,8 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-about {{ margin-top: 76px; background: {WHITE}; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; display: grid; grid-template-columns: 300px 1fr; }}
 .ws-about .pic img {{ width: 100%; height: 100%; object-fit: cover; display: block; min-height: 360px; }}
 .ws-about .body {{ padding: 34px 36px; display: grid; gap: 22px; align-content: center; }}
-.ws-system {{ background: #F6F5F0; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; }}
-.ws-system img {{ width: 100%; display: block; }}
+.ws-system {{ background: #F6F5F0; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; padding: 22px 28px; }}
+.ws-system img {{ width: 100%; max-width: 820px; display: block; margin: 0 auto; -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 72% 78% at 50% 50%, #000 70%, transparent 100%); }}
 .ws-about .me {{ display: flex; gap: 18px; align-items: flex-start; }}
 .ws-about .mono {{ width: 72px; height: 72px; flex: none; border-radius: 20px; background: {FOREST}; color: {SAND}; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; letter-spacing: .02em; }}
 .ws-about h3 {{ font-size: 1.7rem !important; font-weight: 800; margin: 4px 0 4px !important; padding: 0 !important; }}
