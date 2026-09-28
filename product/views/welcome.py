@@ -28,12 +28,6 @@ with right:
     site.preview()
 
 site.stats()
-site.banner()
-site.how_it_works()
-site.agents()
-site.governance()
-site.proof()
-site.project()
 
 # ---------------------------------------------------------------- get started
 site.get_started_header()
@@ -86,6 +80,14 @@ with c3:
             else:
                 S.open_workspace("live", row)
                 st.rerun()
+
+site.connected()
+site.banner()
+site.how_it_works()
+site.agents()
+site.governance()
+site.proof()
+site.project()
 
 site.truth()
 site.about()

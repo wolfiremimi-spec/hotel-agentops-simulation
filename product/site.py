@@ -248,16 +248,20 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-slide div {{ padding: 12px 14px 14px; }}
 .ws-slide b {{ display: block; color: {FOREST}; font-size: .95rem; }}
 .ws-slide span {{ color: {MUTE}; font-size: .82rem; line-height: 1.45; }}
-.ws-about {{ margin-top: 76px; background: {WHITE}; border: 1px solid {LINE}; border-radius: 20px; padding: 34px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 26px 40px; align-items: center; }}
+.ws-about {{ margin-top: 76px; background: {WHITE}; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; display: grid; grid-template-columns: 300px 1fr; }}
+.ws-about .pic img {{ width: 100%; height: 100%; object-fit: cover; display: block; min-height: 360px; }}
+.ws-about .body {{ padding: 34px 36px; display: grid; gap: 22px; align-content: center; }}
+.ws-system {{ background: #F6F5F0; border: 1px solid {LINE}; border-radius: 20px; overflow: hidden; }}
+.ws-system img {{ width: 100%; display: block; }}
 .ws-about .me {{ display: flex; gap: 18px; align-items: flex-start; }}
 .ws-about .mono {{ width: 72px; height: 72px; flex: none; border-radius: 20px; background: {FOREST}; color: {SAND}; font-weight: 800; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; letter-spacing: .02em; }}
 .ws-about h3 {{ font-size: 1.7rem !important; font-weight: 800; margin: 4px 0 4px !important; padding: 0 !important; }}
 .ws-about .role {{ color: {INK}; font-weight: 600; font-size: .9rem; margin: 0 0 6px; text-wrap: balance; }}
 .ws-about .prog {{ color: {MUTE}; font-size: .86rem; line-height: 1.5; margin: 0; }}
 .ws-about blockquote {{ margin: 0; border-left: 3px solid {SAND}; padding: 4px 0 4px 18px; color: {FOREST}; font-size: 1.05rem; line-height: 1.55; font-weight: 600; }}
-.ws-about .ws-contact {{ grid-column: 1 / -1; border-top: 1px solid {LINE}; padding-top: 20px; }}
+.ws-about .ws-contact {{ border-top: 1px solid {LINE}; padding-top: 20px; }}
 @media (max-width: 900px) {{
-  .ws-project, .ws-about {{ grid-template-columns: 1fr; }} .ws-project .ph img {{ min-height: 240px; max-height: 320px; }}
+  .ws-project, .ws-about {{ grid-template-columns: 1fr; }} .ws-project .ph img {{ min-height: 240px; max-height: 320px; }} .ws-about .pic img {{ min-height: 220px; max-height: 280px; }} .ws-about .body {{ padding: 26px 22px; }}
   .ws-gallery {{ grid-template-columns: 1fr 1fr; }} .ws-brandwrap {{ flex-direction: column; align-items: flex-start; gap: 2px; }} .ws-by {{ border-left: 0; padding-left: 40px; font-size: .76rem; }} .ws-banner .in {{ padding: 28px 24px; }}
   .ws-banner h3 {{ font-size: 1.45rem !important; }}
 }}
@@ -535,7 +539,8 @@ def project() -> None:
 
 
 def about() -> None:
-    md(f'<div class="ws-about" id="about"><div class="me"><div class="mono">AW</div><div><div class="k">Designed and built by'
+    md(f'<div class="ws-about" id="about"><div class="pic"><img src="{img("ingredients.jpg")}" alt="Fresh ingredients laid '
+       'out on a light background"></div><div class="body"><div class="me"><div class="mono">AW</div><div><div class="k">Designed and built by'
        f'</div><h3>{AUTHOR}</h3><p class="role">Hospitality · Sustainability · Brand &amp; Business Strategy · Agentic AI</p>'
        '<p class="prog">MIT Sloan × MIT Schwarzman College of Computing · <i>Implementing Agentic AI: Building Your '
        'Organizational Playbook</i> executive program, 2026</p></div></div>'
@@ -544,4 +549,14 @@ def about() -> None:
        '<div class="ws-contact">'
        f'<a class="ws-pill dark" href="{LINKEDIN_URL}" target="_blank">{LI_ICON} Connect on LinkedIn</a>'
        f'<a class="ws-pill" href="mailto:{EMAIL}">{MAIL_ICON} {EMAIL}</a>'
-       f'<a class="ws-pill" href="{CASE_STUDY_URL}" target="_blank">Case study ↗</a></div></div>')
+       f'<a class="ws-pill" href="{CASE_STUDY_URL}" target="_blank">Case study ↗</a></div></div></div>')
+
+
+def connected() -> None:
+    section("system", "The system", "One connected system, from guest demand to business value.",
+            "The hotel runs above; the decision network runs beneath it. Every capability feeds the next, and every "
+            "decision is governed, approved where it matters, and measured.")
+    md(f'<div class="ws-system"><img src="{img("connected_system.jpg")}" alt="A hotel resort above a leaf whose veins '
+       'connect guests, kitchen, dining, inventory, suppliers, reporting and recycling, labelled with demand forecasting, '
+       'inventory intelligence, multi-agent orchestration, human approval, governance and decision rights, waste reduction '
+       'and measurable business value"></div>')
