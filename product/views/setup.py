@@ -76,7 +76,7 @@ def rows_from_frame(df):
 def page():
     site.page_header("Hotel setup", "Your hotel, your menu, your rules",
               "The agents plan from these figures, and governance applies your policy. Changes apply from the next "
-              "morning you plan; past decisions keep the settings they were made under.", photo="band_setup.jpg")
+              "morning you plan; past decisions keep the settings they were made under.", photo="band_today.jpg")
     p = dict(S.profile())
     if p.get("defaults_from_case_study"):
         st.warning("These starting figures are the case study's modeled hotel. Replace them with your hotel's own figures, "
