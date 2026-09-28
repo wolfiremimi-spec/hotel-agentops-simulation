@@ -111,7 +111,8 @@ def inputs_form(date, base):
     p = S.profile()
     k = f"_{date}"
     groups_of = core.item_groups(p)
-    for r in (base.get("near_expiry") or []) + (base.get("open_orders") or []) + core.carry_over_rows(base):   # keep items saved before a menu edit
+    for r in ((base.get("near_expiry") or []) + (base.get("open_orders") or []) + core.carry_over_rows(base)
+              + (st.session_state.get(f"td_prefill_{date}") or [])):   # keep items saved before a menu edit
         if r.get("item") and r.get("group"):
             groups_of.setdefault(r["item"], r["group"])
     with st.form(f"td_form{k}"):
@@ -144,11 +145,12 @@ def inputs_form(date, base):
                                       step=0.5, key=f"td_invage{k}", placeholder="required")
             st.caption("Carry-over from yesterday · click **+** to add a row, type the item, enter the kg and untick "
                        "anything past its shelf life (it won't be counted as usable)")
-            carry_df = pd.DataFrame(core.carry_over_rows(base) or [], columns=["item", "kg", "within_shelf_life"])
+            prefill = st.session_state.get(f"td_prefill_{date}")
+            carry_df = pd.DataFrame(prefill or core.carry_over_rows(base) or [], columns=["item", "kg", "within_shelf_life"])
             carry_df["item"] = carry_df["item"].astype("object")
             carry_df["kg"] = pd.to_numeric(carry_df["kg"], errors="coerce").astype("float64")
             carry_df["within_shelf_life"] = carry_df["within_shelf_life"].fillna(True).astype("bool")
-            carry_ed = st.data_editor(carry_df, num_rows="dynamic", use_container_width=True, key=f"td_carry{k}",
+            carry_ed = st.data_editor(carry_df, num_rows="dynamic", use_container_width=True, key=f"td_carry{k}_{st.session_state.get(f'td_prefill_v_{date}', 0)}",
                                       column_config={"item": item_col,
                                                      "kg": st.column_config.NumberColumn("kg", min_value=0.0, max_value=500.0,
                                                                                          step=0.5, required=True),
@@ -344,6 +346,21 @@ def page():
             base = core.blank_inputs(date)
         st.session_state[f"td_base_{date}"] = base
     base = st.session_state.get(f"td_inputs_{date}") or st.session_state[f"td_base_{date}"]
+    prev = next((d for d in sorted(S.days(), key=lambda d: d["service_date"], reverse=True)
+                 if d["service_date"] < date and (d.get("inputs") or {}).get("carry_over_items")), None)
+    if prev:
+        names = list(dict.fromkeys(r["item"] for r in prev["inputs"]["carry_over_items"]))
+        c = st.columns([1.3, 2])
+        if c[0].button(f"↺ Start carry-over from {prev['service_date']}'s items", use_container_width=True,
+                       key=f"td_prefill_btn_{date}",
+                       help="Fills the carry-over table with the same items as last time, with the kg left blank "
+                            "so you only weigh and enter today's amounts. Rows left blank aren't counted."):
+            st.session_state[f"td_prefill_{date}"] = [{"item": r["item"], "group": r["group"], "kg": None,
+                                                       "within_shelf_life": True}
+                                                      for r in {r["item"]: r for r in prev["inputs"]["carry_over_items"]}.values()]
+            st.session_state[f"td_prefill_v_{date}"] = st.session_state.get(f"td_prefill_v_{date}", 0) + 1
+            st.rerun()
+        c[1].caption(f"Last recorded: {', '.join(names[:6])}{'…' if len(names) > 6 else ''}")
     submitted = inputs_form(date, base)
     if submitted is not None:
         st.session_state[f"td_inputs_{date}"] = submitted
