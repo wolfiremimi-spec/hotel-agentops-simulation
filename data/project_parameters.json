@@ -1,0 +1,554 @@
+{
+  "_about": "Extracted from the case-study workbook. Every value carries its source cell. Values marked source 'Case study' come from the 17-page case study, not a cell.",
+  "workbook": "Hotel_Food_Waste_Model.xlsx",
+  "readiness_thresholds": {
+    "recommendation_acceptance": {
+      "value": 0.8,
+      "source": "Readiness Gate!C2",
+      "test": ">="
+    },
+    "escalation_recall": {
+      "value": 0.9,
+      "source": "Readiness Gate!C3",
+      "test": ">="
+    },
+    "escalation_precision": {
+      "value": 0.85,
+      "source": "Readiness Gate!C4",
+      "test": ">="
+    },
+    "tool_reliability": {
+      "value": 0.99,
+      "source": "Readiness Gate!C5",
+      "test": ">="
+    },
+    "human_override_rate": {
+      "value": 0.15,
+      "source": "Readiness Gate!C6",
+      "test": "<="
+    },
+    "forecast_mape": {
+      "value": 0.1,
+      "source": "Readiness Gate!C7",
+      "test": "<="
+    },
+    "guest_fb_score": {
+      "value": 4.6,
+      "source": "Readiness Gate!C8",
+      "test": ">="
+    },
+    "policy_violations": {
+      "value": 0,
+      "source": "Readiness Gate!C9",
+      "test": "=="
+    }
+  },
+  "latest_gate_evidence": {
+    "week": {
+      "value": "A8",
+      "source": "Readiness Gate!A19"
+    },
+    "recommendation_acceptance": {
+      "value": 0.882758620689655,
+      "source": "Readiness Gate!B19"
+    },
+    "escalation_recall": {
+      "value": 0.954545454545455,
+      "source": "Readiness Gate!C19"
+    },
+    "escalation_precision": {
+      "value": 0.91304347826087,
+      "source": "Readiness Gate!D19"
+    },
+    "tool_reliability": {
+      "value": 0.994202898550725,
+      "source": "Readiness Gate!E19"
+    },
+    "human_override_rate": {
+      "value": 0.0896551724137931,
+      "source": "Readiness Gate!F19"
+    },
+    "forecast_mape": {
+      "value": 0.072,
+      "source": "Readiness Gate!G19"
+    },
+    "guest_fb_score": {
+      "value": 4.68,
+      "source": "Readiness Gate!H19"
+    },
+    "policy_violations": {
+      "value": 0,
+      "source": "Readiness Gate!I19"
+    },
+    "gate": {
+      "value": "PASS",
+      "source": "Readiness Gate!K19"
+    }
+  },
+  "gate_evidence_by_week": {
+    "A1": {
+      "recommendation_acceptance": {
+        "value": 0.61,
+        "source": "Readiness Gate!B12"
+      },
+      "escalation_recall": {
+        "value": 0.740740740740741,
+        "source": "Readiness Gate!C12"
+      },
+      "escalation_precision": {
+        "value": 0.740740740740741,
+        "source": "Readiness Gate!D12"
+      },
+      "tool_reliability": {
+        "value": 0.967307692307692,
+        "source": "Readiness Gate!E12"
+      },
+      "human_override_rate": {
+        "value": 0.29,
+        "source": "Readiness Gate!F12"
+      },
+      "forecast_mape": {
+        "value": 0.149,
+        "source": "Readiness Gate!G12"
+      },
+      "guest_fb_score": {
+        "value": 4.62,
+        "source": "Readiness Gate!H12"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I12"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K12"
+      },
+      "first_blocker": {
+        "value": "Acceptance",
+        "source": "Readiness Gate!L12"
+      }
+    },
+    "A2": {
+      "recommendation_acceptance": {
+        "value": 0.666666666666667,
+        "source": "Readiness Gate!B13"
+      },
+      "escalation_recall": {
+        "value": 0.777777777777778,
+        "source": "Readiness Gate!C13"
+      },
+      "escalation_precision": {
+        "value": 0.777777777777778,
+        "source": "Readiness Gate!D13"
+      },
+      "tool_reliability": {
+        "value": 0.974311926605505,
+        "source": "Readiness Gate!E13"
+      },
+      "human_override_rate": {
+        "value": 0.25,
+        "source": "Readiness Gate!F13"
+      },
+      "forecast_mape": {
+        "value": 0.132,
+        "source": "Readiness Gate!G13"
+      },
+      "guest_fb_score": {
+        "value": 4.64,
+        "source": "Readiness Gate!H13"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I13"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K13"
+      },
+      "first_blocker": {
+        "value": "Acceptance",
+        "source": "Readiness Gate!L13"
+      }
+    },
+    "A3": {
+      "recommendation_acceptance": {
+        "value": 0.721739130434783,
+        "source": "Readiness Gate!B14"
+      },
+      "escalation_recall": {
+        "value": 0.821428571428571,
+        "source": "Readiness Gate!C14"
+      },
+      "escalation_precision": {
+        "value": 0.821428571428571,
+        "source": "Readiness Gate!D14"
+      },
+      "tool_reliability": {
+        "value": 0.980701754385965,
+        "source": "Readiness Gate!E14"
+      },
+      "human_override_rate": {
+        "value": 0.208695652173913,
+        "source": "Readiness Gate!F14"
+      },
+      "forecast_mape": {
+        "value": 0.117,
+        "source": "Readiness Gate!G14"
+      },
+      "guest_fb_score": {
+        "value": 4.63,
+        "source": "Readiness Gate!H14"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I14"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K14"
+      },
+      "first_blocker": {
+        "value": "Acceptance",
+        "source": "Readiness Gate!L14"
+      }
+    },
+    "A4": {
+      "recommendation_acceptance": {
+        "value": 0.760330578512397,
+        "source": "Readiness Gate!B15"
+      },
+      "escalation_recall": {
+        "value": 0.851851851851852,
+        "source": "Readiness Gate!C15"
+      },
+      "escalation_precision": {
+        "value": 0.851851851851852,
+        "source": "Readiness Gate!D15"
+      },
+      "tool_reliability": {
+        "value": 0.984873949579832,
+        "source": "Readiness Gate!E15"
+      },
+      "human_override_rate": {
+        "value": 0.181818181818182,
+        "source": "Readiness Gate!F15"
+      },
+      "forecast_mape": {
+        "value": 0.104,
+        "source": "Readiness Gate!G15"
+      },
+      "guest_fb_score": {
+        "value": 4.65,
+        "source": "Readiness Gate!H15"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I15"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K15"
+      },
+      "first_blocker": {
+        "value": "Acceptance",
+        "source": "Readiness Gate!L15"
+      }
+    },
+    "A5": {
+      "recommendation_acceptance": {
+        "value": 0.796875,
+        "source": "Readiness Gate!B16"
+      },
+      "escalation_recall": {
+        "value": 0.884615384615385,
+        "source": "Readiness Gate!C16"
+      },
+      "escalation_precision": {
+        "value": 0.851851851851852,
+        "source": "Readiness Gate!D16"
+      },
+      "tool_reliability": {
+        "value": 0.987096774193548,
+        "source": "Readiness Gate!E16"
+      },
+      "human_override_rate": {
+        "value": 0.1484375,
+        "source": "Readiness Gate!F16"
+      },
+      "forecast_mape": {
+        "value": 0.092,
+        "source": "Readiness Gate!G16"
+      },
+      "guest_fb_score": {
+        "value": 4.66,
+        "source": "Readiness Gate!H16"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I16"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K16"
+      },
+      "first_blocker": {
+        "value": "Acceptance",
+        "source": "Readiness Gate!L16"
+      }
+    },
+    "A6": {
+      "recommendation_acceptance": {
+        "value": 0.833333333333333,
+        "source": "Readiness Gate!B17"
+      },
+      "escalation_recall": {
+        "value": 0.92,
+        "source": "Readiness Gate!C17"
+      },
+      "escalation_precision": {
+        "value": 0.884615384615385,
+        "source": "Readiness Gate!D17"
+      },
+      "tool_reliability": {
+        "value": 0.9890625,
+        "source": "Readiness Gate!E17"
+      },
+      "human_override_rate": {
+        "value": 0.128787878787879,
+        "source": "Readiness Gate!F17"
+      },
+      "forecast_mape": {
+        "value": 0.085,
+        "source": "Readiness Gate!G17"
+      },
+      "guest_fb_score": {
+        "value": 4.65,
+        "source": "Readiness Gate!H17"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I17"
+      },
+      "gate": {
+        "value": "HOLD",
+        "source": "Readiness Gate!K17"
+      },
+      "first_blocker": {
+        "value": "Tool reliability",
+        "source": "Readiness Gate!L17"
+      }
+    },
+    "A7": {
+      "recommendation_acceptance": {
+        "value": 0.863309352517986,
+        "source": "Readiness Gate!B18"
+      },
+      "escalation_recall": {
+        "value": 0.925925925925926,
+        "source": "Readiness Gate!C18"
+      },
+      "escalation_precision": {
+        "value": 0.925925925925926,
+        "source": "Readiness Gate!D18"
+      },
+      "tool_reliability": {
+        "value": 0.990977443609023,
+        "source": "Readiness Gate!E18"
+      },
+      "human_override_rate": {
+        "value": 0.107913669064748,
+        "source": "Readiness Gate!F18"
+      },
+      "forecast_mape": {
+        "value": 0.078,
+        "source": "Readiness Gate!G18"
+      },
+      "guest_fb_score": {
+        "value": 4.67,
+        "source": "Readiness Gate!H18"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I18"
+      },
+      "gate": {
+        "value": "PASS",
+        "source": "Readiness Gate!K18"
+      },
+      "first_blocker": {
+        "value": "\u2014",
+        "source": "Readiness Gate!L18"
+      }
+    },
+    "A8": {
+      "recommendation_acceptance": {
+        "value": 0.882758620689655,
+        "source": "Readiness Gate!B19"
+      },
+      "escalation_recall": {
+        "value": 0.954545454545455,
+        "source": "Readiness Gate!C19"
+      },
+      "escalation_precision": {
+        "value": 0.91304347826087,
+        "source": "Readiness Gate!D19"
+      },
+      "tool_reliability": {
+        "value": 0.994202898550725,
+        "source": "Readiness Gate!E19"
+      },
+      "human_override_rate": {
+        "value": 0.0896551724137931,
+        "source": "Readiness Gate!F19"
+      },
+      "forecast_mape": {
+        "value": 0.072,
+        "source": "Readiness Gate!G19"
+      },
+      "guest_fb_score": {
+        "value": 4.68,
+        "source": "Readiness Gate!H19"
+      },
+      "policy_violations": {
+        "value": 0,
+        "source": "Readiness Gate!I19"
+      },
+      "gate": {
+        "value": "PASS",
+        "source": "Readiness Gate!K19"
+      },
+      "first_blocker": {
+        "value": "\u2014",
+        "source": "Readiness Gate!L19"
+      }
+    }
+  },
+  "override_categories": [
+    {
+      "reason": "Missing context",
+      "pilot_count": 38,
+      "system_improvement": "Add banquet and group-block feed to context layer",
+      "source": "Overrides!A2:D2"
+    },
+    {
+      "reason": "Special event",
+      "pilot_count": 31,
+      "system_improvement": "Integrate events calendar; lower autonomy on event days",
+      "source": "Overrides!A3:D3"
+    },
+    {
+      "reason": "Forecast disagreement",
+      "pilot_count": 29,
+      "system_improvement": "Retrain demand model on chef-adjusted actuals",
+      "source": "Overrides!A4:D4"
+    },
+    {
+      "reason": "Guest-experience concern",
+      "pilot_count": 24,
+      "system_improvement": "Add minimum-display guardrail for signature items",
+      "source": "Overrides!A5:D5"
+    },
+    {
+      "reason": "Inventory constraint",
+      "pilot_count": 19,
+      "system_improvement": "Refresh inventory feed hourly; block on stale data",
+      "source": "Overrides!A6:D6"
+    },
+    {
+      "reason": "Policy requirement",
+      "pilot_count": 14,
+      "system_improvement": "Encode the policy as a hard constraint",
+      "source": "Overrides!A7:D7"
+    },
+    {
+      "reason": "Agent error",
+      "pilot_count": 11,
+      "system_improvement": "Log as defect; add a regression case to the evaluation suite",
+      "source": "Overrides!A8:D8"
+    }
+  ],
+  "drift_rule": {
+    "multiplier": 1.5,
+    "trailing_weeks": 3,
+    "source": "Overrides!A18 (rule text)"
+  },
+  "override_rate_history": [
+    {
+      "week": "A1",
+      "value": 0.29,
+      "source": "AgentOps!K2"
+    },
+    {
+      "week": "A2",
+      "value": 0.25,
+      "source": "AgentOps!K3"
+    },
+    {
+      "week": "A3",
+      "value": 0.208695652173913,
+      "source": "AgentOps!K4"
+    },
+    {
+      "week": "A4",
+      "value": 0.181818181818182,
+      "source": "AgentOps!K5"
+    },
+    {
+      "week": "A5",
+      "value": 0.1484375,
+      "source": "AgentOps!K6"
+    },
+    {
+      "week": "A6",
+      "value": 0.128787878787879,
+      "source": "AgentOps!K7"
+    },
+    {
+      "week": "A7",
+      "value": 0.107913669064748,
+      "source": "AgentOps!K8"
+    },
+    {
+      "week": "A8",
+      "value": 0.0896551724137931,
+      "source": "AgentOps!K9"
+    }
+  ],
+  "guest_score_floor": {
+    "value": 4.6,
+    "source": "Readiness Gate!C8"
+  },
+  "waste_cost_per_kg": {
+    "value": 15.12,
+    "source": "Waste Cost!G3 / (Weekly Waste!F2 x 52)"
+  },
+  "manager_loaded_hourly_cost": {
+    "value": 45,
+    "source": "Economics!B19"
+  },
+  "hotel_rooms": {
+    "value": 250,
+    "source": "Case study p.9 (250 rooms)"
+  },
+  "context_completeness_threshold": {
+    "value": 0.95,
+    "source": "Case study p.8 (>= 95% for delegated execution)"
+  },
+  "delegated_prep_range": {
+    "value": 0.1,
+    "source": "Case study p.7 (small prep adjustment <= +/-10%)"
+  },
+  "required_context_sources": {
+    "value": [
+      "pms_occupancy",
+      "reservations",
+      "pos_history",
+      "inventory",
+      "shelf_life",
+      "waste_history",
+      "event_schedule",
+      "guest_experience_signal"
+    ],
+    "source": "Case study p.8 (8 required sources)"
+  }
+}

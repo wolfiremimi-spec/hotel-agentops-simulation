@@ -1,0 +1,2 @@
+Decision ID,Run,Predicted Covers,Actual Covers,Forecast APE,Actual Production kg,Actual Consumption kg,Actual Waste kg,Overproduction kg,Plate Waste kg,Waste Source,Waste per Cover,Guest F&B Score,Stockouts,Operational Exception,Plan Used,Counterfactual Waste kg (standing plan)
+D-0418,day1,420,409,0.0269,165.0,152.6,23.3,18.4,4.9,pastry_bread 2.7 kg; hot_line 7.6 kg; fruit_yogurt 5.7 kg; cold_cuts_cheese 2.4 kg,0.057,4.67,None,None,AI plan (final action),47.3

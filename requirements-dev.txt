@@ -1,0 +1,3 @@
+# Runtime needs only the Python standard library.
+# openpyxl is used only by tools/extract_parameters.py and one test.
+openpyxl>=3.1

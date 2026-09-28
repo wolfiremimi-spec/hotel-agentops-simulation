@@ -1,0 +1,95 @@
+{
+  "_label": "MODELED SIMULATION DATA. Built to be consistent with the case study's 250-room modeled hotel and decision trace D-0418 (231 of 250 rooms, Saturday breakfast). Not data from a real hotel.",
+  "scenario_id": "SIM-DAY-01",
+  "service": "Saturday breakfast",
+  "service_date": "Simulation Day 1 (Saturday)",
+  "run_clock": "08:02",
+  "first_decision_number": 418,
+
+  "new_modeled_assumptions": [
+    {"id": "NA-01", "assumption": "Expected covers = occupied rooms x trailing 4-Saturday covers per occupied room.", "why": "Case study gives 231 rooms and 420 covers but no forecasting method."},
+    {"id": "NA-02", "assumption": "Forecast confidence = 1 - trailing 7-service MAPE.", "why": "Case study uses confidence qualitatively only."},
+    {"id": "NA-03", "assumption": "Low-confidence cutoff = 80%. Below it the system may only recommend.", "why": "Case study: 'Low confidence -> Recommend only' with no number."},
+    {"id": "NA-04", "assumption": "Service buffer 8% above expected consumption; 3% for chronic-overproduction groups; 12% for groups with repeated stockouts.", "why": "Needed to size production; not in the case study."},
+    {"id": "NA-05", "assumption": "Chronic overproduction = leftover above 20% in at least 3 of the last 4 same-day services.", "why": "Waste Agent needs a detection rule."},
+    {"id": "NA-06", "assumption": "Production-change risk: |change| <= 10% LOW (delegable range, case study p.7), <= 25% MEDIUM, > 25% HIGH. Banquet guarantee changes are always HIGH.", "why": "Case study defines the 10% range and the tiers, not the MEDIUM/HIGH boundary."},
+    {"id": "NA-07", "assumption": "Inventory feed is stale when older than 12 hours.", "why": "Case study: 'Inventory feed stale -> Block execution' with no age limit."},
+    {"id": "NA-08", "assumption": "Abnormal event demand = event covers changed by more than 25% versus guarantee.", "why": "Case study: 'Abnormal event demand -> Human review' with no number."},
+    {"id": "NA-09", "assumption": "Agents conflict when Demand points up (> +5%) and the production draft points down (< -5%), or the reverse. Resolved only if Waste Agent evidence explains it; otherwise escalate.", "why": "Mirrors the case study's pastry conflict example (p.4)."},
+    {"id": "NA-10", "assumption": "Guest F&B score for the day = recent baseline minus 0.05 for each item group that stocks out.", "why": "Links availability to the guest guardrail; not in the case study."},
+    {"id": "NA-11", "assumption": "Policy: no item group may be planned below 100% of expected consumption (no planned stockouts).", "why": "Hard constraint protecting the guest-experience floor."},
+    {"id": "NA-12", "assumption": "Policy: carry-over stock is usable only inside its shelf life.", "why": "Food-safety hard constraint."},
+    {"id": "NA-13", "assumption": "Authority levels: gate PASS -> DELEGATED (low-risk reversible actions execute), gate HOLD -> SUPERVISED (low-risk actions need approval), guest-guardrail or policy breach -> BOUNDED (recommend only).", "why": "Maps the case study's authority ladder (p.14) to executable rules."},
+    {"id": "NA-14", "assumption": "Simulation-day rates need at least 20 decisions before they can change the gate; below that they are reported with their sample size only.", "why": "Rates from a handful of decisions are not evidence."},
+    {"id": "NA-15", "assumption": "Each context source read and each system write is one tool call.", "why": "Needed to measure tool reliability per decision."}
+  ],
+
+  "hotel_data": {
+    "pms_occupancy": {"as_of_hours": 1, "rooms": 250, "occupied_rooms": 231, "in_house_guests": 402},
+    "reservations": {"as_of_hours": 1, "breakfast_inclusive_rooms": 172, "outside_breakfast_bookings": 8},
+    "pos_history": {
+      "as_of_hours": 2,
+      "last_4_saturdays": [
+        {"occupied_rooms": 206, "covers": 375},
+        {"occupied_rooms": 214, "covers": 389},
+        {"occupied_rooms": 198, "covers": 360},
+        {"occupied_rooms": 221, "covers": 402}
+      ],
+      "last_7_services_forecast_ape": [0.081, 0.066, 0.074, 0.059, 0.088, 0.069, 0.071],
+      "consumption_kg_per_cover": {"pastry_bread": 0.080, "hot_line": 0.150, "fruit_yogurt": 0.100, "cold_cuts_cheese": 0.045}
+    },
+    "inventory": {
+      "as_of_hours": 3,
+      "carry_over_kg": {"pastry_bread": 0.0, "hot_line": 0.0, "fruit_yogurt": 4.0, "cold_cuts_cheese": 2.0},
+      "near_expiry": [{"item": "Greek yogurt", "group": "fruit_yogurt", "kg": 6.0, "expires_in_days": 1, "alternative_outlet": "Lobby cafe (lunch)"}],
+      "open_orders": [{"order_id": "PO-7731", "item": "Pastry & bread", "group": "pastry_bread", "kg": 60, "delivery": "Monday 05:00", "supplier": "Maison Boulangerie"}]
+    },
+    "shelf_life": {"as_of_hours": 3, "carry_over_within_shelf_life": {"pastry_bread": true, "hot_line": true, "fruit_yogurt": true, "cold_cuts_cheese": true}},
+    "waste_history": {
+      "as_of_hours": 20,
+      "leftover_rate_last_4_saturdays": {
+        "pastry_bread": [0.29, 0.33, 0.31, 0.27],
+        "hot_line": [0.04, 0.00, 0.05, 0.00],
+        "fruit_yogurt": [0.18, 0.16, 0.21, 0.17],
+        "cold_cuts_cheese": [0.14, 0.12, 0.15, 0.11]
+      },
+      "stockouts_last_4_saturdays": {"pastry_bread": 0, "hot_line": 2, "fruit_yogurt": 0, "cold_cuts_cheese": 0}
+    },
+    "event_schedule": {
+      "as_of_hours": 2,
+      "events": [{"event_id": "EV-0927", "name": "Sunday wedding brunch", "date": "Simulation Day 2", "guaranteed_covers": 140, "revised_covers": 95, "planned_production_kg": 63.0}]
+    },
+    "guest_experience_signal": {"as_of_hours": 12, "recent_guest_fb_score": 4.67, "open_fb_complaints": 0}
+  },
+
+  "kitchen_standing_plan_kg": {"_label": "The kitchen's current Saturday breakfast par before any AI input (MODELED).",
+    "pastry_bread": 52.0, "hot_line": 62.0, "fruit_yogurt": 52.0, "cold_cuts_cheese": 22.0},
+
+  "observed_outcome": {
+    "_label": "What 'actually happened' in the simulation (MODELED). The system never sees this before deciding.",
+    "actual_covers": 409,
+    "actual_consumption_kg_per_cover": {"pastry_bread": 0.078, "hot_line": 0.154, "fruit_yogurt": 0.097, "cold_cuts_cheese": 0.044},
+    "plate_waste_kg_per_cover": 0.012,
+    "operational_exception": "None"
+  },
+
+  "ground_truth_escalation_required": {
+    "_label": "Analyst labels used to score escalation recall and precision (MODELED).",
+    "production_adjustment": true,
+    "flag_overproduction": false,
+    "inventory_transfer": false,
+    "purchasing_adjustment": true,
+    "banquet_production_change": true,
+    "abstain_missing_context": true,
+    "guardrail_escalation": true,
+    "override_drift_investigation": true
+  },
+
+  "scripted_manager_choices": {
+    "_label": "Used only with --auto so the demo is reproducible. In interactive mode a person decides.",
+    "approver": "F&B Manager (demo)",
+    "production_adjustment": {"choice": "approve"},
+    "purchasing_adjustment": {"choice": "modify", "new_change_pct": -15, "reason": "Special event", "note": "Group check-in Monday; keep more pastry."},
+    "banquet_production_change": {"choice": "approve"}
+  }
+}

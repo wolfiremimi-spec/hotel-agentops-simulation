@@ -1,0 +1,221 @@
+HOTEL AGENTOPS SIMULATION · Agentic AI for Sustainable Hospitality (Amelia Wolfire)
+MODELED SIMULATION · no real hotel systems connected · results are not realized performance
+
+① READINESS GATE (evidence week A8): PASS · first blocker: — → autonomy level DELEGATED
+   Gate PASS → low-risk reversible actions may be delegated
+
+② CONTEXT · 08:02 · 8/8 sources · completeness 100.0%
+   ✓ pms_occupancy            ok
+   ✓ reservations             ok
+   ✓ pos_history              ok
+   ✓ inventory                ok
+   ✓ shelf_life               ok
+   ✓ waste_history            ok
+   ✓ event_schedule           ok
+   ✓ guest_experience_signal  ok
+
+③ SPECIALIST AGENTS
+   Demand     Expected covers up 12% vs last Saturday (375 → 420) · confidence 92.7% (1 − trailing MAPE 7.3%)
+   Inventory  usable carry-over {'pastry_bread': 0.0, 'hot_line': 0.0, 'fruit_yogurt': 4.0, 'cold_cuts_cheese': 2.0} · Near-expiry surplus: 6.0 kg Greek yogurt
+   Waste      pastry_bread: leftover above 20% in 4 of last 4 Saturdays (avg 30%); hot_line: stocked out in 2 of last 4 Saturdays
+   Production draft 188 → 165 kg (-12.2%) · Pastry & bread -34%, Hot line +14%, Fruit & yogurt -20%, Cold cuts & cheese -16%
+
+④ ORCHESTRATOR · 5 recommendations · conflict check: Demand +12% but production draft -12%. Resolved: Waste Agent shows chronic overproduction in Pastry & bread, so the plan raises what guests eat and cuts what they leave.
+
+⑤ GOVERNANCE · D-0418 · Reduce breakfast production by 12.2% (188 → 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16%
+   Context completeness 100.0% (threshold 95%)
+   Policy: all hard constraints pass
+   Risk MEDIUM · reversibility HIGH · confidence 92.7%
+   Decision rights for MEDIUM risk → Agent recommends · manager approves
+   High confidence (93%) does not grant authority for MEDIUM risk
+   Agent conflict: Demand +12% but production draft -12%. Resolved: Waste Agent shows chronic overproduction in Pastry & bread, so the plan raises what guests eat and cuts what they leave.
+   Current autonomy level: DELEGATED
+   FINAL: Agent recommends · manager approves
+
+┌────────────────────────────────────────────────────────────────────────────┐
+  APPROVAL REQUIRED · D-0418 · Saturday breakfast
+└────────────────────────────────────────────────────────────────────────────┘
+AI RECOMMENDATION
+  Reduce breakfast production by 12.2% (188 → 165 kg): Hot line +14%;
+  Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16%
+WHY THE AI RECOMMENDED IT
+  Expected covers up 12% vs last Saturday (375 → 420). Historical waste
+  shows chronic overproduction in Pastry & bread (avg leftover 30%). Hot
+  line stocked out recently, so it is raised.
+CONFIDENCE  92.7%      RISK  MEDIUM      REVERSIBILITY  HIGH
+AUTHORITY   Agent recommends · manager approves
+RELEVANT DATA
+  Expected covers 420 · context 100% complete
+  pastry_bread      need  33.6 kg · plan  34.6 kg (standing   52, -34%) · buffer 3%
+  hot_line          need  63.0 kg · plan  70.6 kg (standing   62, +14%) · buffer 12%
+  fruit_yogurt      need  42.0 kg · plan  41.4 kg (standing   52, -20%) · buffer 8%
+  cold_cuts_cheese  need  18.9 kg · plan  18.4 kg (standing   22, -16%) · buffer 8%
+EXPECTED IMPACT
+  About 23 kg less food prepared, with every item group still covered
+  above expected consumption.
+
+  [scripted demo] F&B Manager (demo) chose: APPROVE
+⑥ ACTION · Reduce breakfast production by 12.2% (188 → 165 kg): Hot line +14%; Pastry & bread -34%; Fruit & yogurt -20%; Cold cuts & cheese -16% → EXECUTED
+⑦ OUTCOME · 409 actual covers vs 420 predicted (2.7% error) · waste 23.3 kg vs 47.3 kg on the standing plan · No stockouts; score 4.67
+
+⑤ GOVERNANCE · D-0419 · Flag chronic overproduction: Pastry & bread
+   Context completeness 100.0% (threshold 95%)
+   Policy: all hard constraints pass
+   Risk LOW · reversibility HIGH · confidence 100.0%
+   Decision rights for LOW risk → Agent executes (delegated)
+   Current autonomy level: DELEGATED
+   FINAL: Agent executes (delegated)
+⑥ ACTION · Flag chronic overproduction: Pastry & bread (delegated) → EXECUTED
+⑦ OUTCOME · Flag posted for the chef; no direct impact.
+
+⑤ GOVERNANCE · D-0420 · Transfer 6 kg Greek yogurt to Lobby cafe (lunch)
+   Context completeness 100.0% (threshold 95%)
+   Policy: all hard constraints pass
+   Risk LOW · reversibility MODERATE · confidence 100.0%
+   Decision rights for LOW risk → Agent executes (delegated)
+   Current autonomy level: DELEGATED
+   FINAL: Agent executes (delegated)
+⑥ ACTION · Transfer 6 kg Greek yogurt to Lobby cafe (lunch) (delegated) → EXECUTED
+⑦ OUTCOME · 6 kg moved before expiry (assumes the receiving outlet uses it).
+
+⑤ GOVERNANCE · D-0421 · Reduce PO-7731 (Pastry & bread) by 30%: 60 → 42 kg
+   Context completeness 100.0% (threshold 95%)
+   Policy: all hard constraints pass
+   Risk MEDIUM · reversibility LOW · confidence 100.0%
+   Decision rights for MEDIUM risk → Agent recommends · manager approves
+   No agent holds write permission for 'purchasing' → a human must act
+   High confidence (100%) does not grant authority for MEDIUM risk
+   Current autonomy level: DELEGATED
+   FINAL: Agent recommends · manager approves
+
+┌────────────────────────────────────────────────────────────────────────────┐
+  APPROVAL REQUIRED · D-0421 · Saturday breakfast
+└────────────────────────────────────────────────────────────────────────────┘
+AI RECOMMENDATION
+  Reduce PO-7731 (Pastry & bread) by 30%: 60 → 42 kg
+WHY THE AI RECOMMENDED IT
+  Average leftover for Pastry & bread is 30% across the last 4 Saturdays.
+CONFIDENCE  100.0%      RISK  MEDIUM      REVERSIBILITY  LOW
+AUTHORITY   Agent recommends · manager approves
+EXPECTED IMPACT
+  About 18 kg less pastry & bread bought per order.
+
+  [scripted demo] F&B Manager (demo) chose: MODIFY to -15% · reason: Special event
+⑥ ACTION · Modified by manager to -15% → EXECUTED
+⑦ OUTCOME · PENDING: impact is measured when the order is delivered / the event is served.
+
+⑤ GOVERNANCE · D-0422 · Resize Sunday wedding brunch production 63.0 → 42.8 kg (140 → 95 covers)
+   Context completeness 100.0% (threshold 95%)
+   Policy: all hard constraints pass
+   Risk HIGH · reversibility LOW · confidence 92.7%
+   Decision rights for HIGH risk → Human decision · mandatory escalation
+   High confidence (93%) does not grant authority for HIGH risk
+   Abnormal event demand → HUMAN REVIEW
+   Current autonomy level: DELEGATED
+   FINAL: Human decision · mandatory escalation
+
+┌────────────────────────────────────────────────────────────────────────────┐
+  MANDATORY ESCALATION · HUMAN DECISION · D-0422 · Saturday breakfast
+└────────────────────────────────────────────────────────────────────────────┘
+AI RECOMMENDATION
+  Resize Sunday wedding brunch production 63.0 → 42.8 kg (140 → 95 covers)
+WHY THE AI RECOMMENDED IT
+  Guarantee changed -32%; abnormal event demand.
+CONFIDENCE  92.7%      RISK  HIGH      REVERSIBILITY  LOW
+AUTHORITY   Human decision · mandatory escalation
+EXPECTED IMPACT
+  About 20 kg less banquet food prepared.
+
+  [scripted demo] F&B Manager (demo) chose: APPROVE
+⑥ ACTION · Resize Sunday wedding brunch production 63.0 → 42.8 kg (140 → 95 covers) → EXECUTED
+⑦ OUTCOME · PENDING: impact is measured when the order is delivered / the event is served.
+
+⑧ AGENTOPS + ⑨ READINESS GATE
+   ✓ Acceptance           88.3%  >= 80%
+   ✓ Recall               95.5%  >= 90%
+   ✓ Precision            91.3%  >= 85%
+   ✓ Tool reliability     99.4%  >= 99%
+   ✓ Override rate         9.0%  <= 15%
+   ✓ Forecast MAPE         7.2%  <= 10%
+   ✓ Guest score           4.68  >= 4.60
+   ✓ Policy violations        0  == 0
+   RESULT: PASS · first blocker: — · failed checks: 0
+══════════════════════════════════════════════════════════════════════════════
+ OPERATIONAL CONTROL VIEW · Saturday breakfast · SIM-DAY-01 · MODELED SIMULATION
+══════════════════════════════════════════════════════════════════════════════
+ TODAY'S AI ACTIVITY
+   Recommendations   5   Executed   5   Awaiting approval   0
+   Escalated         3   Abstained   0   Overridden   1   Blocked   0
+ SYSTEM HEALTH
+   Context completeness  100.0%
+   Tool / API reliability 100.0%  (n=17, below min sample)
+   Forecast (this service) APE 2.7% · 420 predicted vs 409 actual
+   Execution failures    0.0%  (n=5, below min sample)
+   Policy violations     0 executed · 0 blocked before execution
+ BUSINESS HEALTH
+   Food waste            23.3 kg (standing plan would have been 47.3 kg)
+   Waste per cover       0.057 kg
+   Overproduction        18.4 kg
+   Guest F&B (modeled)   4.67 · no stockouts
+ GOVERNANCE
+   Current authority level  DELEGATED
+   Readiness gate           PASS · first blocker: —
+   Pending human decisions  0
+ DAY RATES (accumulate toward the gate; one day is not enough evidence)
+   Acceptance 66.7%  (n=3, below min sample)
+   Override   33.3%  (n=3, below min sample)
+   Esc. recall 100.0%  (n=3, below min sample)   precision 100.0%  (n=3, below min sample)
+══════════════════════════════════════════════════════════════════════════════
+
+Outputs: /home/claude/hotel-agentops-simulation/runs/day1  (decision_log.csv · outcomes.csv · override_learning.csv · traces/ · agentops_summary.json)
+
+══ FAILURE TEST 1 · MISSING CRITICAL CONTEXT (PMS occupancy removed) ══
+
+   CONTEXT CHECK → FAIL (87.5%) → ABSTAIN → ESCALATE → LOG EVENT D-0418
+   Executions attempted: 0 · Result: PASS — the system refused to act
+
+══ FAILURE TEST 2 · TOOL RELIABILITY < 99% (week A6 evidence from the workbook) ══
+   ✓ Acceptance           83.3%  >= 80%
+   ✓ Recall               92.0%  >= 90%
+   ✓ Precision            88.5%  >= 85%
+   ✗ Tool reliability     98.9%  >= 99%
+   ✓ Override rate        12.9%  <= 15%
+   ✓ Forecast MAPE         8.5%  <= 10%
+   ✓ Guest score           4.65  >= 4.60
+   ✓ Policy violations        0  == 0
+   RESULT: HOLD · first blocker: Tool reliability · failed checks: 1
+
+   Every other mandatory metric passes: True · Gate: HOLD · Autonomy: SUPERVISED
+   Low-risk actions that were delegated at A8 now need approval: D-0419 flag_overproduction, D-0420 inventory_transfer
+   Result: PASS — one failed threshold holds autonomy (the A6 lesson)
+
+══ FAILURE TEST 3 · GUEST F&B SCORE < 4.60 ══
+   ✓ Acceptance           88.3%  >= 80%
+   ✓ Recall               95.5%  >= 90%
+   ✓ Precision            91.3%  >= 85%
+   ✓ Tool reliability     99.4%  >= 99%
+   ✓ Override rate         9.0%  <= 15%
+   ✓ Forecast MAPE         7.2%  <= 10%
+   ✗ Guest score           4.55  >= 4.60
+   ✓ Policy violations        0  == 0
+   RESULT: HOLD · first blocker: Guest score · failed checks: 1
+
+   FLAG → ESCALATE (D-0418) → REDUCE AUTONOMY (BOUNDED) → HUMAN REVIEW
+   Result: PASS — efficiency no longer outranks the guest guardrail
+
+══ FAILURE-MODE MATRIX · every row executed, not described ══
+   FAILURE                   DETECTION               SYSTEM RESPONSE
+   Missing PMS data          Context check           ABSTAINED · ESCALATED
+   POS API failure           Tool monitoring         FALLBACK + ESCALATE
+   Inventory feed stale      Timestamp check         BLOCKED (Blocked · escalate)
+   Abnormal event demand     Distribution shift      Human decision · mandatory escalation
+   Low confidence            Confidence threshold    Recommend only · no execution (conf 76.3%)
+   Conflicting agents        Orchestrator conflict   Human decision · mandatory escalation
+   High-risk action          Risk classification     Human decision · mandatory escalation
+   Policy violation          Hard constraint         BLOCKED (manager's −35% would plan a stockout)
+   Guest score deterioration Experience guardrail    Autonomy → BOUNDED (REDUCE AUTONOMY)
+   Rising overrides          AgentOps drift signal   Autonomy → BOUNDED (REDUCE + INVESTIGATE: 23% > 1.5 × 12.8%)
+
+Failure tests passed: 3/3
+
+Next: python -m hotel_agentops_sim trace D-0418

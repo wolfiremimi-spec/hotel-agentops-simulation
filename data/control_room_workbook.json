@@ -1,0 +1,655 @@
+{
+ "_about": "Extracted from Hotel_Food_Waste_Model.xlsx (modeled 12-week pilot scenario, not realized hotel performance).",
+ "weekly_waste": [
+  {
+   "week": "B1",
+   "phase": "Baseline",
+   "kg": 486
+  },
+  {
+   "week": "B2",
+   "phase": "Baseline",
+   "kg": 501
+  },
+  {
+   "week": "B3",
+   "phase": "Baseline",
+   "kg": 472
+  },
+  {
+   "week": "B4",
+   "phase": "Baseline",
+   "kg": 495
+  },
+  {
+   "week": "A1",
+   "phase": "Agent",
+   "kg": 443
+  },
+  {
+   "week": "A2",
+   "phase": "Agent",
+   "kg": 409
+  },
+  {
+   "week": "A3",
+   "phase": "Agent",
+   "kg": 381
+  },
+  {
+   "week": "A4",
+   "phase": "Agent",
+   "kg": 352
+  },
+  {
+   "week": "A5",
+   "phase": "Agent",
+   "kg": 329
+  },
+  {
+   "week": "A6",
+   "phase": "Agent",
+   "kg": 310
+  },
+  {
+   "week": "A7",
+   "phase": "Agent",
+   "kg": 296
+  },
+  {
+   "week": "A8",
+   "phase": "Agent",
+   "kg": 281
+  }
+ ],
+ "waste_by_source": [
+  {
+   "source": "Overproduction",
+   "baseline": 215,
+   "with_agents": 103,
+   "change": -0.52093023255814
+  },
+  {
+   "source": "Buffet Excess",
+   "baseline": 108,
+   "with_agents": 76,
+   "change": -0.296296296296296
+  },
+  {
+   "source": "Spoilage",
+   "baseline": 92,
+   "with_agents": 56,
+   "change": -0.391304347826087
+  },
+  {
+   "source": "Prep Waste",
+   "baseline": 44,
+   "with_agents": 39,
+   "change": -0.113636363636364
+  },
+  {
+   "source": "Plate Waste",
+   "baseline": 30,
+   "with_agents": 30,
+   "change": 0
+  },
+  {
+   "source": "Total",
+   "baseline": 489,
+   "with_agents": 304,
+   "change": -0.378323108384458
+  }
+ ],
+ "forecast_mape": [
+  {
+   "week": "B1",
+   "phase": "Baseline",
+   "mape": 0.182
+  },
+  {
+   "week": "B2",
+   "phase": "Baseline",
+   "mape": 0.171
+  },
+  {
+   "week": "B3",
+   "phase": "Baseline",
+   "mape": 0.19
+  },
+  {
+   "week": "B4",
+   "phase": "Baseline",
+   "mape": 0.168
+  },
+  {
+   "week": "A1",
+   "phase": "Agent",
+   "mape": 0.149
+  },
+  {
+   "week": "A2",
+   "phase": "Agent",
+   "mape": 0.132
+  },
+  {
+   "week": "A3",
+   "phase": "Agent",
+   "mape": 0.117
+  },
+  {
+   "week": "A4",
+   "phase": "Agent",
+   "mape": 0.104
+  },
+  {
+   "week": "A5",
+   "phase": "Agent",
+   "mape": 0.092
+  },
+  {
+   "week": "A6",
+   "phase": "Agent",
+   "mape": 0.085
+  },
+  {
+   "week": "A7",
+   "phase": "Agent",
+   "mape": 0.078
+  },
+  {
+   "week": "A8",
+   "phase": "Agent",
+   "mape": 0.072
+  }
+ ],
+ "guest": [
+  {
+   "week": "B1",
+   "phase": "Baseline",
+   "waste_per_cover": 0.164,
+   "guest_score": 4.61
+  },
+  {
+   "week": "B2",
+   "phase": "Baseline",
+   "waste_per_cover": 0.168,
+   "guest_score": 4.6
+  },
+  {
+   "week": "B3",
+   "phase": "Baseline",
+   "waste_per_cover": 0.158,
+   "guest_score": 4.63
+  },
+  {
+   "week": "B4",
+   "phase": "Baseline",
+   "waste_per_cover": 0.165,
+   "guest_score": 4.62
+  },
+  {
+   "week": "A1",
+   "phase": "Agent",
+   "waste_per_cover": 0.148,
+   "guest_score": 4.62
+  },
+  {
+   "week": "A2",
+   "phase": "Agent",
+   "waste_per_cover": 0.137,
+   "guest_score": 4.64
+  },
+  {
+   "week": "A3",
+   "phase": "Agent",
+   "waste_per_cover": 0.127,
+   "guest_score": 4.63
+  },
+  {
+   "week": "A4",
+   "phase": "Agent",
+   "waste_per_cover": 0.117,
+   "guest_score": 4.65
+  },
+  {
+   "week": "A5",
+   "phase": "Agent",
+   "waste_per_cover": 0.11,
+   "guest_score": 4.66
+  },
+  {
+   "week": "A6",
+   "phase": "Agent",
+   "waste_per_cover": 0.104,
+   "guest_score": 4.65
+  },
+  {
+   "week": "A7",
+   "phase": "Agent",
+   "waste_per_cover": 0.099,
+   "guest_score": 4.67
+  },
+  {
+   "week": "A8",
+   "phase": "Agent",
+   "waste_per_cover": 0.094,
+   "guest_score": 4.68
+  }
+ ],
+ "coordination_hours": [
+  {
+   "week": "Baseline",
+   "hours": 18.5
+  },
+  {
+   "week": "A1",
+   "hours": 17
+  },
+  {
+   "week": "A2",
+   "hours": 15.5
+  },
+  {
+   "week": "A3",
+   "hours": 14.2
+  },
+  {
+   "week": "A4",
+   "hours": 13.1
+  },
+  {
+   "week": "A5",
+   "hours": 12
+  },
+  {
+   "week": "A6",
+   "hours": 11.4
+  },
+  {
+   "week": "A7",
+   "hours": 10.8
+  },
+  {
+   "week": "A8",
+   "hours": 10.3
+  }
+ ],
+ "waste_cost_steps": [
+  {
+   "step": "Baseline Waste Cost",
+   "amount": 384000
+  },
+  {
+   "step": "Overproduction",
+   "amount": -86000
+  },
+  {
+   "step": "Spoilage",
+   "amount": -29000
+  },
+  {
+   "step": "Buffet Excess",
+   "amount": -26000
+  },
+  {
+   "step": "Other Efficiency",
+   "amount": -4000
+  },
+  {
+   "step": "Optimized Waste Cost",
+   "amount": 239000
+  }
+ ],
+ "waste_cost": {
+  "baseline": 384000,
+  "annual_purchasing": 3200000,
+  "avoided": 145000,
+  "reduction": 0.377604166666667
+ },
+ "agentops_weekly": [
+  {
+   "week": "A1",
+   "recommendations": 100,
+   "accepted": 61,
+   "overrides": 29,
+   "required_escalations": 27,
+   "correct_escalations": 20,
+   "all_escalations": 27,
+   "tool_calls": 520,
+   "successful_tool_calls": 503,
+   "acceptance": 0.61,
+   "override_rate": 0.29,
+   "recall": 0.740740740740741
+  },
+  {
+   "week": "A2",
+   "recommendations": 108,
+   "accepted": 72,
+   "overrides": 27,
+   "required_escalations": 27,
+   "correct_escalations": 21,
+   "all_escalations": 27,
+   "tool_calls": 545,
+   "successful_tool_calls": 531,
+   "acceptance": 0.666666666666667,
+   "override_rate": 0.25,
+   "recall": 0.777777777777778
+  },
+  {
+   "week": "A3",
+   "recommendations": 115,
+   "accepted": 83,
+   "overrides": 24,
+   "required_escalations": 28,
+   "correct_escalations": 23,
+   "all_escalations": 28,
+   "tool_calls": 570,
+   "successful_tool_calls": 559,
+   "acceptance": 0.721739130434783,
+   "override_rate": 0.208695652173913,
+   "recall": 0.821428571428571
+  },
+  {
+   "week": "A4",
+   "recommendations": 121,
+   "accepted": 92,
+   "overrides": 22,
+   "required_escalations": 27,
+   "correct_escalations": 23,
+   "all_escalations": 27,
+   "tool_calls": 595,
+   "successful_tool_calls": 586,
+   "acceptance": 0.760330578512397,
+   "override_rate": 0.181818181818182,
+   "recall": 0.851851851851852
+  },
+  {
+   "week": "A5",
+   "recommendations": 128,
+   "accepted": 102,
+   "overrides": 19,
+   "required_escalations": 26,
+   "correct_escalations": 23,
+   "all_escalations": 27,
+   "tool_calls": 620,
+   "successful_tool_calls": 612,
+   "acceptance": 0.796875,
+   "override_rate": 0.1484375,
+   "recall": 0.884615384615385
+  },
+  {
+   "week": "A6",
+   "recommendations": 132,
+   "accepted": 110,
+   "overrides": 17,
+   "required_escalations": 25,
+   "correct_escalations": 23,
+   "all_escalations": 26,
+   "tool_calls": 640,
+   "successful_tool_calls": 633,
+   "acceptance": 0.833333333333333,
+   "override_rate": 0.128787878787879,
+   "recall": 0.92
+  },
+  {
+   "week": "A7",
+   "recommendations": 139,
+   "accepted": 120,
+   "overrides": 15,
+   "required_escalations": 27,
+   "correct_escalations": 25,
+   "all_escalations": 27,
+   "tool_calls": 665,
+   "successful_tool_calls": 659,
+   "acceptance": 0.863309352517986,
+   "override_rate": 0.107913669064748,
+   "recall": 0.925925925925926
+  },
+  {
+   "week": "A8",
+   "recommendations": 145,
+   "accepted": 128,
+   "overrides": 13,
+   "required_escalations": 22,
+   "correct_escalations": 21,
+   "all_escalations": 23,
+   "tool_calls": 690,
+   "successful_tool_calls": 686,
+   "acceptance": 0.882758620689655,
+   "override_rate": 0.0896551724137931,
+   "recall": 0.954545454545455
+  }
+ ],
+ "overrides": [
+  {
+   "reason": "Missing context",
+   "count": 38,
+   "share": 0.228915662650602,
+   "improvement": "Add banquet and group-block feed to context layer"
+  },
+  {
+   "reason": "Special event",
+   "count": 31,
+   "share": 0.186746987951807,
+   "improvement": "Integrate events calendar; lower autonomy on event days"
+  },
+  {
+   "reason": "Forecast disagreement",
+   "count": 29,
+   "share": 0.174698795180723,
+   "improvement": "Retrain demand model on chef-adjusted actuals"
+  },
+  {
+   "reason": "Guest-experience concern",
+   "count": 24,
+   "share": 0.144578313253012,
+   "improvement": "Add minimum-display guardrail for signature items"
+  },
+  {
+   "reason": "Inventory constraint",
+   "count": 19,
+   "share": 0.114457831325301,
+   "improvement": "Refresh inventory feed hourly; block on stale data"
+  },
+  {
+   "reason": "Policy requirement",
+   "count": 14,
+   "share": 0.0843373493975904,
+   "improvement": "Encode the policy as a hard constraint"
+  },
+  {
+   "reason": "Agent error",
+   "count": 11,
+   "share": 0.0662650602409639,
+   "improvement": "Log as defect; add a regression case to the evaluation suite"
+  }
+ ],
+ "control_room": [
+  {
+   "category": "QUALITY",
+   "kpi": "Recommendation Acceptance",
+   "value": 0.882758620689655,
+   "test": ">=",
+   "target": 0.8,
+   "status": "On target",
+   "source": "AgentOps"
+  },
+  {
+   "category": "QUALITY",
+   "kpi": "Forecast MAPE",
+   "value": 0.072,
+   "test": "<=",
+   "target": 0.1,
+   "status": "On target",
+   "source": "Forecast MAPE"
+  },
+  {
+   "category": "QUALITY",
+   "kpi": "Recommendation Outcome Quality",
+   "value": 0.91,
+   "test": ">=",
+   "target": 0.85,
+   "status": "On target",
+   "source": "Modeled"
+  },
+  {
+   "category": "SAFETY",
+   "kpi": "Escalation Recall",
+   "value": 0.954545454545455,
+   "test": ">=",
+   "target": 0.9,
+   "status": "On target",
+   "source": "AgentOps"
+  },
+  {
+   "category": "SAFETY",
+   "kpi": "Escalation Precision",
+   "value": 0.91304347826087,
+   "test": ">=",
+   "target": 0.85,
+   "status": "On target",
+   "source": "AgentOps"
+  },
+  {
+   "category": "SAFETY",
+   "kpi": "Policy Violations",
+   "value": 0,
+   "test": "=",
+   "target": 0,
+   "status": "On target",
+   "source": "Modeled"
+  },
+  {
+   "category": "SAFETY",
+   "kpi": "Correct Abstention Rate",
+   "value": 0.92,
+   "test": ">=",
+   "target": 0.9,
+   "status": "On target",
+   "source": "Modeled"
+  },
+  {
+   "category": "RELIABILITY",
+   "kpi": "Tool / API Reliability",
+   "value": 0.994202898550725,
+   "test": ">=",
+   "target": 0.99,
+   "status": "On target",
+   "source": "AgentOps"
+  },
+  {
+   "category": "RELIABILITY",
+   "kpi": "Context Completeness",
+   "value": 0.978,
+   "test": ">=",
+   "target": 0.95,
+   "status": "On target",
+   "source": "Modeled"
+  },
+  {
+   "category": "RELIABILITY",
+   "kpi": "Human Override Rate",
+   "value": 0.0896551724137931,
+   "test": "<=",
+   "target": 0.15,
+   "status": "On target",
+   "source": "AgentOps"
+  },
+  {
+   "category": "RELIABILITY",
+   "kpi": "Execution Failure Rate",
+   "value": 0.006,
+   "test": "<=",
+   "target": 0.01,
+   "status": "On target",
+   "source": "Modeled"
+  },
+  {
+   "category": "BUSINESS",
+   "kpi": "Food Waste Reduction",
+   "value": 0.377686796315251,
+   "test": null,
+   "target": null,
+   "status": "Outcome",
+   "source": "Weekly Waste"
+  },
+  {
+   "category": "BUSINESS",
+   "kpi": "Waste Cost Avoided (annual)",
+   "value": 145000,
+   "test": null,
+   "target": null,
+   "status": "Outcome",
+   "source": "Waste Cost"
+  },
+  {
+   "category": "BUSINESS",
+   "kpi": "Manager Hours Saved / Week",
+   "value": 8.2,
+   "test": null,
+   "target": null,
+   "status": "Outcome",
+   "source": "Operations"
+  },
+  {
+   "category": "BUSINESS",
+   "kpi": "Guest F&B Score",
+   "value": 4.68,
+   "test": ">=",
+   "target": 4.6,
+   "status": "On target",
+   "source": "Guest Experience"
+  }
+ ],
+ "economics": {
+  "food_cost_avoided": 145000,
+  "coordination_value": 19188,
+  "gross_benefit": 164188,
+  "cost_lines": {
+   "Model / API usage": 6000,
+   "Monitoring + observability": 6000,
+   "Human review of approvals": 4680,
+   "Maintenance + evaluation": 12000
+  },
+  "annual_ai_cost": 28680,
+  "one_time_lines": {
+   "Integration (PMS, POS, inventory, procurement)": 40000,
+   "Training + change management": 10000
+  },
+  "one_time_total": 50000,
+  "manager_rate": 45,
+  "hours_saved_week": 8.2,
+  "review_hours_week": 2,
+  "net_annual": 135508,
+  "year1_net": 85508,
+  "year1_roi": 1.08678190137265,
+  "payback_months": 4.42778286152847,
+  "value_per_ai_cost": 5.72482566248257
+ },
+ "sensitivity_cases": {
+  "Conservative": {
+   "waste_reduction": 0.15,
+   "adoption": 0.8,
+   "cost_multiplier": 1.25,
+   "volume_index": 1,
+   "net_annual": 25580.4,
+   "payback_months": 23.4554580850964
+  },
+  "Base": {
+   "waste_reduction": 0.25,
+   "adoption": 0.9,
+   "cost_multiplier": 1,
+   "volume_index": 1,
+   "net_annual": 74989.2,
+   "payback_months": 8.00115216591189
+  },
+  "Upside": {
+   "waste_reduction": 0.377604166666667,
+   "adoption": 1,
+   "cost_multiplier": 1,
+   "volume_index": 1,
+   "net_annual": 135508,
+   "payback_months": 4.42778286152847
+  }
+ }
+}
