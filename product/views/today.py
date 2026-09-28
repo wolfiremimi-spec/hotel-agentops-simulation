@@ -290,7 +290,7 @@ def recommend_and_approve(date, inputs, perf):
 def page():
     site.page_header("Today's plan", "This morning's production plan",
               "Enter this morning's figures. The agents recommend, governance routes each decision, and you approve "
-              "what needs you. The saved plan becomes the kitchen's production sheet.")
+              "what needs you. The saved plan becomes the kitchen's production sheet.", photo="band_today.jpg")
     if S.is_demo():
         ui.banner("<b>Demo workspace.</b> Modeled case-study data; the D-0418 morning is prefilled. Nothing is saved after you leave.")
     date = st.date_input("Service date", dt.date.fromisoformat(S.today()), key="td_date").isoformat()

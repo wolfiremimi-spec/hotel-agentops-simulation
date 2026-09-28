@@ -13,7 +13,7 @@ from product import site
 def page():
     site.page_header("Decision log & audit", "Every decision, who made it, and why",
               "Each recommendation is logged with its authority, the human decision, what was executed and the rule "
-              "trace behind it. Close-outs add the actual outcome.")
+              "trace behind it. Close-outs add the actual outcome.", photo="band_log.jpg")
     days = [d for d in S.days() if d.get("run")]
     if not days:
         st.info("No decisions yet. Approve a morning plan on Today's plan and it appears here.")

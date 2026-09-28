@@ -106,6 +106,11 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-ph .eyebrow {{ display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: {MOSS}; background: {LINEN}; border-radius: 999px; padding: 4px 10px; }}
 .ws-ph h1 {{ font-size: 2rem !important; line-height: 1.15; margin: .55rem 0 .35rem !important; padding: 0 !important; font-weight: 800; }}
 .ws-ph p {{ color: {MUTE}; font-size: 1.02rem; max-width: 74ch; margin: 0; }}
+.ws-ph.pic {{ position: relative; overflow: hidden; min-height: 150px; padding: 26px 30px; border: 1px solid {LINE}; border-radius: 16px; background: {WHITE}; box-shadow: 0 1px 2px rgba(23,33,28,.04); }}
+.ws-ph.pic .bg {{ position: absolute; top: 0; right: 0; bottom: 0; width: 50%; background-size: cover; background-position: center; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 42%); mask-image: linear-gradient(90deg, transparent 0%, #000 42%); }}
+.ws-ph.pic .tx {{ position: relative; max-width: 58%; }}
+.ws-ph.pic p {{ max-width: 60ch; }}
+@media (max-width: 800px) {{ .ws-ph.pic {{ padding: 20px; }} .ws-ph.pic .bg {{ width: 100%; opacity: .16; -webkit-mask-image: none; mask-image: none; }} .ws-ph.pic .tx {{ max-width: 100%; }} }}
 .ha-sec .n {{ color: {SAND} !important; }}
 .ha-level {{ padding: 12px 16px; margin: .4rem 0 1rem; border-radius: 12px !important; background: {WHITE} !important; border: 1px solid {LINE}; border-left: 4px solid {SAND} !important; }}
 .ws-appfoot {{ margin-top: 3rem; padding-top: 1rem; border-top: 1px solid {LINE}; display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; font-size: .78rem; color: {MUTE}; }}
@@ -330,9 +335,13 @@ def setup(landing: bool = False) -> None:
 # ---------------------------------------------------------------------------
 # In-app components
 # ---------------------------------------------------------------------------
-def page_header(eyebrow: str, title: str, sub: str = "") -> None:
-    md(f'<div class="ws-ph"><span class="eyebrow">{e(eyebrow)}</span><h1>{e(title)}</h1>'
-       + (f"<p>{e(sub)}</p>" if sub else "") + "</div>")
+def page_header(eyebrow: str, title: str, sub: str = "", photo: str | None = None) -> None:
+    text = f'<span class="eyebrow">{e(eyebrow)}</span><h1>{e(title)}</h1>' + (f"<p>{e(sub)}</p>" if sub else "")
+    if photo:
+        md(f'<div class="ws-ph pic"><div class="bg" style="background-image:url({img(photo)})"></div>'
+           f'<div class="tx">{text}</div></div>')
+    else:
+        md(f'<div class="ws-ph">{text}</div>')
 
 
 def app_footer(extra: str = "") -> None:

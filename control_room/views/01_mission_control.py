@@ -8,7 +8,7 @@ ww = W["weekly_waste"]; mape = W["forecast_mape"]; eco = W["economics"]; guest =
 base_avg = sum(x["kg"] for x in ww if x["phase"] == "Baseline") / 4; last4 = sum(x["kg"] for x in ww[-4:]) / 4
 
 ui.header("01", "Mission control", "Can AI make hospitality waste less, without costing guests or profit?",
-          "A governed, closed-loop multi-agent system for hotel food waste. This control room runs the real simulation code behind the case study.")
+          "A governed, closed-loop multi-agent system for hotel food waste. This control room runs the real simulation code behind the case study.", image="band_control.jpg")
 ui.banner()
 st.markdown("### Try the system yourself")
 st.write(

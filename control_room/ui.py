@@ -10,6 +10,7 @@ import streamlit as st
 FOREST, MOSS, SAGE, SAND, LINEN, WHITE, INK = "#1F3A2F", "#4F7A63", "#A9BFAE", "#C7A877", "#F5F2EA", "#FFFFFF", "#26302B"
 GRAY, LINE, MUTE, ALERT = "#CBD3CC", "#E3E6E0", "#5F6B63", "#A4493D"
 FONT = "Inter, 'Helvetica Neue', Arial, sans-serif"
+ASSETS = Path(__file__).resolve().parents[1] / "product" / "assets"
 WB = json.loads((Path(__file__).resolve().parents[1] / "data" / "control_room_workbook.json").read_text())
 
 pio.templates["controlroom"] = go.layout.Template(data=dict(bar=[go.Bar(cliponaxis=False)]), layout=go.Layout(
@@ -34,6 +35,10 @@ h1, h2, h3, h4 {{ color: {FOREST} !important; letter-spacing: -0.01em; }}
 .cr-kicker {{ font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: {SAND}; margin-bottom: .25rem; }}
 .cr-title {{ font-size: 2.05rem; line-height: 1.15; font-weight: 700; color: {FOREST}; margin: 0 0 .4rem; max-width: 32ch; }}
 .cr-sub {{ font-size: 1.02rem; color: {MUTE}; margin-bottom: 1rem; max-width: 72ch; }}
+.cr-hero {{ position: relative; overflow: hidden; min-height: 190px; padding: 26px 30px 18px; margin-bottom: 1rem; border: 1px solid {LINE}; border-radius: 16px; background: {WHITE}; }}
+.cr-hero .bg {{ position: absolute; top: 0; right: 0; bottom: 0; width: 50%; background-size: cover; background-position: center; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 40%); mask-image: linear-gradient(90deg, transparent 0%, #000 40%); }}
+.cr-hero .tx {{ position: relative; max-width: 56%; }}
+@media (max-width: 800px) {{ .cr-hero .bg {{ width: 100%; opacity: .15; -webkit-mask-image: none; mask-image: none; }} .cr-hero .tx {{ max-width: 100%; }} }}
 .cr-banner {{ background: {LINEN}; border-left: 3px solid {SAND}; padding: 8px 12px; font-size: .82rem; color: {MUTE}; margin-bottom: 1rem; }}
 .cr-tag {{ display: inline-block; font-size: .64rem; font-weight: 700; letter-spacing: .08em; padding: 2px 7px; border-radius: 3px; margin: 0 4px 4px 0; vertical-align: middle; white-space: nowrap; }}
 .t-sim {{ border: 1px dashed {MOSS}; color: {MOSS}; }} .t-wb {{ border: 1px solid {FOREST}; color: {FOREST}; }}
@@ -73,9 +78,17 @@ def setup(): st.markdown(CSS, unsafe_allow_html=True)
 def tag(label): return f'<span class="cr-tag {TAGS[label]}">{label}</span>'
 
 
-def header(num, kicker, title, sub=""):
-    st.markdown(f'<div class="cr-kicker">{e(num)} · {e(kicker)}</div><div class="cr-title">{e(title)}</div>' + (f'<div class="cr-sub">{sub}</div>' if sub else ""),
-                unsafe_allow_html=True)
+def photo(name):
+    """Inline image (data URI) from the shared assets folder."""
+    import base64
+    return "data:image/jpeg;base64," + base64.b64encode((ASSETS / name).read_bytes()).decode()
+
+
+def header(num, kicker, title, sub="", image=None):
+    text = f'<div class="cr-kicker">{e(num)} · {e(kicker)}</div><div class="cr-title">{e(title)}</div>' + (f'<div class="cr-sub">{sub}</div>' if sub else "")
+    if image:
+        text = f'<div class="cr-hero"><div class="bg" style="background-image:url({photo(image)})"></div><div class="tx">{text}</div></div>'
+    st.markdown(text, unsafe_allow_html=True)
 
 
 def banner(text=None):

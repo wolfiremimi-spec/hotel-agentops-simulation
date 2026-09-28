@@ -158,7 +158,7 @@ Rules:
 def page():
     site.page_header("Ops copilot", "Ask about your plans, decisions and results",
               "An AI assistant that answers from this workspace's records and can re-run a morning with different "
-              "figures. It explains; governance rules still decide who may act.")
+              "figures. It explains; governance rules still decide who may act.", photo="band_copilot.jpg")
     key = S.secret("GEMINI_API_KEY")
     if not key:
         st.warning("The copilot isn't switched on for this deployment (it needs a GEMINI_API_KEY secret). Everything else works.")

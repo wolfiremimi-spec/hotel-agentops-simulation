@@ -22,7 +22,7 @@ def fmt(key, v):
 def page():
     site.page_header("Performance & autonomy", "Autonomy is earned from your own results",
               f"The readiness gate uses this hotel's last {core.EVIDENCE_WINDOW_DAYS} days of decisions and close-outs. "
-              "All eight checks must pass before any action runs without a manager. No single strong metric grants authority.")
+              "All eight checks must pass before any action runs without a manager. No single strong metric grants authority.", photo="band_perf.jpg")
     perf = S.performance_for(S.today())
     lvl = perf["autonomy"]
     st.markdown(f'<div class="ha-level"><b>Current autonomy: {ui.e(lvl)}</b><br>{ui.e(" · ".join(perf["autonomy_why"]))}</div>',
