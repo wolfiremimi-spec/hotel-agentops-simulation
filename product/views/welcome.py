@@ -30,7 +30,7 @@ with right:
 
 site.stats()
 
-site.connected()
+site.banner()
 
 # ---------------------------------------------------------------- get started
 site.get_started_header()
@@ -85,7 +85,7 @@ with c3:
                 st.rerun()
 
 site.how_it_works()
-site.banner()
+site.connected()
 site.agents()
 site.governance()
 site.proof()

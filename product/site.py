@@ -276,10 +276,16 @@ html, [data-testid="stMain"], [data-testid="stAppViewContainer"], section.main {
 }}
 .ws-top {{ display: none; position: fixed; right: 16px; bottom: 18px; z-index: 999; width: 44px; height: 44px; border-radius: 50%; background: {FOREST}; color: {WHITE} !important; text-decoration: none !important; font-size: 1.2rem; font-weight: 700; align-items: center; justify-content: center; box-shadow: 0 10px 24px -12px rgba(23,33,28,.6); }}
 @media (max-width: 1320px) {{ .ws-rail {{ display: none; }} .ws-top {{ display: flex; }} }}
+.ws-syssplit {{ margin-top: 60px; display: grid; grid-template-columns: .85fr 1.15fr; gap: 28px; align-items: center; background: #F6F5F0; border: 1px solid {LINE}; border-radius: 20px; padding: 34px 30px 34px 40px; scroll-margin-top: 24px; }}
+.ws-syssplit .k {{ font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: {MOSS}; }}
+.ws-syssplit h2 {{ font-size: 1.9rem !important; font-weight: 800; line-height: 1.14; margin: 10px 0 12px !important; padding: 0 !important; text-wrap: balance; }}
+.ws-syssplit p {{ color: {MUTE}; font-size: 1rem; line-height: 1.6; margin: 0 0 16px; }}
+.ws-tags.caps span {{ background: {WHITE}; border: 1px solid {LINE}; font-size: .76rem; padding: 4px 9px; }}
+.ws-syssplit .im img {{ width: 100%; display: block; -webkit-mask-image: radial-gradient(ellipse 74% 80% at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 74% 80% at 50% 50%, #000 70%, transparent 100%); }}
 /* motion: sections glide in as they scroll into view (progressive enhancement), cards lift on hover */
 @supports (animation-timeline: view()) {{
   @media (prefers-reduced-motion: no-preference) {{
-    .ws-sec, .ws-system, .ws-steps, .ws-grid4, .ws-orch, .ws-split, .ws-proof, .ws-project, .ws-gallery, .ws-truth, .ws-about, .ws-banner, .ws-stats {{
+    .ws-sec, .ws-system, .ws-steps, .ws-grid4, .ws-orch, .ws-split, .ws-syssplit, .ws-proof, .ws-project, .ws-gallery, .ws-truth, .ws-about, .ws-banner, .ws-stats {{
       animation: ws-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }}
   }}
 }}
@@ -292,7 +298,7 @@ html, [data-testid="stMain"], [data-testid="stAppViewContainer"], section.main {
 .ws-banner {{ min-height: 360px; }}
 @media (max-width: 900px) {{
   .ws-project, .ws-about {{ grid-template-columns: 1fr; }} .ws-project .ph img {{ min-height: 240px; max-height: 320px; }} .ws-about .pic img {{ min-height: 220px; max-height: 280px; }} .ws-about .body {{ padding: 26px 22px; }}
-  .ws-gallery {{ grid-template-columns: 1fr 1fr; }} .ws-brandwrap {{ flex-direction: column; align-items: flex-start; gap: 2px; }} .ws-by {{ border-left: 0; padding-left: 40px; font-size: .76rem; }} .ws-banner .in {{ padding: 28px 24px; }}
+  .ws-syssplit {{ grid-template-columns: 1fr; padding: 24px 20px; }} .ws-syssplit h2 {{ font-size: 1.5rem !important; }} .ws-gallery {{ grid-template-columns: 1fr 1fr; }} .ws-brandwrap {{ flex-direction: column; align-items: flex-start; gap: 2px; }} .ws-by {{ border-left: 0; padding-left: 40px; font-size: .76rem; }} .ws-banner .in {{ padding: 28px 24px; }}
   .ws-banner h3 {{ font-size: 1.45rem !important; }}
 }}
 @media (max-width: 900px) {{
@@ -583,16 +589,18 @@ def about() -> None:
 
 
 def connected() -> None:
-    section("system", "The system", "One connected system, from guest demand to business value.",
-            "The hotel runs above; the decision network runs beneath it. Every capability feeds the next, and every "
-            "decision is governed, approved where it matters, and measured.")
-    md(f'<div class="ws-system"><img src="{img("connected_system.jpg")}" alt="A hotel resort above a leaf whose veins '
-       'connect guests, kitchen, dining, inventory, suppliers, reporting and recycling, labelled with demand forecasting, '
-       'inventory intelligence, multi-agent orchestration, human approval, governance and decision rights, waste reduction '
-       'and measurable business value"></div>')
+    caps = ["Demand forecasting", "Inventory intelligence", "Multi-agent orchestration", "Human approval",
+            "Governance & decision rights", "Waste reduction", "Measurable business value"]
+    md('<div class="ws-syssplit" id="system"><div class="tx"><div class="k">The system</div>'
+       '<h2>One connected system, from guest demand to business value.</h2>'
+       '<p>The hotel runs above; the decision network runs beneath it. Every capability feeds the next, and every '
+       'decision is governed, approved where it matters, and measured.</p>'
+       '<div class="ws-tags caps">' + "".join(f"<span>{e(c)}</span>" for c in caps) + '</div></div>'
+       f'<div class="im"><img src="{img("connected_system.jpg")}" alt="A hotel resort above a leaf whose veins connect '
+       'guests, kitchen, dining, inventory, suppliers, reporting and recycling, labelled with the seven capabilities '
+       'listed beside it"></div></div>')
 
-
-SECTIONS = [("top", "Overview"), ("system", "The system"), ("get-started", "Get started"), ("how", "How it works"),
+SECTIONS = [("top", "Overview"), ("get-started", "Get started"), ("how", "How it works"), ("system", "The system"),
             ("agents", "Agents"), ("governance", "Governance"), ("results", "Results"), ("project", "The project"),
             ("about", "About")]
 
