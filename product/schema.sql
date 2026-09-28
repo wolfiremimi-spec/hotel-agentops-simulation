@@ -53,3 +53,10 @@ end $$;
 drop trigger if exists audit_events_no_change on public.audit_events;
 create trigger audit_events_no_change before update or delete on public.audit_events
     for each row execute function public.audit_events_append_only();
+
+-- Explicit privileges, so this works whether or not "Automatically expose new tables" was ticked.
+-- The public roles get nothing; only the server's secret key (service_role) can use these tables.
+revoke all on public.hotels, public.service_days, public.audit_events from anon, authenticated;
+grant usage on schema public to service_role;
+grant select, insert, update, delete on public.hotels, public.service_days to service_role;
+grant select, insert on public.audit_events to service_role;
