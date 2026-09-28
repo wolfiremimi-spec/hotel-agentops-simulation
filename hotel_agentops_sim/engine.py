@@ -15,7 +15,7 @@ from .context import ContextManager
 from .learning import learning_cases
 from .models import GovernanceResult, HumanDecision, Recommendation, ToolCall
 from .orchestrator import GROUP_LABEL, Orchestrator
-from .outcome import production_outcome, simple_outcome
+from .outcome import pending_outcome, production_outcome, simple_outcome
 from .parameters import thresholds as load_thresholds, value
 
 
@@ -60,14 +60,16 @@ def _scaled_plan(rec: Recommendation, new_change_pct: float) -> dict:
 
 def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, override_history: list | None = None,
                 failures: dict | None = None, mode: str = "scripted", approval: ApprovalQueue | None = None,
-                say=print) -> RunResult:
+                say=print, gate_result: tuple | None = None) -> RunResult:
+    """gate_result: optional precomputed (gate, level, why) from the hotel's own track record, used instead of
+    evaluating `evidence` (e.g. SUPERVISED while a new hotel has too few decisions to evaluate the gate)."""
     th = load_thresholds(params)
     ctx_threshold = value(params, "context_completeness_threshold")
     delegated_range = value(params, "delegated_prep_range")
     cost_kg = value(params, "waste_cost_per_kg")
     categories = [c["reason"] for c in params["override_categories"]]
-    observed = scenario["observed_outcome"]
-    truth = scenario["ground_truth_escalation_required"]
+    observed = scenario.get("observed_outcome")          # None on a real morning: the outcome is recorded after service
+    truth = scenario.get("ground_truth_escalation_required") or {}
     standing = {k: v for k, v in scenario["kitchen_standing_plan_kg"].items() if not k.startswith("_")}
     guest_base = scenario["hotel_data"].get("guest_experience_signal", {}).get("recent_guest_fb_score", 4.6)
     clock = SimClock(scenario["run_clock"])
@@ -77,9 +79,12 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
     if evidence is None:
         evidence = {k: v["value"] for k, v in params["latest_gate_evidence"].items()}
     history = override_history or [w["value"] for w in params["override_rate_history"]]
-    gate = evaluate_gate(evidence, th)
-    drift_state = drift(history, params["drift_rule"]["multiplier"], params["drift_rule"]["trailing_weeks"])
-    level, level_why = autonomy_level(gate, evidence, th, drift_state)
+    if gate_result is not None:
+        gate, level, level_why = gate_result
+    else:
+        gate = evaluate_gate(evidence, th)
+        drift_state = drift(history, params["drift_rule"]["multiplier"], params["drift_rule"]["trailing_weeks"])
+        level, level_why = autonomy_level(gate, evidence, th, drift_state)
     say(f"\n① READINESS GATE (evidence week {evidence.get('week', 'custom')}): {gate['result']}"
         f" · first blocker: {gate['first_blocker']} → autonomy level {level}")
     for w in level_why:
@@ -172,9 +177,13 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
         for line in gov.rule_trace:
             say(f"   {line}")
         say(f"   ESCALATED to {approval.approver}: '{rec.reason} No AI action taken.'")
-        out = production_outcome(rec, None, observed, standing, cost_kg, guest_base, executed=False)
-        out.summary = "Standing plan served. " + f"Waste {out.actual['waste_kg']} kg · {out.actual['actual_covers']} covers."
+        if observed is None:
+            out = pending_outcome("NOT EXECUTED (standing plan used)", "Kitchen standing plan", standing)
+        else:
+            out = production_outcome(rec, None, observed, standing, cost_kg, guest_base, executed=False)
+            out.summary = "Standing plan served. " + f"Waste {out.actual['waste_kg']} kg · {out.actual['actual_covers']} covers."
         record(rec, gov, None, "No AI action · abstained and escalated", "ABSTAINED · ESCALATED", out)
+        traces[rec.decision_id]["action"]["final_plan_kg"] = None
         return _finish(scenario, records, traces, tool_calls, executions, gate, level, level_why, ctx, params, guardrail)
 
     # ---- Specialist agents ---------------------------------------------------------------------
@@ -255,7 +264,12 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
         say(f"⑥ ACTION · {final_action} → {status}")
 
         # ---- Outcome ----
-        if rec.decision_type == "production_adjustment":
+        if rec.decision_type == "production_adjustment" and observed is None:
+            used = final_plan if executed and final_plan else standing
+            out, ape = pending_outcome("EXECUTED" if executed else "NOT EXECUTED (standing plan used)",
+                                       "AI plan (final action)" if executed else "Kitchen standing plan", used), None
+            say(f"⑦ OUTCOME · {out.summary}")
+        elif rec.decision_type == "production_adjustment":
             out = production_outcome(rec, final_plan, observed, standing, cost_kg, guest_base, executed)
             ape = out.actual["forecast_ape"]
             say(f"⑦ OUTCOME · {out.summary} · {out.guest_impact}")
@@ -263,6 +277,7 @@ def run_service(scenario: dict, params: dict, *, evidence: dict | None = None, o
             out, ape = simple_outcome(rec, executed, cost_kg), None
             say(f"⑦ OUTCOME · {out.summary}")
         record(rec, gov, human, final_action, status, out, violation, ape)
+        traces[rec.decision_id]["action"]["final_plan_kg"] = final_plan if executed else None
 
     return _finish(scenario, records, traces, tool_calls, executions, gate, level, level_why, ctx, params, guardrail)
 

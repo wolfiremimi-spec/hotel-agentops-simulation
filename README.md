@@ -74,6 +74,35 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
+## Hotel AgentOps pilot application (for a real hotel)
+
+**Live app:** _link added after deployment_
+
+The Control Room demonstrates the operating model on the case study's modeled hotel. The pilot application runs the
+same engine on **a real hotel's own data**, day after day:
+
+| Screen | What the hotel does |
+|---|---|
+| Hotel setup | Rooms, consumption per cover, standing par, waste cost, governance policy, and four weeks of baseline history (typed in or imported from a CSV template) |
+| Today's plan | Enters this morning's occupancy, reservations, inventory, events and guest signal; the agents recommend; governance routes each decision; the manager approves, modifies, rejects or asks for more context; the kitchen gets a production sheet |
+| Close out service | Records actual covers, leftovers and stockouts after breakfast; the day is scored (recorded waste, forecast error, estimated waste vs standing par) |
+| Decision log & audit | Every decision with its rule trace, human decision and outcome; learning cases from overrides; an append-only audit trail; CSV/JSON export |
+| Performance & autonomy | The eight-check readiness gate computed from the hotel's own last 28 days; autonomy starts SUPERVISED and is earned |
+| Ops copilot (optional) | A Gemini model that answers from the workspace's records and re-runs a morning as a what-if; it never decides who may act |
+
+How it stays honest:
+- **Data comes in by form or CSV.** There are no PMS/POS/inventory integrations; those would come in a funded pilot.
+- **Autonomy is earned from the hotel's own record.** A new hotel stays SUPERVISED until it has 20 manager decisions and 4 closed-out services; then all eight gate checks must pass.
+- **Escalations caused only by the current autonomy level don't count against escalation precision.** Otherwise a supervised hotel could never demonstrate precision. This is visible in each decision's rule trace.
+- **Estimates are labeled.** "Waste vs standing par" serves the kitchen's usual par against that day's measured consumption; it is a lower bound on days an item ran out.
+- **Access is pilot-grade.** Each hotel has a private workspace code; only its SHA-256 hash is stored. Database tables have row-level security on with no policies, so only the server (holding the secret key) can read them.
+
+Deploy it as its own Streamlit app with main file `hotel_app.py`. One-time setup:
+1. Create a free Supabase project and run `product/schema.sql` in its SQL editor.
+2. In the Streamlit app's **Secrets**, add `SUPABASE_URL`, `SUPABASE_SECRET_KEY` and a random `APP_SALT` (and optionally `GEMINI_API_KEY`).
+
+Without a database it still runs, with only the demo workspace available.
+
 ## Where each rule lives (inspect it)
 
 | Case-study rule | Code |
@@ -115,6 +144,7 @@ The case study didn't specify everything a running system needs. Each missing pi
 - **One service is one observation.** MAPE, acceptance, override rate and escalation recall/precision are rates over many decisions. The control view shows them with their sample size (n) and flags them as below the minimum sample. Today's autonomy comes from the latest evaluated pilot week in the workbook (A8).
 - **Waste scope is narrower than the pilot's.** The simulation models buffet overproduction and plate waste for four item groups. It does not model spoilage or prep waste, so its waste per cover is not comparable to the pilot's total.
 - **Some outcomes are pending.** Purchasing and banquet decisions are marked PENDING because their effect happens after the simulated day.
+- **The pilot application is decision support, not a live integration.** It runs on figures the hotel enters; it has not been validated in a real hotel.
 - **The escalation labels are analyst-set.** Escalation recall and precision are scored against modeled ground-truth labels, which are listed in the scenario file.
 
 ## Layout
@@ -135,4 +165,11 @@ hotel_agentops_sim/
 data/                 project_parameters.json (from the workbook) · scenario_d0418.json (modeled)
 tools/                extract_parameters.py
 tests/                test_simulation.py
+hotel_app.py          pilot application entry point
+product/
+  core.py             hotel profile → scenario, morning run, close-out, earned autonomy from the hotel's record
+  store.py            Supabase (REST) and in-memory storage with the same interface
+  schema.sql          database tables, row-level security, append-only audit log
+  agent.py            Gemini tool-calling loop for the copilot
+  views/              welcome · today · closeout · decision_log · performance · setup · copilot
 ```

@@ -59,6 +59,13 @@ def production_outcome(rec, final_plan: dict | None, observed: dict, standing: d
                  f"vs {baseline['waste_kg']} kg on the standing plan" if ape is not None else ""))
 
 
+def pending_outcome(execution_status: str, plan_used: str, plan_kg: dict) -> Outcome:
+    """A real morning: nothing has happened yet. The kitchen records the result after service (close-out)."""
+    return Outcome(execution_status=execution_status,
+                   actual={"plan_used": plan_used, "plan_to_serve_kg": {g: round(kg, 1) for g, kg in plan_kg.items()}},
+                   summary="PENDING: record actual covers and leftovers after service to score this decision.")
+
+
 def simple_outcome(rec, executed: bool, cost_per_kg: float) -> Outcome:
     t = rec.decision_type
     if not executed:
