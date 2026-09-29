@@ -5,7 +5,7 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
-from product import site, tour
+from product import printsheet, site, tour
 from product import core
 
 GL = sim.GROUP_LABEL
@@ -83,8 +83,24 @@ def show_saved(day, date):
     st.markdown("**Kitchen production sheet**")
     sheet = kitchen_sheet(run)
     st.dataframe(sheet, use_container_width=True, hide_index=True)
-    st.download_button("Download the kitchen sheet (CSV)", sheet.to_csv(index=False).encode(), f"kitchen_sheet_{date}.csv",
-                       "text/csv", key=f"td_dl_{date}")
+    plan, usable = core.plan_served(run)
+    ins = day.get("inputs") or {}
+    html_sheet = printsheet.build(
+        S.hotel()["name"], S.profile().get("service_name", "Breakfast"), date, plan, usable,
+        run["scenario"]["kitchen_standing_plan_kg"],
+        [{"id": r["Decision ID"], "what": r["Recommendation"], "who": r["Human Decision"], "status": r["Execution Status"]}
+         for r in run["records"]],
+        approver=next((r.get("Approver") for r in run["records"] if r.get("Approver")), "") or S.profile().get("approver", ""),
+        autonomy=run.get("autonomy", ""), carry_items=core.carry_over_rows(ins),
+        transfers=[r["Recommendation"] for r in run["records"] if r["Decision Type"] == "inventory_transfer"
+                   and str(r["Execution Status"]).startswith("EXECUTED")],
+        note="demo · modeled data" if S.is_demo() else "")
+    d1, d2 = st.columns(2)
+    d1.download_button("Printable kitchen sheet (open, then print or save as PDF)", html_sheet.encode(),
+                       f"kitchen_sheet_{date}.html", "text/html", key=f"td_print_{date}", type="primary",
+                       use_container_width=True)
+    d2.download_button("Download the kitchen sheet (CSV)", sheet.to_csv(index=False).encode(), f"kitchen_sheet_{date}.csv",
+                       "text/csv", key=f"td_dl_{date}", use_container_width=True)
     if rec is not None and rec["Decision Type"] == "abstain_missing_context":
         st.warning("The system abstained this morning (not enough data), so the kitchen serves its standing par.")
     with st.expander(f"How the agents reasoned · {run.get('agent_mode', 'Rule-based agents')}"):

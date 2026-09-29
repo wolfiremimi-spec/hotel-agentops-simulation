@@ -275,6 +275,27 @@ st.dataframe(
 )
 
 prod = next((r for r in res.records if r["Decision Type"] == "production_adjustment"), None)
+if prod is not None and not prod["Execution Status"].startswith("BLOCKED"):
+    from product import core as _core
+    from product import printsheet
+    _standing = _core.CASE["kitchen_standing_plan_kg"]
+    _plan, _usable = printsheet.plan_from_trace(res.traces[prod["Decision ID"]], _standing)
+    st.download_button(
+        "Printable kitchen sheet for this plan (open, then print or save as PDF)",
+        printsheet.build(
+            "Case-study hotel (modeled)", "Saturday breakfast", "D-0418 service", _plan, _usable, _standing,
+            [{"id": r["Decision ID"], "what": r["Recommendation"], "who": r["Human Decision"], "status": r["Execution Status"]}
+             for r in res.records],
+            approver=prod.get("Approver") or "F&B Manager",
+            transfers=[r["Recommendation"] for r in res.records if r["Decision Type"] == "inventory_transfer"
+                       and str(r["Execution Status"]).startswith("EXECUTED")],
+            note="Control Room · modeled simulation",
+        ).encode(),
+        "kitchen_sheet_D-0418.html",
+        "text/html",
+        key="dl_kitchen_sheet",
+    )
+
 if prod is not None:
     act = prod["_outcome_actual"] or {}
     if prod["Execution Status"].startswith("BLOCKED"):
