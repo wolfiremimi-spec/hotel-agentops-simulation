@@ -46,12 +46,17 @@ jobs:
           kill -INT $(cat ff.pid); sleep 4
       - name: Cut and encode the video
         continue-on-error: true
+        env:
+          TARGET: "120"
         run: |
           S=$(python -c "print(float(open('demo_out/start.txt').read())-float(open('demo_out/ff_start.txt').read()))")
           E=$(python -c "print(float(open('demo_out/end.txt').read())-float(open('demo_out/ff_start.txt').read()))")
           echo "trim $S -> $E" >> demo_out/log.txt
           C=$(cat demo_out/chrome.txt)
-          ffmpeg -loglevel error -y -ss $S -to $E -i raw.mkv -vf "crop=1600:900:0:$C,scale=1920:1080:flags=lanczos" \
+          # fit the walkthrough to exactly TARGET seconds (never slower than real time, at most 15% faster)
+          F=$(python -c "d=float('$E')-float('$S'); t=float('${TARGET:-120}'); print(max(1.0, min(d/t, 1.15)))")
+          echo "duration $(python -c "print(float('$E')-float('$S'))") speed x$F" >> demo_out/log.txt
+          ffmpeg -loglevel error -y -ss $S -to $E -i raw.mkv -vf "crop=1600:900:0:$C,setpts=PTS/$F,scale=1920:1080:flags=lanczos" -r 30 \
                  -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -movflags +faststart Hotel_AgentOps_walkthrough.mp4
           ls -la Hotel_AgentOps_walkthrough.mp4 >> demo_out/log.txt
       - name: Publish to the demo-video branch
