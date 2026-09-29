@@ -20,6 +20,19 @@ if st.button("Run the system →", type="primary", use_container_width=True):
     st.switch_page("control_room/views/02_live_service.py")
 
 st.caption("About 60 seconds · No setup required · Uses modeled scenario data")
+with st.container(border=True):
+    st.markdown("**Suggested path** · about five minutes, in the order a hotel lives it")
+    path = [("control_room/views/02_live_service.py", "1 · Live service: make the morning's calls"),
+            ("control_room/views/03_scenario_lab.py", "2 · Scenario lab: change the morning"),
+            ("control_room/views/04_failure_lab.py", "3 · Failure lab: try to break it"),
+            ("control_room/views/procurement.py", "4 · Procurement: next week's order"),
+            ("control_room/views/05_readiness_gate.py", "5 · Readiness gate: how autonomy is earned"),
+            ("control_room/views/07_business_value.py", "6 · Business value: is it worth it?")]
+    cols = st.columns(3)
+    for i, (pth, label) in enumerate(path):
+        with cols[i % 3]:
+            st.page_link(pth, label=label)
+    st.caption("Prefer the product? The pilot app has a guided two-minute tour: https://hotel-agentops.streamlit.app")
 st.markdown("#### Modeled 12-week pilot " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
 k = st.columns(5)
 k[0].metric("Food waste", f"{last4:.0f} kg/wk", f"{(last4/base_avg-1)*100:.1f}% vs {base_avg:.0f} baseline", delta_color="inverse")
