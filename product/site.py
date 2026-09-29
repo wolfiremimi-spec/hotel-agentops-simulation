@@ -287,10 +287,10 @@ html, [data-testid="stMain"], [data-testid="stAppViewContainer"], section.main {
 .ws-sec, #top, #about {{ scroll-margin-top: 24px; }}
 .ws-vidthumb {{ position: relative; border-radius: 14px; overflow: hidden; border: 1px solid {LINE}; box-shadow: 0 10px 24px rgba(23,33,28,.10); }}
 .ws-vidthumb img {{ width: 100%; display: block; }}
-.ws-vidthumb .play {{ position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%;
+.ws-vidthumb .play {{ position: absolute; right: 12px; bottom: 12px; width: 44px; height: 44px; border-radius: 50%;
   background: rgba(255,255,255,.92); box-shadow: 0 6px 16px rgba(0,0,0,.25); }}
-.ws-vidthumb .play::after {{ content: ""; position: absolute; left: 23px; top: 18px; border-left: 18px solid {FOREST};
-  border-top: 11px solid transparent; border-bottom: 11px solid transparent; }}
+.ws-vidthumb .play::after {{ content: ""; position: absolute; left: 17px; top: 13px; border-left: 14px solid {FOREST};
+  border-top: 9px solid transparent; border-bottom: 9px solid transparent; }}
 .ws-vidmeta {{ margin: 10px 2px 8px; }} .ws-vidmeta b {{ display: block; color: {FOREST}; font-size: 1.02rem; }}
 .ws-vidmeta span {{ color: {MUTE}; font-size: .85rem; }}
 .ha-vid .n {{ font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: {MOSS}; }}

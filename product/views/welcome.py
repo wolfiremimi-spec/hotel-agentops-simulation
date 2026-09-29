@@ -96,7 +96,7 @@ _, v1, v2, _ = st.columns([0.55, 1, 1, 0.55], gap="large")
 for col, v in zip((v1, v2), site.HOW_TO_VIDEOS):
     with col:
         site.video_thumb(v)
-        if st.button(f"▶ Play: {v['title']}", use_container_width=True, key=f"ha_play_{v['key']}"):
+        if st.button(f"▶ Play video {v['label'][-6]}", use_container_width=True, key=f"ha_play_{v['key']}"):
             st.session_state.hv_pick = v["key"]
             st.switch_page("product/views/videos.py")
 
