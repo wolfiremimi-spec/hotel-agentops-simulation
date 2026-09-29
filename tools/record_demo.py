@@ -58,6 +58,7 @@ CARD_JS = r"""
     <div style="font-size:72px;font-weight:800;line-height:1.08;margin:18px 0 22px;letter-spacing:-.01em">${title}</div>
     <div style="font-size:30px;color:#E8DDC4;max-width:1150px">${sub}</div>`;
   d.style.opacity = show ? 1 : 0; d.style.pointerEvents = show ? 'auto' : 'none';
+  const cur = document.getElementById('__cur'); if (cur) cur.style.display = show ? 'none' : 'block';
 }
 """
 
