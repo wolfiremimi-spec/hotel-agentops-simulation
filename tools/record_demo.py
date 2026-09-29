@@ -168,7 +168,7 @@ def main():
         (OUT / "start.txt").write_text(str(time.time()))
         results = []
 
-        d.card("How to run the app", "A short walkthrough of one full breakfast service in the demo hotel: "
+        d.card("How to run through the demo", "How-to video 1 of 2. One full breakfast service in the demo hotel: "
                "plan, decide, close out, audit and order.", 3.5)
 
         def s_landing():

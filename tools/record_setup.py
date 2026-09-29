@@ -60,7 +60,7 @@ def main():
             loc.press("Tab")
             time.sleep(0.25)
 
-        d.card("Set up your own hotel", "From an empty workspace to your first governed morning with your own figures: "
+        d.card("How to set up your own hotel", "How-to video 2 of 2. From an empty workspace to your first governed morning with your own figures: "
                "create, configure, import history, plan, decide and close out.", 3.5)
 
         def s_create():
