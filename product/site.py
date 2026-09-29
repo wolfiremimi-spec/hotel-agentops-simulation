@@ -583,7 +583,7 @@ def footer() -> None:
        f'<a href="{GITHUB_URL}" target="_blank">Source code ↗</a></div><div><span class="h">Contact</span>'
        f'<a href="{LINKEDIN_URL}" target="_blank">LinkedIn ↗</a><a href="mailto:{EMAIL}">{EMAIL}</a></div></div></div>'
        f'<div class="legal"><span>© 2026 {AUTHOR} · Hospitality · Sustainability · Agentic AI</span>'
-       '<span>Modeled implementation simulation · no live hotel systems are connected</span></div></div>')
+       '<span>Modeled implementation simulation · no live hotel systems are connected · version 2026-09-28 (videos)</span></div></div>')
 
 
 def banner() -> None:
