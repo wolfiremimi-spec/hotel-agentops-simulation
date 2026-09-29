@@ -418,5 +418,5 @@ cc = st.columns([2, 1])
 cc[0].write("Failures reduce authority. The readiness gate is how authority is earned back: all eight metrics must pass, "
             "week by week, before any action runs without a manager.")
 if cc[1].button("Readiness Gate & Autonomy →", type="primary", use_container_width=True, key="goto_readiness"):
-    st.switch_page("control_room/views/06_readiness_gate.py")
+    st.switch_page("control_room/views/05_readiness_gate.py")
 ui.footer()
