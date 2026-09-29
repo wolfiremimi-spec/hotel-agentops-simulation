@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from record_demo import CARD_JS, OUT, URL, W, H, CHROME, Demo, log, step  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
 
-HOTEL = "Harbour Example Hotel"
+HOTEL = "Harbor Example Hotel"
 GROUPS = ["pastry_bread", "hot_line", "fruit_yogurt", "cold_cuts_cheese"]
 
 
@@ -66,7 +66,7 @@ def main():
         def s_create():
             d.cap("Go to <b>hotel-agentops.streamlit.app</b> and click <b>Set up your hotel</b>.", 0.4)
             d.click(page.get_by_text("Set up your hotel", exact=True).first, after=1.5)
-            d.cap("Create a private workspace: your hotel's name, rooms and who approves the plan.", 0.3)
+            d.cap("Create a private workspace with your hotel's name, room count and approver.", 0.3)
             typ(page.get_by_label("Hotel name"), HOTEL)
             typ(page.get_by_label("Rooms"), "180", delay=90)
             d.click(page.get_by_role("button", name="Create workspace"), after=2.0)
@@ -84,19 +84,19 @@ def main():
         results.append(step(d, "access_code", s_code))
 
         def s_setup():
-            d.cap("<b>Step 1 · Hotel setup.</b> Your costs, outlets, menu, par levels and rules.", 0.2)
+            d.cap("<b>Step 1 · Hotel setup.</b> Enter your costs, outlets, menu, par levels and rules.", 0.2)
             d.nav("Hotel setup")
             typ(page.get_by_label("Outlet that can use near-expiry stock"), "Staff canteen")
             typ(page.get_by_label("Food waste cost ($ per kg)"), "12.50", delay=90)
             d.click(page.get_by_role("tab", name="Menu & par levels"), after=0.6)
-            d.cap("Enter your standing par: what your kitchen prepares today without AI.", 0.3)
+            d.cap("Enter your standing par: what your kitchen prepares without AI.", 0.3)
             for label, v in (("Pastry & bread standing par (kg)", "30"), ("Hot line standing par (kg)", "46"),
                              ("Fruit & yogurt standing par (kg)", "34"), ("Cold cuts & cheese standing par (kg)", "15")):
                 typ(page.get_by_label(label), v, delay=80)
-            d.cap("Below it, the menu items your staff search for when they record stock.", 0.3)
+            d.cap("Below it are the menu items your staff search for when recording stock.", 0.3)
             d.scroll(380, 1.1); time.sleep(1.2)
             d.click(page.get_by_role("tab", name="Governance policy"), after=0.6)
-            d.cap("Your rules: how much the agents may change alone, and whether they run as AI agents.", 2.4)
+            d.cap("Set your rules: how much the agents may change on their own, and whether they run as AI agents.", 2.4)
             d.click(page.get_by_role("button", name="Save setup"), after=1.5)
         results.append(step(d, "setup", s_setup))
 
@@ -127,7 +127,7 @@ def main():
             d.click(page.get_by_text("I have checked the events calendar", exact=False).first, after=0.3)
             d.click(page.get_by_role("tab", name="Guest signal"), after=0.4)
             typ(page.get_by_label("Recent guest F&B score (1–5)"), "4.62", delay=90)
-            d.cap("Save it, and the agents analyse the morning.", 0.2)
+            d.cap("Save it, and the agents analyze the morning.", 0.2)
             d.click(page.get_by_role("button", name="Save this morning's data and ask the agents"), after=2.5)
         results.append(step(d, "morning", s_morning))
 
@@ -177,7 +177,7 @@ def main():
             d.move_to(box)
             box.click(); box.type(code.get("v", ""), delay=70)
             d.click(page.get_by_role("button", name="Open", exact=True), after=2.0)
-            d.cap(f"Back in {HOTEL}, with everything saved.", 2.4)
+            d.cap(f"You're back in {HOTEL}, with everything saved.", 2.4)
         results.append(step(d, "reopen", s_reopen))
 
         def s_end():

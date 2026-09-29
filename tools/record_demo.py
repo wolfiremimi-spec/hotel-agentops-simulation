@@ -172,14 +172,14 @@ def main():
                "plan, decide, close out, audit and order.", 3.5)
 
         def s_landing():
-            d.cap("Go to <b>hotel-agentops.streamlit.app</b>. No sign-up: click <b>Try the live demo</b>.", 1.5)
+            d.cap("Go to <b>hotel-agentops.streamlit.app</b> and click <b>Try the live demo</b>. No sign-up needed.", 1.5)
             d.scroll(450, 1.1); time.sleep(0.3); d.to_top()
             d.click(page.get_by_role("button", name="Try the live demo →"), after=2.0)
         results.append(step(d, "landing", s_landing))
 
         def s_today():
             d.cap("<b>Step 1 · Today's plan.</b> The Saturday morning (D-0418) is prefilled from the case study.", 2.6)
-            d.cap("Each tab is a data source the agents read: occupancy, inventory, events, guest signal.", 0.6)
+            d.cap("Each tab is a data source the agents read: occupancy, inventory, events and guest signal.", 0.6)
             for tab in ("Inventory", "Occupancy & reservations"):
                 d.click(page.get_by_role("tab", name=tab), after=1.0)
             d.cap("Click <b>Save this morning's data and ask the agents</b>.", 0.4)
@@ -187,9 +187,9 @@ def main():
         results.append(step(d, "today_inputs", s_today))
 
         def s_decide():
-            d.cap("<b>Step 2 · The agents recommend.</b> Four AI specialists analyse the morning; governance routes each decision.", 2.0)
+            d.cap("<b>Step 2 · The agents recommend.</b> Four AI specialists analyze the morning, and governance routes each decision.", 2.0)
             d.scroll(700, 1.8); time.sleep(0.6)
-            d.cap("Nothing is pre-selected. For each decision choose <b>Approve</b>, Modify, Reject or Request more context.", 0.8)
+            d.cap("Nothing is pre-selected. For each decision, choose <b>Approve</b>, Modify, Reject or Request more context.", 0.8)
             groups = page.locator('[data-testid="stRadio"]').filter(has_text="Approve")
             n = groups.count()
             log("decision groups", n)
@@ -201,7 +201,7 @@ def main():
 
         def s_saved():
             d.to_top()
-            d.cap("The approved plan becomes the kitchen's production sheet: print it, or download it.", 1.0)
+            d.cap("The approved plan becomes the kitchen's production sheet: print it or download it.", 1.0)
             d.move_to(page.get_by_text("Printable kitchen sheet").first); time.sleep(1.4)
             d.scroll(450, 1.2); time.sleep(0.4)
             d.cap("<b>Step 3 · After breakfast,</b> close out the service.", 0.5)
@@ -226,21 +226,21 @@ def main():
             opt = page.get_by_role("option", name="D-0418")
             if opt.count():
                 d.click(opt.first, after=1.2)
-            d.cap("Follow D-0418 end to end: input, agent, governance, human, action, outcome.", 1.0)
+            d.cap("Follow D-0418 end to end: input, agent, governance, human decision, action and outcome.", 1.0)
             d.scroll(350, 1.0); time.sleep(1.8)
         results.append(step(d, "decision_log", s_log))
 
         def s_perf():
-            d.cap("<b>Step 5 · Performance & autonomy.</b> Autonomy is earned from the hotel's own record: eight readiness checks.", 0.3)
+            d.cap("<b>Step 5 · Performance & autonomy.</b> Autonomy is earned from the hotel's own record through eight readiness checks.", 0.3)
             d.nav("Performance")
             time.sleep(1.4); d.scroll(600, 1.6); time.sleep(1.6)
         results.append(step(d, "performance", s_perf))
 
         def s_order():
-            d.cap("<b>Step 6 · Next week's order.</b> Less of what's left over, more of what runs out.", 0.3)
+            d.cap("<b>Step 6 · Next week's order.</b> Order less of what's left over and more of what runs out.", 0.3)
             d.nav("Next week's order")
             time.sleep(0.8); d.scroll(750, 1.8); time.sleep(1.8)
-            d.cap("Review the suggestion, change any quantity, then approve. A manager approves every order.", 0.6)
+            d.cap("Review the suggestion, change any quantity and approve it. A manager approves every order.", 0.6)
             d.click(page.get_by_role("button", name="Approve and log this order"), after=1.6)
         results.append(step(d, "order", s_order))
 

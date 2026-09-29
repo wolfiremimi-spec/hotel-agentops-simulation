@@ -447,7 +447,7 @@ def how_it_works() -> None:
     section("how", "How it works", "One loop, every service.",
             "A closed-loop decision system, not a one-time prediction. Each morning runs the same governed cycle.")
     steps = [("01", "Perceive", "Enter the morning", "Occupancy, reservations, inventory, events and the team's notes, in one form."),
-             ("02", "Reason", "Agents analyse", "Demand, Inventory and Waste run in parallel; Production drafts the plan from their signals."),
+             ("02", "Reason", "Agents analyze", "Demand, Inventory and Waste run in parallel; Production drafts the plan from their signals."),
              ("03", "Govern", "Rules route it", "Risk, reversibility, confidence and policy decide who may act on each recommendation."),
              ("04", "Act", "You decide", "Approve, modify, reject or ask for context. The kitchen gets its production sheet."),
              ("05", "Learn", "Close out", "Record covers and leftovers. Every service builds the record autonomy is earned from.")]
@@ -610,7 +610,7 @@ def connected() -> None:
        'decision is governed, approved where it matters, and measured.</p>'
        '<div class="ws-tags caps">' + "".join(f"<span>{e(c)}</span>" for c in caps) + '</div></div>'
        f'<div class="im"><img src="{img("connected_system.jpg")}" alt="A hotel resort above a leaf whose veins connect '
-       'guests, kitchen, dining, inventory, suppliers, reporting and recycling, labelled with the seven capabilities '
+       'guests, kitchen, dining, inventory, suppliers, reporting and recycling, labeled with the seven capabilities '
        'listed beside it"></div></div>')
 
 SECTIONS = [("top", "Overview"), ("get-started", "Get started"), ("how", "How it works"), ("system", "The system"),

@@ -177,7 +177,7 @@ def page():
             steps(m.get("steps"))
     q = st.chat_input("e.g. Why did D-0418 need my approval? What if inventory was counted 14 hours ago?", key="cp_in")
     if not st.session_state.cp_chat:
-        st.caption("Try: “Summarise this morning's plan” · “Why is autonomy SUPERVISED?” · “What if the wedding is revised to 180 covers?”")
+        st.caption("Try: “Summarize this morning's plan” · “Why is autonomy SUPERVISED?” · “What if the wedding is revised to 180 covers?”")
     if not q:
         return
     if st.session_state.cp_asked >= MAX_QUESTIONS:
