@@ -5,7 +5,7 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
-from product import site
+from product import site, tour
 from product import core
 
 GL = sim.GROUP_LABEL
@@ -322,6 +322,7 @@ def page():
     site.page_header("Today's plan", "This morning's production plan",
               "Enter this morning's figures. The agents recommend, governance routes each decision, and you approve "
               "what needs you. The saved plan becomes the kitchen's production sheet.", photo="band_ingredients.jpg")
+    tour.hint("product/views/today.py")
     if S.is_demo():
         ui.banner("<b>Demo workspace.</b> Modeled case-study data; the D-0418 morning is prefilled. Nothing is saved after you leave.")
     date = st.date_input("Service date", dt.date.fromisoformat(S.today()), key="td_date").isoformat()

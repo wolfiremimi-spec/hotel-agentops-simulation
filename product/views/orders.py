@@ -7,6 +7,7 @@ import streamlit as st
 
 from control_room import ui
 from product import app_state as S
+from product import tour
 from product import core, ordering, site
 
 GL = core.GROUP_LABEL
@@ -24,6 +25,7 @@ def page():
                      "The agents turn this hotel's own close-outs into next week's supplier order per item group: less "
                      "where food is usually left over, more where guests ran short. A manager approves every order.",
                      photo="band_order.jpg")
+    tour.hint("product/views/orders.py")
     if S.is_demo():
         ui.banner("<b>Demo workspace.</b> Built from the case study's modeled history. Nothing is saved after you leave.")
     p = S.profile()

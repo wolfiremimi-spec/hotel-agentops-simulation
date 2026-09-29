@@ -7,13 +7,15 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
-from product import site
+from product import site, tour
 
 
 def page():
     site.page_header("Decision log & audit", "Every decision, who made it, and why",
               "Each recommendation is logged with its authority, the human decision, what was executed and the rule "
               "trace behind it. Close-outs add the actual outcome.", photo="band_log.jpg")
+    tour.hint("product/views/decision_log.py")
+    tour.mark("log")
     days = [d for d in S.days() if d.get("run")]
     if not days:
         st.info("No decisions yet. Approve a morning plan on Today's plan and it appears here.")

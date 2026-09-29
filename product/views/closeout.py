@@ -3,7 +3,7 @@ import streamlit as st
 
 from control_room import sim, ui
 from product import app_state as S
-from product import site
+from product import site, tour
 from product import core
 
 GL = sim.GROUP_LABEL
@@ -13,6 +13,7 @@ def page():
     site.page_header("Close out service", "What actually happened at breakfast",
               "Record actual covers and what was left over. This scores the day's decisions, measures real waste and "
               "forecast accuracy, and builds the track record that autonomy is earned from.", photo="band_closeout.jpg")
+    tour.hint("product/views/closeout.py")
     if S.is_demo():
         ui.banner("<b>Demo workspace.</b> You can fill in the case study's modeled result for the D-0418 morning.")
     open_days = [d for d in S.days() if d.get("run") and not d.get("closeout")]

@@ -21,6 +21,11 @@ st.markdown(
 .ha-sec .t {{ font-size: 1.2rem; font-weight: 700; color: {ui.FOREST}; margin-top: .1rem; }}
 .ha-level {{ border-radius: 6px; padding: 12px 16px; margin: .4rem 0 1rem; background: {ui.LINEN}; border-left: 4px solid {ui.SAND}; }}
 .ha-level b {{ color: {ui.FOREST}; }}
+.ha-tour {{ border: 1px solid {ui.SAND}; background: linear-gradient(90deg, {ui.LINEN}, #fff); border-radius: 14px;
+            padding: 14px 18px; margin: .2rem 0 1rem; box-shadow: 0 1px 2px rgba(23,33,28,.05); }}
+.ha-tour .k {{ font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: {ui.SAND}; }}
+.ha-tour .t {{ font-size: 1.1rem; font-weight: 800; color: {ui.FOREST}; margin: .15rem 0 .25rem; }}
+.ha-tour p {{ margin: 0; color: {ui.INK}; font-size: .95rem; line-height: 1.5; }}
 .ha-code {{ font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 1.6rem; font-weight: 700; letter-spacing: .12em;
             color: {ui.FOREST}; background: {ui.LINEN}; border: 2px dashed {ui.SAND}; border-radius: 6px; padding: 12px 16px;
             display: inline-block; }}
@@ -65,3 +70,7 @@ if st.session_state.get("ha_new_code"):
             del st.session_state["ha_new_code"]
             st.rerun()
 S.guard(nav.run)
+if S.hotel():
+    from product import tour  # rendered after the page, so steps completed on it are already ticked
+    with st.sidebar:
+        tour.sidebar()

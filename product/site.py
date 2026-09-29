@@ -404,7 +404,7 @@ def hero_text() -> None:
 
 
 def hero_fine() -> None:
-    md('<div class="ws-fine">No sign-up for the demo · runs on the case study\'s modeled hotel · nothing is saved</div>')
+    md('<div class="ws-fine">No sign-up · a guided tour walks you through one full day in about two minutes · nothing is saved</div>')
 
 
 def preview() -> None:

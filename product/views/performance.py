@@ -5,7 +5,7 @@ import streamlit as st
 from control_room import ui
 from hotel_agentops_sim.agentops import MIN_SAMPLE
 from product import app_state as S
-from product import site
+from product import site, tour
 from product import core
 
 
@@ -23,6 +23,8 @@ def page():
     site.page_header("Performance & autonomy", "Autonomy is earned from your own results",
               f"The readiness gate uses this hotel's last {core.EVIDENCE_WINDOW_DAYS} days of decisions and close-outs. "
               "All eight checks must pass before any action runs without a manager. No single strong metric grants authority.", photo="band_perf.jpg")
+    tour.hint("product/views/performance.py")
+    tour.mark("autonomy")
     perf = S.performance_for(S.today())
     lvl = perf["autonomy"]
     st.markdown(f'<div class="ha-level"><b>Current autonomy: {ui.e(lvl)}</b><br>{ui.e(" · ".join(perf["autonomy_why"]))}</div>',
