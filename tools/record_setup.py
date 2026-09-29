@@ -89,8 +89,12 @@ def main():
             typ(page.get_by_label("Outlet that can use near-expiry stock"), "Staff canteen")
             typ(page.get_by_label("Food waste cost ($ per kg)"), "12.50", delay=90)
             d.click(page.get_by_role("tab", name="Menu & par levels"), after=0.6)
-            d.cap("Consumption per cover and standing par, plus the menu items staff search for.", 0.3)
-            d.scroll(420, 1.3); time.sleep(1.8)
+            d.cap("Enter your standing par: what your kitchen prepares today without AI.", 0.3)
+            for label, v in (("Pastry & bread standing par (kg)", "30"), ("Hot line standing par (kg)", "46"),
+                             ("Fruit & yogurt standing par (kg)", "34"), ("Cold cuts & cheese standing par (kg)", "15")):
+                typ(page.get_by_label(label), v, delay=80)
+            d.cap("Below it, the menu items your staff search for when they record stock.", 0.3)
+            d.scroll(380, 1.1); time.sleep(1.2)
             d.click(page.get_by_role("tab", name="Governance policy"), after=0.6)
             d.cap("Your rules: how much the agents may change alone, and whether they run as AI agents.", 2.4)
             d.click(page.get_by_role("button", name="Save setup"), after=1.5)
@@ -150,6 +154,11 @@ def main():
                              ("Cold cuts & cheese left", "0.9")):
                 typ(page.get_by_label(label, exact=False), v, delay=80)
             d.click(page.get_by_role("button", name="Save the close-out"), after=2.0)
+            m = page.locator('[data-testid="stMetric"]').filter(has_text="Covers").first
+            got = m.inner_text() if m.count() else ""
+            log("close-out covers metric:", got.replace("\n", " | "))
+            if "259" not in got:
+                raise AssertionError("covers not saved as typed: " + got)
             d.cap("The day is scored against your standing par, and your track record grows.", 0.3)
             d.scroll(300, 1.0); time.sleep(2.0)
         results.append(step(d, "close_out", s_close))

@@ -56,8 +56,10 @@ def page():
 
     with st.form(f"co_form{k}"):
         c = st.columns(3)
-        covers = c[0].number_input("Actual covers served", 1, 20000, step=1, key=f"co_cov{k}", placeholder="required",
-                                   **({} if f"co_cov{k}" in st.session_state else {"value": None}))
+        # The empty starting value lives in session state (never as a `value=` argument), so the widget keeps the same
+        # identity before and after the form is submitted and the typed number survives the rerun.
+        st.session_state.setdefault(f"co_cov{k}", None)
+        covers = c[0].number_input("Actual covers served", 1, 20000, step=1, key=f"co_cov{k}", placeholder="required")
         plate = c[1].number_input("Plate waste (kg, optional)", 0.0, 1000.0, step=0.1, key=f"co_plate{k}")
         gs = c[2].number_input("Guest F&B score for this service (optional)", 1.0, 5.0, value=None, step=0.01,
                                key=f"co_gs{k}")
