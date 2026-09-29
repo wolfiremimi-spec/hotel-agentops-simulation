@@ -1,0 +1,25 @@
+name: check-videos
+on:
+  push:
+    branches: [shoot]
+permissions:
+  contents: write
+jobs:
+  shoot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: |
+          pip install -r requirements.txt playwright==1.47.0
+          python -m playwright install --with-deps chromium
+      - run: |
+          streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > streamlit.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8501/_stcore/health && break; sleep 2; done
+          python tools/shoot_videos.py || true
+      - if: always()
+        run: |
+          cp streamlit.log shots/ || true; mkdir -p /tmp/p && cp -r shots/* /tmp/p/
+          git config user.name "shots"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan shots-out && git rm -rf -q . && git clean -fdq && cp -r /tmp/p/* . && git add -A && git commit -qm shots && git push -f origin shots-out

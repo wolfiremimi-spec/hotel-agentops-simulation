@@ -26,6 +26,20 @@ AUTHOR = "Amelia Wolfire"
 LINKEDIN_URL = "https://www.linkedin.com/in/amelia-wolfire-34354a273"
 EMAIL = "wolfiremimi@gmail.com"
 ASSETS = Path(__file__).resolve().parent / "assets"
+HOW_TO_VIDEOS = [
+    {"key": "demo", "label": "How-to video 1 of 2", "length": "2:00", "title": "How to run through the demo",
+     "file": "how_to_run_the_demo.mp4", "thumb": "videos/thumb_demo.jpg",
+     "summary": "Explore the case study's demo hotel: plan the morning, approve the agents' decisions, close out "
+                "breakfast, follow a decision through the audit log, see how autonomy is earned and approve next "
+                "week's order.",
+     "note": "Recorded in this app with the demo's modeled case-study data. No sign-up is needed to try it yourself."},
+    {"key": "setup", "label": "How-to video 2 of 2", "length": "2:30", "title": "How to set up your own hotel",
+     "file": "how_to_set_up_your_hotel.mp4", "thumb": "videos/thumb_setup.jpg",
+     "summary": "Create a private workspace, save your access code, enter your costs, par levels and history, run "
+                "your first morning with your own figures, close it out and come back in the next day.",
+     "note": "Recorded in this app. The hotel in this video is a fictional example; your own workspace saves your "
+             "hotel's real figures."},
+]
 
 
 @functools.lru_cache(maxsize=None)
@@ -271,6 +285,17 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-about .ws-contact {{ border-top: 1px solid {LINE}; padding-top: 20px; }}
 html, [data-testid="stMain"], [data-testid="stAppViewContainer"], section.main {{ scroll-behavior: smooth; }}
 .ws-sec, #top, #about {{ scroll-margin-top: 24px; }}
+.ws-vidthumb {{ position: relative; border-radius: 14px; overflow: hidden; border: 1px solid {LINE}; box-shadow: 0 10px 24px rgba(23,33,28,.10); }}
+.ws-vidthumb img {{ width: 100%; display: block; }}
+.ws-vidthumb .play {{ position: absolute; left: 50%; top: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%;
+  background: rgba(255,255,255,.92); box-shadow: 0 6px 16px rgba(0,0,0,.25); }}
+.ws-vidthumb .play::after {{ content: ""; position: absolute; left: 23px; top: 18px; border-left: 18px solid {FOREST};
+  border-top: 11px solid transparent; border-bottom: 11px solid transparent; }}
+.ws-vidmeta {{ margin: 10px 2px 8px; }} .ws-vidmeta b {{ display: block; color: {FOREST}; font-size: 1.02rem; }}
+.ws-vidmeta span {{ color: {MUTE}; font-size: .85rem; }}
+.ha-vid .n {{ font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: {MOSS}; }}
+.ha-vid h3 {{ margin: 4px 0 6px !important; padding: 0 !important; font-size: 1.5rem !important; color: {FOREST}; }}
+.ha-vid p {{ color: {MUTE}; margin: 0 0 10px; max-width: 70ch; }}
 .ws-rail {{ position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 999; display: flex; flex-direction: column; gap: 4px; padding: 10px 8px; background: rgba(251,250,246,.86); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid {LINE}; border-radius: 999px; box-shadow: 0 8px 24px -16px rgba(31,58,47,.35); }}
 .ws-rail a {{ position: relative; display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; text-decoration: none !important; }}
 .ws-rail i {{ width: 8px; height: 8px; border-radius: 50%; background: {SAGE}; transition: all .18s ease; }}
@@ -393,7 +418,7 @@ def nav() -> None:
     md(f'<div class="ws-nav"><div class="ws-brandwrap"><a class="ws-brand" href="#top">{LOGO}<b>Hotel AgentOps</b></a>'
        f'<a class="ws-by" href="#about">by <b>{AUTHOR}</b></a></div>'
        '<div class="ws-links"><a href="#how">How it works</a><a href="#agents">Agents</a><a href="#project">The project</a>'
-       '<a href="#about">About</a><a href="#get-started" class="cta">Get started</a></div></div>')
+       '<a href="#about">About</a><a href="#videos">Videos</a><a href="#get-started" class="cta">Get started</a></div></div>')
 
 
 def hero_text() -> None:
@@ -523,6 +548,18 @@ def get_started_header() -> None:
             "Explore the demo hotel, or create a private workspace for your own property.")
 
 
+def videos_header() -> None:
+    section("videos", "How-to videos", "Watch how it works first.",
+            "Two short walkthroughs recorded in this app: one runs through the demo hotel, the other shows how a hotel "
+            "sets up its own workspace.")
+
+
+def video_thumb(v: dict) -> None:
+    md(f'<div class="ws-vidthumb"><img src="{img(v["thumb"])}" alt="{e(v["title"])} video thumbnail">'
+       f'<span class="play"></span></div><div class="ws-vidmeta"><b>{e(v["title"])}</b><span>{e(v["label"])} · '
+       f'{e(v["length"])}</span></div>')
+
+
 def truth() -> None:
     md('<div class="ws-sec" style="margin-top:64px"><div class="k">Straight answers</div><h2>What it is, and what it isn\'t.</h2></div>'
        '<div class="ws-truth"><div class="ws-card"><div class="role">It is</div><h4>A working pilot application</h4><ul>'
@@ -613,7 +650,7 @@ def connected() -> None:
        'guests, kitchen, dining, inventory, suppliers, reporting and recycling, labeled with the seven capabilities '
        'listed beside it"></div></div>')
 
-SECTIONS = [("top", "Overview"), ("get-started", "Get started"), ("how", "How it works"), ("system", "The system"),
+SECTIONS = [("top", "Overview"), ("get-started", "Get started"), ("videos", "How-to videos"), ("how", "How it works"), ("system", "The system"),
             ("agents", "Agents"), ("governance", "Governance"), ("results", "Results"), ("project", "The project"),
             ("about", "About")]
 

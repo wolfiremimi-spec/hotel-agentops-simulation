@@ -35,7 +35,8 @@ st.markdown(
 )
 
 if S.hotel() is None:
-    pages = [st.Page("product/views/welcome.py", title="Hotel AgentOps", default=True)]
+    pages = [st.Page("product/views/welcome.py", title="Hotel AgentOps", default=True),
+             st.Page("product/views/videos.py", title="How-to videos", url_path="videos")]
 else:
     pages = {
         "Daily operations": [
@@ -47,7 +48,9 @@ else:
             st.Page("product/views/decision_log.py", title="Decision log & audit", icon=":material/fact_check:"),
             st.Page("product/views/performance.py", title="Performance & autonomy", icon=":material/insights:"),
         ],
-        "Assist": [st.Page("product/views/copilot.py", title="Ops copilot", icon=":material/forum:")],
+        "Assist": [st.Page("product/views/copilot.py", title="Ops copilot", icon=":material/forum:"),
+                   st.Page("product/views/videos.py", title="How-to videos", icon=":material/play_circle:",
+                           url_path="videos")],
         "Hotel": [st.Page("product/views/setup.py", title="Hotel setup", icon=":material/tune:")],
     }
 

@@ -13,6 +13,9 @@ def open_demo():
     st.rerun()
 
 
+if st.session_state.pop("hv_open_demo", False):
+    open_demo()
+
 site.nav()
 site.side_nav()
 
@@ -83,6 +86,19 @@ with c3:
             else:
                 S.open_workspace("live", row)
                 st.rerun()
+
+# ---------------------------------------------------------------- how-to videos
+site.videos_header()
+_, mid, _ = st.columns([1, 1.2, 1])
+if mid.button("Watch the how-to videos →", type="primary", use_container_width=True, key="ha_videos"):
+    st.switch_page("product/views/videos.py")
+_, v1, v2, _ = st.columns([0.55, 1, 1, 0.55], gap="large")
+for col, v in zip((v1, v2), site.HOW_TO_VIDEOS):
+    with col:
+        site.video_thumb(v)
+        if st.button(f"▶ Play: {v['title']}", use_container_width=True, key=f"ha_play_{v['key']}"):
+            st.session_state.hv_pick = v["key"]
+            st.switch_page("product/views/videos.py")
 
 site.how_it_works()
 site.connected()
