@@ -1,0 +1,65 @@
+name: record-demo
+
+# Records the captioned walkthrough video of the pilot app. Runs when the `record-demo` branch is pushed;
+# the video and step screenshots are published to the `demo-video` branch.
+on:
+  push:
+    branches: [record-demo]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install app, browser and recorder
+        run: |
+          pip install -r requirements.txt playwright==1.47.0
+          python -m playwright install --with-deps chromium
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg fonts-inter || sudo apt-get install -y -qq xvfb ffmpeg
+      - name: Start a virtual screen and the app
+        run: |
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+          streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > streamlit.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8501/_stcore/health && break; sleep 2; done
+      - name: Record the walkthrough
+        continue-on-error: true
+        run: |
+          mkdir -p demo_out
+          date +%s.%N > demo_out/ff_start.txt
+          ffmpeg -loglevel error -y -f x11grab -draw_mouse 0 -video_size 1600x900 -framerate 30 -i :99 \
+                 -c:v libx264 -preset ultrafast -crf 10 -pix_fmt yuv444p raw.mkv &
+          echo $! > ff.pid
+          sleep 1
+          python tools/record_demo.py; echo "exit=$?" >> demo_out/log.txt
+          sleep 1
+          kill -INT $(cat ff.pid); sleep 4
+      - name: Cut and encode the video
+        continue-on-error: true
+        run: |
+          S=$(python -c "print(float(open('demo_out/start.txt').read())-float(open('demo_out/ff_start.txt').read()))")
+          E=$(python -c "print(float(open('demo_out/end.txt').read())-float(open('demo_out/ff_start.txt').read()))")
+          echo "trim $S -> $E" >> demo_out/log.txt
+          ffmpeg -loglevel error -y -ss $S -to $E -i raw.mkv -vf "scale=1920:1080:flags=lanczos" \
+                 -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -movflags +faststart Hotel_AgentOps_walkthrough.mp4
+          ls -la Hotel_AgentOps_walkthrough.mp4 >> demo_out/log.txt
+      - name: Publish to the demo-video branch
+        if: always()
+        run: |
+          mkdir -p /tmp/pub && cp -r demo_out/* /tmp/pub/ && cp streamlit.log /tmp/pub/ || true
+          cp Hotel_AgentOps_walkthrough.mp4 /tmp/pub/ || true
+          git config user.name "demo-recorder"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan demo-video
+          git rm -rf -q . && git clean -fdq
+          cp -r /tmp/pub/* .
+          git add -A && git commit -qm "Walkthrough recording ${GITHUB_SHA::7}"
+          git push -f origin demo-video
