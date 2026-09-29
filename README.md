@@ -1,5 +1,8 @@
 # Hotel AgentOps Simulation
 
+[![tests](https://github.com/wolfiremimi-spec/hotel-agentops-simulation/actions/workflows/tests.yml/badge.svg)](https://github.com/wolfiremimi-spec/hotel-agentops-simulation/actions/workflows/tests.yml)
+&nbsp;**[Pilot app](https://hotel-agentops.streamlit.app)** · **[Control Room](https://hotel-agentops-control-room.streamlit.app)**
+
 A working, auditable simulation of the governed multi-agent operating system from my case study
 **Agentic AI for Sustainable Hospitality**. Developed in the MIT executive program
 *Implementing Agentic AI: Building Your Organizational Playbook*.
@@ -25,6 +28,7 @@ python -m hotel_agentops_sim trace D-0418    # follow one decision: input → ag
 python -m hotel_agentops_sim test tool-reliability   # or missing-context, guest-score
 python -m hotel_agentops_sim failure-matrix  # all 10 failure modes from the case study, executed
 python -m unittest -v                        # 20 tests of the governance guarantees
+python tests/app/run_all.py                  # 125 end-to-end checks of the pilot app and the Control Room
 ```
 
 Every run writes the following to `runs/<name>/`:
