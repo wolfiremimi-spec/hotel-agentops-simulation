@@ -149,6 +149,41 @@ if d:
     st.markdown('<div class="cr-trace">' + ui.e("\n".join(rows)) + "</div>", unsafe_allow_html=True)
 
 src = {x["source"]: x["baseline"] for x in ui.WB["waste_by_source"]}
+# ---------------------------------------------------------------- 5 · close the loop
+if d and d["choice"] in ("Approve", "Modify"):
+    st.markdown("#### 5 · Run the week: did the order fit? " + ui.tag("MODELED SIMULATION"), unsafe_allow_html=True)
+    st.caption("Enter how many guests actually came. Usage is modeled as actual covers × the case study's consumption per "
+               "cover. In the pilot app this comes from each day's close-out instead.")
+    wk = pd.DataFrame([{"Date": c_["date"], "Day": c_["day"], "Expected": c_["expected_covers"],
+                        "Actual covers": float(c_["expected_covers"])} for c_ in covers])
+    wk = st.data_editor(wk, hide_index=True, use_container_width=True, disabled=["Date", "Day", "Expected"],
+                        key=f"pr_week_{st.session_state.pr_v}_{d['at']}",
+                        column_config={"Actual covers": st.column_config.NumberColumn(min_value=0, max_value=5000, step=1)})
+    actual = int(wk["Actual covers"].fillna(0).sum())
+    used = {g: actual * ev["per_cover"][g] for g in core.GROUPS}
+    order = {"week_start": start, "lines": {g: {"ordered_kg": d["final"][g], "standing_par_kg": lines[g]["standing_par_kg"]}
+                                            for g in core.GROUPS}}
+    res = ordering.accuracy(order, used, 7)
+    m = st.columns(3)
+    m[0].metric("Order accuracy", "—" if res["accuracy"] is None else f"{res['accuracy']:.0%}", "1 − |ordered − used| ÷ used",
+                delta_color="off")
+    m[1].metric("Bought beyond use", f"{res['surplus_kg']:.0f} kg", f"standing par: {res['par_surplus_kg']:.0f} kg",
+                delta_color="off")
+    m[2].metric("Actual vs expected covers", f"{actual:,}", f"{actual - rec['total_covers']:+,}", delta_color="off")
+    st.dataframe(pd.DataFrame([{"Item group": l["label"], "Ordered (kg)": l["ordered_kg"], "Used (kg)": l["used_kg"],
+                                "Surplus (+) / short (−) kg": l["surplus_kg"], "Standing par (kg)": l["standing_par_kg"],
+                                "Result": "Short" if l["short"] else "Covered"} for l in res["lines"].values()]),
+                 hide_index=True, use_container_width=True)
+    learn = dict(ev, last_order=res)
+    shifts = [(GL[g], ordering.classify(learn, g)) for g in core.GROUPS if res["lines"][g]["short"]]
+    if shifts:
+        st.markdown('<div class="cr-trace">' + ui.e("\n".join(
+            [f"LEARNING       {n}: {why} → next week's order gets the stockout-prone buffer" for n, (_, why) in shifts]))
+            + "</div>", unsafe_allow_html=True)
+    else:
+        st.caption("Every group was covered, so next week's suggestion keeps its patterns. Try more guests than expected to "
+                   "see the agent learn from a shortfall.")
+
 ui.why(f"Overproduction is the largest waste source in the workbook ({src['Overproduction']} of {src['Total']} kg at baseline). "
        f"On the recorded Saturdays pastry averaged {ev['avg_leftover_pct']['pastry_bread']:.0f}% left over, while the hot line "
        f"ran out in {ev['stockouts']['hot_line']} of {ev['services']}.",

@@ -173,5 +173,39 @@ def page():
                            f"purchase_order_{latest['week_start']}.csv", "text/csv", key="or_csv")
 
 
-S.guard(page)
+def order_results(p, days):
+    evals = ordering.evaluate_orders(p, days)
+    section("05", "How approved orders performed")
+    if not evals:
+        st.caption("Once services in an approved order's week are closed out, this compares what was ordered with what "
+                   "the kitchen actually used, and next week's suggestion learns from any shortfall.")
+        return
+    for ev_ in evals[:3]:
+        acc = ev_["accuracy"]
+        with st.container(border=True):
+            c = st.columns(4)
+            c[0].metric(f"Week of {ev_['week_start']}", f"{ev_['days_recorded']} of 7 days", "closed out", delta_color="off")
+            c[1].metric("Order accuracy", "—" if acc is None else f"{acc:.0%}", "1 − |ordered − used| ÷ used", delta_color="off")
+            c[2].metric("Bought beyond use", f"{ev_['surplus_kg']:.0f} kg", "this order", delta_color="off")
+            c[3].metric("At standing par", f"{ev_['par_surplus_kg']:.0f} kg", "beyond use (estimate)", delta_color="off")
+            st.dataframe(pd.DataFrame([{"Item group": l["label"], "Ordered (kg, pro-rated)": l["ordered_kg"],
+                                        "Used (kg)": l["used_kg"], "Surplus (+) / short (−) kg": l["surplus_kg"],
+                                        "Standing par would have bought (kg)": l["standing_par_kg"],
+                                        "Result": "Stockout" if l["stockout"] else ("Short" if l["short"] else "Covered")}
+                                       for l in ev_["lines"].values()]), hide_index=True, use_container_width=True)
+            short = [l["label"] for l in ev_["lines"].values() if l["short"]]
+            if short:
+                st.caption("Learning: " + ", ".join(short) + " ran short, so next week's suggestion gives "
+                           + ("it" if len(short) == 1 else "them") + " the larger guest-safety buffer.")
+    st.caption("Ordered amounts are pro-rated to the days closed out so far. Used = what the kitchen served and guests "
+               "ate, from each close-out (available − leftover).")
+
+
+def page_and_results():
+    page()
+    if S.hotel():
+        order_results(S.profile(), S.days())
+
+
+S.guard(page_and_results)
 site.app_footer("Order suggestions are estimates from this hotel's own records; a manager approves every order.")

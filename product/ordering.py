@@ -49,7 +49,45 @@ def evidence(profile: dict, days: list[dict]) -> dict:
     return {"services": len(recent), "avg_leftover_pct": {g: round(mean(v), 1) if v else None for g, v in left.items()},
             "stockouts": outs, "per_cover": per_cover, "per_cover_source": per_cover_source,
             "covers_by_weekday": {wd: round(mean(v[:4])) for wd, v in by_wd.items()},
-            "covers_all": round(mean(r["covers"] for r in rows[:LOOKBACK])) if rows else None}
+            "covers_all": round(mean(r["covers"] for r in rows[:LOOKBACK])) if rows else None,
+            "last_order": (evaluate_orders(profile, days) or [None])[0]}
+
+
+def accuracy(order: dict, used: dict, days_recorded: int, stockouts: dict | None = None) -> dict:
+    """How an approved order compared with what was actually used over the recorded days of its week.
+    The order is pro-rated to the days recorded, so a part-week can be judged fairly."""
+    share = days_recorded / 7 if days_recorded else 0
+    lines, abs_err, total_used = {}, 0.0, 0.0
+    for g in GROUPS:
+        o = order["lines"][g]
+        ordered = o["ordered_kg"] * share
+        par = o["standing_par_kg"] * share
+        u = float(used.get(g) or 0.0)
+        diff = ordered - u
+        short = bool((stockouts or {}).get(g)) or diff < -0.05
+        lines[g] = {"label": LABEL[g], "ordered_kg": round(ordered, 1), "used_kg": round(u, 1), "surplus_kg": round(diff, 1),
+                    "standing_par_kg": round(par, 1), "par_surplus_kg": round(par - u, 1), "short": short,
+                    "stockout": bool((stockouts or {}).get(g))}
+        abs_err += abs(diff)
+        total_used += u
+    acc = max(0.0, 1 - abs_err / total_used) if total_used else None
+    return {"week_start": order["week_start"], "days_recorded": days_recorded, "lines": lines, "accuracy": acc,
+            "surplus_kg": round(sum(max(l["surplus_kg"], 0) for l in lines.values()), 1),
+            "par_surplus_kg": round(sum(max(l["par_surplus_kg"], 0) for l in lines.values()), 1)}
+
+
+def evaluate_orders(profile: dict, days: list[dict]) -> list[dict]:
+    """Every approved order with at least one closed-out service in its week, most recent first."""
+    out = []
+    for order in sorted(profile.get("orders", []), key=lambda o: o["week_start"], reverse=True):
+        week = set(week_dates(order["week_start"]))
+        closed = [d for d in days if d["service_date"] in week and d.get("closeout")]
+        if not closed:
+            continue
+        used = {g: sum(d["closeout"]["lines"][g]["consumed_kg"] for d in closed) for g in GROUPS}
+        outs = {g: any(d["closeout"]["stockout"].get(g) for d in closed) for g in GROUPS}
+        out.append(accuracy(order, used, len(closed), outs))
+    return out
 
 
 def default_covers(ev: dict, dates: list[str]) -> list[dict]:
@@ -68,6 +106,12 @@ def default_covers(ev: dict, dates: list[str]) -> list[dict]:
 
 
 def classify(ev: dict, g: str) -> tuple[str, str]:
+    last = ev.get("last_order")
+    if last and last["lines"][g]["short"]:
+        l = last["lines"][g]
+        return "stockout_prone", (f"last week's order ran short ({l['used_kg']:.0f} kg used vs {l['ordered_kg']:.0f} kg "
+                                  f"ordered for the {last['days_recorded']} recorded days)"
+                                  + ("" if not l["stockout"] else ", with a stockout"))
     if ev["stockouts"][g]:
         n = ev["stockouts"][g]
         return "stockout_prone", f"ran out in {n} of the last {ev['services']} recorded services"
