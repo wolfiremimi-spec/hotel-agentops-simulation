@@ -68,6 +68,16 @@ h1, h2, h3, h4 {{ color: {FOREST} !important; letter-spacing: -0.01em; }}
 .cr-table td {{ padding: 7px 8px; border-bottom: 1px solid {LINE}; vertical-align: top; }}
 .cr-foot {{ margin-top: 2.2rem; padding-top: .7rem; border-top: 1px solid {LINE}; font-size: .78rem; color: {MUTE}; }}
 @media (max-width: 800px) {{ .cr-why-g {{ grid-template-columns: 1fr; }} .cr-title {{ font-size: 1.6rem; }} }}
+/* touch screens (kitchen tablets, phones): bigger targets, easier typing */
+@media (pointer: coarse) {{
+  .stButton button, .stDownloadButton button, .stFormSubmitButton button, [data-testid^="stBaseButton"] {{ min-height: 48px; font-size: 1rem; }}
+  [data-testid="stNumberInput"] input, [data-testid="stTextInput"] input, [data-testid="stDateInput"] input {{ min-height: 46px; font-size: 1.05rem; }}
+  [data-testid="stNumberInput"] button {{ min-width: 44px; }}
+  [data-testid="stRadio"] label, [data-testid="stCheckbox"] label {{ padding: 6px 4px; font-size: 1rem; }}
+  [data-baseweb="select"] > div {{ min-height: 46px; }}
+  [data-testid="stSidebarNavLink"] {{ padding-top: 10px; padding-bottom: 10px; }}
+}}
+@media (max-width: 1024px) {{ .block-container {{ padding-left: 1.1rem; padding-right: 1.1rem; }} }}
 </style>
 """
 TAGS = {"LIVE SIMULATION": "t-live", "MODELED SIMULATION": "t-sim", "WORKBOOK": "t-wb", "ASSUMPTION": "t-asm", "INTERPRETATION": "t-int"}
