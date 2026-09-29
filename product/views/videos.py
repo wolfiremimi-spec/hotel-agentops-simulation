@@ -16,8 +16,8 @@ def page():
                      photo="band_today.jpg")
     pick = st.session_state.pop("hv_pick", None)
     order = sorted(VIDEOS, key=lambda v: v["key"] != pick)
-    for v in order:
-        with st.container(border=True):
+    for col, v in zip(st.columns(2, gap="large"), order):
+        with col, st.container(border=True):
             st.markdown(f'<div class="ha-vid"><span class="n">{site.e(v["label"])} · {site.e(v["length"])}</span>'
                         f'<h3>{site.e(v["title"])}</h3><p>{site.e(v["summary"])}</p></div>', unsafe_allow_html=True)
             st.video(str(site.ASSETS / "videos" / v["file"]))
