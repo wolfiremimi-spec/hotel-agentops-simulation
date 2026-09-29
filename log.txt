@@ -1,0 +1,37 @@
+CAPTION Go to <b>hotel-agentops.streamlit.app</b> and click <b>Set up your hotel</b>.
+CAPTION Create a private workspace with your hotel's name, room count and approver.
+OK   create
+access code 97CX-L5WK-7XFY
+CAPTION Save your <b>access code</b>. It's how you and your team get back in, and it can't be recovered.
+OK   access_code
+CAPTION <b>Step 1 · Hotel setup.</b> Enter your costs, outlets, menu, par levels and rules.
+CAPTION Enter your standing par: what your kitchen prepares without AI.
+CAPTION Below it are the menu items your staff search for when recording stock.
+CAPTION Set your rules: how much the agents may change on their own, and whether they run as AI agents.
+OK   setup
+CAPTION <b>Step 2 · History.</b> Import a few weeks of past services from the spreadsheet template.
+CAPTION Imported. The agents now plan from your hotel's own services.
+OK   history
+CAPTION <b>Step 3 · Every morning,</b> enter today's figures from your PMS and kitchen.
+CAPTION Save it, and the agents analyze the morning.
+OK   morning
+CAPTION <b>Step 4 · Decide.</b> Governance routes each recommendation; you approve what needs you.
+decision groups 2
+CAPTION Your plan becomes the kitchen's production sheet, ready to print.
+OK   decide
+CAPTION <b>Step 5 · After breakfast,</b> weigh what's left and close out the service.
+close-out covers metric: COVERS |  | 259 | predicted 267
+CAPTION The day is scored against your standing par, and your track record grows.
+OK   close_out
+CAPTION <b>Step 6 · Earned autonomy.</b> The agents start supervised and earn independence from your results.
+OK   performance
+CAPTION Tomorrow, open your workspace with your access code.
+CAPTION You're back in Harbor Example Hotel, with everything saved.
+OK   reopen
+CAPTION 
+OK   end
+RESULTS [True, True, True, True, True, True, True, True, True, True]
+exit=0
+trim 11.181296348571777 -> 179.30011916160583
+duration 168.11882281303406 speed x1.1207921520868938
+-rw-r--r-- 1 runner runner 11278797 Sep 29 03:56 Hotel_AgentOps_setup_walkthrough.mp4
