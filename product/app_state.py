@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import os
 
 import streamlit as st
 
@@ -19,12 +20,21 @@ def secret(name: str):
         return None
 
 
+_LOCAL_DB: dict = {}   # HA_LOCAL_DB=1 only (local runs and walkthrough recordings): workspaces kept in this process's memory
+
+
+def local_db() -> bool:
+    return os.environ.get("HA_LOCAL_DB") == "1" and not secret("SUPABASE_URL")
+
+
 def database_configured() -> bool:
-    return bool(secret("SUPABASE_URL") and secret("SUPABASE_SECRET_KEY"))
+    return local_db() or bool(secret("SUPABASE_URL") and secret("SUPABASE_SECRET_KEY"))
 
 
 def get_store(mode: str | None = None):
     mode = mode or st.session_state.get("ha_mode")
+    if mode == "live" and local_db():
+        return MemoryStore(_LOCAL_DB, salt="local")
     if mode == "live":
         return SupabaseStore(secret("SUPABASE_URL"), secret("SUPABASE_SECRET_KEY"),
                              salt=secret("APP_SALT") or secret("SUPABASE_URL"))
