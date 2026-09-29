@@ -66,6 +66,7 @@ CSS = f"""
 html, body, .stApp, [class*="css"], .stMarkdown, button, input, textarea {{ font-family: Inter, 'Helvetica Neue', Arial, sans-serif; }}
 .stApp {{ background: {PAPER}; color: {INK}; }}
 header[data-testid="stHeader"] {{ background: transparent; }}
+[data-testid="stDecoration"] {{ display: none; }}
 [data-testid="InputInstructions"] {{ display: none; }}
 footer, #MainMenu {{ visibility: hidden; }}
 .block-container {{ max-width: 1180px; padding-top: 2.4rem; padding-bottom: 3rem; }}

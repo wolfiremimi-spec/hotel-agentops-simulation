@@ -14,6 +14,7 @@ URL = os.environ.get("APP_URL", "http://localhost:8501")
 OUT = Path(os.environ.get("DEMO_OUT", "demo_out"))
 OUT.mkdir(exist_ok=True)
 W, H = int(os.environ.get("DEMO_W", 1600)), int(os.environ.get("DEMO_H", 900))
+CHROME = int(os.environ.get("DEMO_CHROME", 0))          # extra window height for the browser's own bar, cropped later
 LOG = open(OUT / "log.txt", "w")
 
 
@@ -151,7 +152,7 @@ def main():
     with sync_playwright() as pw:
         headed = os.environ.get("DEMO_HEADED", "1") == "1"
         browser = pw.chromium.launch(headless=not headed, ignore_default_args=["--enable-automation"],
-                                     args=[f"--window-size={W},{H}", "--window-position=0,0", "--kiosk",
+                                     args=[f"--window-size={W},{H + CHROME}", "--window-position=0,0", "--kiosk",
                                            "--force-device-scale-factor=1", "--disable-infobars", "--hide-scrollbars"])
         ctx = browser.new_context(no_viewport=True) if headed else browser.new_context(viewport={"width": W, "height": H})
         page = ctx.new_page()
@@ -160,10 +161,13 @@ def main():
         page.goto(URL, wait_until="domcontentloaded")
         page.get_by_text("Cut breakfast waste.").first.wait_for(timeout=120000)
         d.idle(1.5)
+        chrome = page.evaluate("window.outerHeight - window.innerHeight") if headed else 0
+        (OUT / "chrome.txt").write_text(str(int(chrome)))
+        log("browser chrome height", chrome, "inner", page.evaluate("[window.innerWidth, window.innerHeight]"))
         (OUT / "start.txt").write_text(str(time.time()))
         results = []
 
-        d.card("How to run the app", "A two-minute walkthrough of one full breakfast service in the demo hotel: "
+        d.card("How to run the app", "A short walkthrough of one full breakfast service in the demo hotel: "
                "plan, decide, close out, audit and order.", 4.5)
 
         def s_landing():

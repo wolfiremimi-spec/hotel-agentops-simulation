@@ -11,6 +11,9 @@ from product.store import MemoryStore, StoreError, SupabaseStore
 
 def secret(name: str):
     try:
+        loader = getattr(st.secrets, "load_if_toml_exists", None)
+        if loader is not None and not loader():          # no secrets configured: stay silent, no error box
+            return None
         return st.secrets.get(name)
     except Exception:                                  # no secrets file
         return None

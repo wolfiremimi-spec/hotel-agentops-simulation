@@ -27,7 +27,8 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg fonts-inter || sudo apt-get install -y -qq xvfb ffmpeg
       - name: Start a virtual screen and the app
         run: |
-          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp &
+          Xvfb :99 -screen 0 1600x1000x24 -nolisten tcp &
+          mkdir -p .streamlit && echo 'APP_SALT = "demo-recording"' > .streamlit/secrets.toml
           echo "DISPLAY=:99" >> $GITHUB_ENV
           streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > streamlit.log 2>&1 &
           for i in $(seq 1 60); do curl -sf http://localhost:8501/_stcore/health && break; sleep 2; done
@@ -36,11 +37,11 @@ jobs:
         run: |
           mkdir -p demo_out
           date +%s.%N > demo_out/ff_start.txt
-          ffmpeg -loglevel error -y -f x11grab -draw_mouse 0 -video_size 1600x900 -framerate 30 -i :99 \
+          ffmpeg -loglevel error -y -f x11grab -draw_mouse 0 -video_size 1600x1000 -framerate 30 -i :99 \
                  -c:v libx264 -preset ultrafast -crf 10 -pix_fmt yuv444p raw.mkv &
           echo $! > ff.pid
           sleep 1
-          python tools/record_demo.py; echo "exit=$?" >> demo_out/log.txt
+          DEMO_CHROME=100 python tools/record_demo.py; echo "exit=$?" >> demo_out/log.txt
           sleep 1
           kill -INT $(cat ff.pid); sleep 4
       - name: Cut and encode the video
@@ -49,7 +50,8 @@ jobs:
           S=$(python -c "print(float(open('demo_out/start.txt').read())-float(open('demo_out/ff_start.txt').read()))")
           E=$(python -c "print(float(open('demo_out/end.txt').read())-float(open('demo_out/ff_start.txt').read()))")
           echo "trim $S -> $E" >> demo_out/log.txt
-          ffmpeg -loglevel error -y -ss $S -to $E -i raw.mkv -vf "scale=1920:1080:flags=lanczos" \
+          C=$(cat demo_out/chrome.txt)
+          ffmpeg -loglevel error -y -ss $S -to $E -i raw.mkv -vf "crop=1600:900:0:$C,scale=1920:1080:flags=lanczos" \
                  -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -movflags +faststart Hotel_AgentOps_walkthrough.mp4
           ls -la Hotel_AgentOps_walkthrough.mp4 >> demo_out/log.txt
       - name: Publish to the demo-video branch
