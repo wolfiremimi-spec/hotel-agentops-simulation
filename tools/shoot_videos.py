@@ -3,7 +3,7 @@ import time, sys
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 OUT = Path("shots"); OUT.mkdir(exist_ok=True)
-log = open(OUT / "log.txt", "w")
+log = open(OUT / "videos_log.txt", "w")
 def say(*a): print(*a, flush=True); print(*a, file=log, flush=True)
 ok = True
 with sync_playwright() as pw:
