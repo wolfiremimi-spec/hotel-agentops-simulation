@@ -3,6 +3,7 @@
 Runs in GitHub Actions (see .github/workflows/record-demo.yml): the real app is started with `streamlit run`, a headed
 Chromium drives it like a visitor while ffmpeg records the screen. Captions and a visible cursor are overlaid in the page.
 """
+import json
 import os
 import sys
 import time
@@ -14,8 +15,11 @@ URL = os.environ.get("APP_URL", "http://localhost:8501")
 OUT = Path(os.environ.get("DEMO_OUT", "demo_out"))
 OUT.mkdir(exist_ok=True)
 W, H = int(os.environ.get("DEMO_W", 1600)), int(os.environ.get("DEMO_H", 900))
+DSF = os.environ.get("DEMO_DSF", "1")
 CHROME = int(os.environ.get("DEMO_CHROME", 0))          # extra window height for the browser's own bar, cropped later
 LOG = open(OUT / "log.txt", "w")
+CLEAN = os.environ.get("DEMO_CLEAN", "0") == "1"   # no captions or title cards on screen; events logged for editing
+EVENTS = open(OUT / "events.jsonl", "w")
 
 
 def log(*a):
@@ -38,9 +42,20 @@ OVERLAY_JS = r"""
     Object.assign(m.style, {position:'fixed', left:'-100px', top:'-100px', width:'26px', height:'26px', marginLeft:'-13px',
       marginTop:'-13px', borderRadius:'50%', background:'rgba(199,168,119,.45)', border:'3px solid #1F3A2F',
       zIndex: 2147483647, pointerEvents:'none', transition:'transform .15s'});
+    if (window.__CLEAN) {
+      Object.assign(m.style, {width:'30px', height:'38px', marginLeft:'-4px', marginTop:'-3px', borderRadius:'0', background:'none',
+        border:'none', transformOrigin:'4px 3px', filter:'drop-shadow(0 3px 5px rgba(0,0,0,.35))'});
+      m.innerHTML = '<svg width="30" height="38" viewBox="0 0 30 38"><path d="M4 3 L4 30 L11 23.5 L15.5 34 L20 32 L15.6 21.8 L25 21.6 Z" fill="#111" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/></svg>';
+      const r = document.createElement('div'); r.id = '__rip';
+      Object.assign(r.style, {position:'fixed', width:'46px', height:'46px', marginLeft:'-23px', marginTop:'-23px', borderRadius:'50%',
+        border:'3px solid rgba(199,168,119,.95)', background:'rgba(199,168,119,.18)', zIndex: 2147483646, pointerEvents:'none', opacity:0});
+      document.body.appendChild(r);
+      document.addEventListener('mousedown', e => { r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+        r.animate([{opacity:1, transform:'scale(.4)'}, {opacity:0, transform:'scale(1.6)'}], {duration: 650, easing: 'ease-out'}); }, true);
+    }
     document.body.appendChild(m);
     document.addEventListener('mousemove', e => { m.style.left = e.clientX + 'px'; m.style.top = e.clientY + 'px'; }, true);
-    document.addEventListener('mousedown', () => { m.style.transform = 'scale(.6)'; }, true);
+    document.addEventListener('mousedown', () => { m.style.transform = 'scale(.82)'; }, true);
     document.addEventListener('mouseup', () => { m.style.transform = 'scale(1)'; }, true);
   }
 }
@@ -67,20 +82,32 @@ class Demo:
     def __init__(self, page):
         self.p = page
         self.n = 0
+        self.t0 = None
+
+    def ev(self, kind, **data):
+        if self.t0 is not None:
+            EVENTS.write(json.dumps({"t": round(time.time() - self.t0, 3), "kind": kind, **data}) + "\n"); EVENTS.flush()
 
     def overlay(self):
         try:
+            if CLEAN:
+                self.p.evaluate("() => { window.__CLEAN = true; }")
             self.p.evaluate(OVERLAY_JS)
         except Exception as ex:
             log("overlay failed", ex)
 
     def cap(self, text, hold=0.0):
         self.overlay()
-        self.p.evaluate(CAPTION_JS, text)
+        if not CLEAN:
+            self.p.evaluate(CAPTION_JS, text)
         log("CAPTION", text)
+        self.ev("cap", text=text)
         time.sleep(hold)
 
     def card(self, title, sub, hold):
+        self.ev("card", title=title)
+        if CLEAN:
+            return
         self.overlay()
         self.p.evaluate(CARD_JS, [title, sub, True])
         time.sleep(hold)
@@ -110,15 +137,18 @@ class Demo:
         time.sleep(0.4)
         b = loc.bounding_box()
         if b:
+            self.ev("move", box=[round(b["x"]), round(b["y"]), round(b["width"]), round(b["height"])])
             self.p.mouse.move(b["x"] + b["width"] / 2, b["y"] + b["height"] / 2, steps=steps)
         time.sleep(0.35)
 
     def click(self, loc, after=1.2):
         self.move_to(loc)
+        self.ev("click")
         loc.click(timeout=15000)
         self.idle(after)
 
     def scroll(self, dy, secs=1.6):
+        self.ev("scroll", dy=dy, secs=secs)
         self.p.mouse.move(W * 0.62, H * 0.5, steps=12)
         steps = max(int(secs / 0.03), 1)
         for _ in range(steps):
@@ -132,12 +162,14 @@ class Demo:
         time.sleep(0.9)
 
     def nav(self, text):
+        self.ev("nav", text=text)
         link = self.p.locator('[data-testid="stSidebarNav"] a, [data-testid="stSidebarNavLink"]').filter(has_text=text).first
         self.click(link, after=1.5)
         self.overlay()
 
 
 def step(demo, name, fn):
+    demo.ev("step", name=name)
     try:
         fn()
         demo.shot(name)
@@ -154,7 +186,7 @@ def main():
         headed = os.environ.get("DEMO_HEADED", "1") == "1"
         browser = pw.chromium.launch(headless=not headed, ignore_default_args=["--enable-automation"],
                                      args=[f"--window-size={W},{H + CHROME}", "--window-position=0,0", "--kiosk",
-                                           "--force-device-scale-factor=1", "--disable-infobars", "--hide-scrollbars"])
+                                           f"--force-device-scale-factor={DSF}", "--disable-infobars", "--hide-scrollbars"])
         ctx = browser.new_context(no_viewport=True) if headed else browser.new_context(viewport={"width": W, "height": H})
         page = ctx.new_page()
         page.set_default_timeout(30000)
@@ -164,8 +196,11 @@ def main():
         d.idle(1.5)
         chrome = page.evaluate("window.outerHeight - window.innerHeight") if headed else 0
         (OUT / "chrome.txt").write_text(str(int(chrome)))
+        (OUT / "viewport.txt").write_text(" ".join(str(v) for v in page.evaluate(
+            "[window.innerWidth, window.innerHeight, window.devicePixelRatio, window.outerHeight - window.innerHeight]")))
         log("browser chrome height", chrome, "inner", page.evaluate("[window.innerWidth, window.innerHeight]"))
         (OUT / "start.txt").write_text(str(time.time()))
+        d.t0 = time.time(); d.overlay()
         results = []
 
         d.card("How to run through the demo", "How-to video 1 of 2. One full breakfast service in the demo hotel: "
@@ -243,6 +278,13 @@ def main():
             d.cap("Review the suggestion, change any quantity and approve it. A manager approves every order.", 0.6)
             d.click(page.get_by_role("button", name="Approve and log this order"), after=1.6)
         results.append(step(d, "order", s_order))
+
+        def s_videos():
+            d.cap("How-to videos", 0.2)
+            d.nav("How-to videos")
+            time.sleep(1.2); d.scroll(400, 1.2); time.sleep(1.4)
+        if CLEAN:
+            results.append(step(d, "videos", s_videos))
 
         def s_end():
             d.cap("The guided tour in the sidebar tracks each step. That's a full governed day.", 2.8)

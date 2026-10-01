@@ -1,0 +1,74 @@
+name: record-clean
+
+# Records clean, high-resolution clips (no captions; arrow cursor; event log) of the pilot demo, the hotel setup and the
+# Control Room, for editing into the product walkthrough video. Published to the `clean-video` branch.
+on:
+  push:
+    branches: [record-clean]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      DEMO_CLEAN: "1"
+      DEMO_DSF: "1.5"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install app, browser and recorder
+        run: |
+          pip install -r requirements.txt playwright==1.47.0
+          python -m playwright install --with-deps chromium
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb ffmpeg fonts-inter || sudo apt-get install -y -qq xvfb ffmpeg
+      - name: Start a virtual screen and both apps
+        run: |
+          Xvfb :99 -screen 0 2400x1600x24 -nolisten tcp &
+          mkdir -p .streamlit && echo 'APP_SALT = "demo-recording"' > .streamlit/secrets.toml
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+          HA_LOCAL_DB=1 streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > app.log 2>&1 &
+          HA_LOCAL_DB=1 streamlit run streamlit_app.py --server.headless true --server.port 8502 --browser.gatherUsageStats false > cr.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8501/_stcore/health && curl -sf http://localhost:8502/_stcore/health && break; sleep 2; done
+      - name: Record the three clips
+        continue-on-error: true
+        run: |
+          rec() {  # name script
+            mkdir -p out/$1
+            date +%s.%N > out/$1/ff_start.txt
+            ffmpeg -loglevel error -y -f x11grab -draw_mouse 0 -video_size 2400x1600 -framerate 30 -i :99 \
+                   -c:v libx264 -preset ultrafast -crf 8 -pix_fmt yuv444p raw_$1.mkv &
+            FF=$!
+            sleep 1
+            DEMO_OUT=out/$1 python $2; echo "exit=$?" >> out/$1/log.txt
+            sleep 1; kill -INT $FF; sleep 4
+            S=$(python -c "print(float(open('out/$1/start.txt').read())-float(open('out/$1/ff_start.txt').read()))")
+            E=$(python -c "print(float(open('out/$1/end.txt').read())-float(open('out/$1/ff_start.txt').read()))")
+            read IW IH DPR CH < out/$1/viewport.txt
+            CROP=$(python -c "r=float('$DPR'); print(f'{round(float(\"$IW\")*r)//2*2}:{round(float(\"$IH\")*r)//2*2}:0:{round(float(\"$CH\")*r)}')")
+            echo "trim $S -> $E crop $CROP" >> out/$1/log.txt
+            ffmpeg -loglevel error -y -ss $S -to $E -i raw_$1.mkv -vf "crop=$CROP" -r 30 \
+                   -c:v libx264 -preset slow -crf 17 -pix_fmt yuv420p -movflags +faststart out/$1/$1.mp4
+            ls -la out/$1/$1.mp4 >> out/$1/log.txt
+            rm -f raw_$1.mkv
+          }
+          rec demo tools/record_demo.py
+          rec setup tools/record_setup.py
+          rec cr tools/record_cr.py
+      - name: Publish to the clean-video branch
+        if: always()
+        run: |
+          cp app.log cr.log out/ || true
+          mkdir -p /tmp/pub && cp -r out/* /tmp/pub/
+          git config user.name "wolfiremimi-spec"; git config user.email "wolfiremimi@gmail.com"
+          git checkout --orphan clean-video
+          git rm -rf -q . && git clean -fdq
+          cp -r /tmp/pub/* .
+          git add -A && git commit -qm "Clean walkthrough clips ${GITHUB_SHA::7}"
+          git push -f origin clean-video

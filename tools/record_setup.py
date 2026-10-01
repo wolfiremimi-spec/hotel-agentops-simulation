@@ -9,7 +9,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from record_demo import CARD_JS, OUT, URL, W, H, CHROME, Demo, log, step  # noqa: E402
+from record_demo import CARD_JS, OUT, URL, W, H, CHROME, DSF, Demo, log, step  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 HOTEL = "Harbor Example Hotel"
@@ -39,7 +39,7 @@ def main():
         headed = os.environ.get("DEMO_HEADED", "1") == "1"
         browser = pw.chromium.launch(headless=not headed, ignore_default_args=["--enable-automation"],
                                      args=[f"--window-size={W},{H + CHROME}", "--window-position=0,0", "--kiosk",
-                                           "--force-device-scale-factor=1", "--disable-infobars", "--hide-scrollbars"])
+                                           f"--force-device-scale-factor={DSF}", "--disable-infobars", "--hide-scrollbars"])
         ctx = browser.new_context(no_viewport=True) if headed else browser.new_context(viewport={"width": W, "height": H})
         page = ctx.new_page()
         page.set_default_timeout(30000)
@@ -49,11 +49,15 @@ def main():
         d.idle(1.5)
         chrome = page.evaluate("window.outerHeight - window.innerHeight") if headed else 0
         (OUT / "chrome.txt").write_text(str(int(chrome)))
+        (OUT / "viewport.txt").write_text(" ".join(str(v) for v in page.evaluate(
+            "[window.innerWidth, window.innerHeight, window.devicePixelRatio, window.outerHeight - window.innerHeight]")))
         (OUT / "start.txt").write_text(str(time.time()))
+        d.t0 = time.time(); d.overlay()
         results, code = [], {}
 
         def typ(loc, text, delay=45):
             d.move_to(loc)
+            d.ev("type", text=str(text))
             loc.click()
             loc.fill("")
             loc.type(str(text), delay=delay)
