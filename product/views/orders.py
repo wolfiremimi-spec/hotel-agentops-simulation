@@ -112,7 +112,7 @@ def page():
                                            "Your order (kg)": st.column_config.NumberColumn(min_value=0.0, step=1.0)})
     st.caption(f"Expected use = expected covers × consumption per cover ({rec['per_cover_source']}). Buffers: "
                f"{ordering.BUFFER['stockout_prone']:.0%} where guests ran short, {ordering.BUFFER['normal']:.0%} normally, "
-               f"{ordering.BUFFER['chronic_overproduction']:.0%} where food is usually left over. Savings are estimates: "
+               f"{ordering.BUFFER['chronic_overproduction']:.0%} where food is usually left over (15% or more on average). Savings are estimates: "
                "they assume stock bought above need ends up as waste.")
 
     final = {g: float(edited.iloc[i]["Your order (kg)"] or 0.0) for i, g in enumerate(core.GROUPS)}

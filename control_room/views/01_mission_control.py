@@ -35,11 +35,13 @@ with st.container(border=True):
     st.caption("Prefer the product? The pilot app has a guided two-minute tour: https://hotel-agentops.streamlit.app")
 st.markdown("#### Modeled 12-week pilot " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
 k = st.columns(5)
-k[0].metric("Food waste", f"{last4:.0f} kg/wk", f"{(last4/base_avg-1)*100:.1f}% vs {base_avg:.1f} baseline", delta_color="inverse")
-k[1].metric("Forecast error (MAPE)", ui.pct(mape[-1]["mape"], 1), f"from {ui.pct(sum(x['mape'] for x in mape[:4])/4, 1)} baseline", delta_color="off")
-k[2].metric("Guest F&B score", f"{guest[-1]['guest_score']:.2f}", "floor 4.60 held every week", delta_color="off")
+k[0].metric("Food waste (kg/week)", f"{last4:.0f}", f"{(last4/base_avg-1)*100:.1f}% vs baseline", delta_color="inverse")
+k[1].metric("Forecast error", ui.pct(mape[-1]["mape"], 1), f"from {ui.pct(sum(x['mape'] for x in mape[:4])/4, 1)}", delta_color="off")
+k[2].metric("Guest F&B score", f"{guest[-1]['guest_score']:.2f}", "floor 4.60 held", delta_color="off")
 k[3].metric("Waste cost avoided", ui.usd(eco["food_cost_avoided"]), "per year", delta_color="off")
-k[4].metric("Payback", f"{eco['payback_months']:.1f} months", f"net {ui.usd(eco['net_annual'])}/yr after AI costs · modeled pilot result", delta_color="off")
+k[4].metric("Payback (months)", f"{eco['payback_months']:.1f}", f"net {ui.usd(eco['net_annual'])}/yr", delta_color="off")
+st.caption(f"Modeled 12-week pilot from the workbook (baseline {base_avg:.1f} kg/week; forecast error is MAPE). "
+           "Business Value recalculates the economics for Conservative, Base and Upside cases.")
 
 c1, c2 = st.columns([1.35, 1])
 with c1:

@@ -117,7 +117,7 @@ def classify(ev: dict, g: str) -> tuple[str, str]:
         return "stockout_prone", f"ran out in {n} of the last {ev['services']} recorded services"
     lp = ev["avg_leftover_pct"][g]
     if lp is not None and lp >= CHRONIC_LEFTOVER_PCT:
-        return "chronic_overproduction", f"{lp:.0f}% left over on average; {CHRONIC_LEFTOVER_PCT:.0f}% or more counts as often left over for ordering"
+        return "chronic_overproduction", f"{lp:.0f}% left over on average"
     return "normal", ("no stockouts; " + (f"{lp:.0f}% average leftover" if lp is not None else "no leftover data yet"))
 
 
