@@ -13,7 +13,7 @@ check("video files exist", all((site.ASSETS / "videos" / v["file"]).is_file() fo
 H.clicks.add("ha_play_setup"); stlite.run_app("hotel_app.py"); t = text()
 vids = [o for o in H.out if o[0] == "video"]
 check("play button opens the videos page", H.current_page == "product/views/videos.py", H.current_page)
-check("both videos on the page, the chosen one first", len(vids) == 2 and "how_to_set_up_your_hotel" in str(vids[0]), vids)
+check("both videos on the page, the chosen one first", len(vids) == 2 and "how_to_set_up_your_hotel" in str(vids[0]) and "cdn.jsdelivr.net" in str(vids[0]), vids)
 H.clicks.add("hv_back"); stlite.run_app("hotel_app.py")
 check("back button returns to the website", H.current_page == "product/views/welcome.py", H.current_page)
 H.clicks.add("ha_videos"); stlite.run_app("hotel_app.py"); H.clicks.add("hv_demo"); stlite.run_app("hotel_app.py")

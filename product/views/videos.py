@@ -20,7 +20,7 @@ def page():
         with col, st.container(border=True):
             st.markdown(f'<div class="ha-vid"><span class="n">{site.e(v["label"])} · {site.e(v["length"])}</span>'
                         f'<h3>{site.e(v["title"])}</h3><p>{site.e(v["summary"])}</p></div>', unsafe_allow_html=True)
-            st.video(str(site.ASSETS / "videos" / v["file"]))
+            st.video(site.VIDEO_CDN + v["file"])
             st.caption(v["note"])
     if S.hotel() is None:
         c = st.columns([1, 1, 2])

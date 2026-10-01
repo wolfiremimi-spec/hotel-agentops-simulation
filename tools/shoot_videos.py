@@ -23,7 +23,7 @@ with sync_playwright() as pw:
         info = v.evaluate("""async v => { v.muted = true; try { await v.play(); } catch(e) { return {err: String(e)} }
             await new Promise(r => setTimeout(r, 2500)); return {src: v.currentSrc.slice(-60), t: v.currentTime, dur: v.duration, w: v.videoWidth, rs: v.readyState}; }""")
         src = v.evaluate("v => v.currentSrc || v.src")
-        r = pg.request.get(src) if src else None
+        r = pg.request.get(src, headers={"Range": "bytes=0-1023"}) if src else None
         say("video", i, info, "| served:", r.status if r else None, r.headers.get("content-type") if r else None, len(r.body()) if r else 0)
         if not info.get("t") or info.get("t", 0) < 1 or not info.get("w"): ok = False
     pg.screenshot(path=str(OUT / "4_playing.png"))
