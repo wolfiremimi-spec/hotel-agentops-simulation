@@ -101,7 +101,7 @@ run()
 t = text()
 check("welcome page: three entry points", all(x in t for x in ["Create a workspace", "Open your workspace", "Explore the demo hotel"]))
 check("welcome: honest 'what it isn't' section", "Connected to your PMS, POS or inventory system" in t)
-check("no database configured → create/open disabled with a note", "isn't connected on this deployment" in t)
+check("no database configured → create/open disabled with a note", "isn't available on this deployment" in t)
 
 H.clicks.add("ha_demo"); run(); t = text()
 print("DEBUG page", getattr(H, "current_page", None), "|", "production plan" in t); check("demo opens on Today's plan", H.current_page == "product/views/today.py")

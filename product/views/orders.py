@@ -21,8 +21,8 @@ def section(num, title):
 
 
 def page():
-    site.page_header("Next week's order", "What to order, and how much less to waste",
-                     "The agents turn this hotel's own close-outs into next week's supplier order per item group: less "
+    site.page_header("Next week's order", "What to order, and how to waste less",
+                     "The Procurement Agent turns this hotel's own close-outs into next week's supplier order per item group: less "
                      "where food is usually left over, more where guests ran short. A manager approves every order.",
                      photo="band_order.jpg")
     tour.hint("product/views/orders.py")
@@ -175,7 +175,7 @@ def page():
 
 def order_results(p, days):
     evals = ordering.evaluate_orders(p, days)
-    section("05", "How approved orders performed")
+    section("05" if p.get("orders") else "04", "How approved orders performed")
     if not evals:
         st.caption("Once services in an approved order's week are closed out, this compares what was ordered with what "
                    "the kitchen actually used, and next week's suggestion learns from any shortfall.")

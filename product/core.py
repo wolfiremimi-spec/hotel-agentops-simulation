@@ -37,7 +37,7 @@ FOOD_ITEMS = {
     "hot_line": ["Hot line (assorted)", "Scrambled eggs", "Shell eggs (egg station)", "Bacon", "Pork sausages", "Chicken sausages",
                  "Vegetarian sausages", "Hash browns", "Roasted potatoes", "Baked beans", "Grilled tomatoes",
                  "Sautéed mushrooms", "Porridge / oatmeal", "Smoked tofu"],
-    "fruit_yogurt": ["Fruit & yogurt (assorted)", "Greek yogurt", "Plain yogurt", "Flavoured yogurt", "Plant-based yogurt", "Fresh fruit salad",
+    "fruit_yogurt": ["Fruit & yogurt (assorted)", "Greek yogurt", "Plain yogurt", "Flavored yogurt", "Plant-based yogurt", "Fresh fruit salad",
                      "Sliced melon", "Pineapple", "Mixed berries", "Bananas", "Whole apples & oranges", "Granola",
                      "Bircher muesli", "Chia pudding", "Fresh orange juice"],
     "cold_cuts_cheese": ["Cold cuts & cheese (assorted)", "Sliced ham", "Smoked turkey", "Salami", "Prosciutto", "Smoked salmon", "Cheddar",
@@ -212,7 +212,7 @@ def derived_history(profile: dict, days: list[dict], service_date: str) -> dict:
     apes = [a for a in (_ape(r) for r in rows) if a is not None][:7]
     learned = [r["consumption_kg_per_cover"] for r in comparable if r.get("consumption_kg_per_cover")]
     per_cover = dict(profile["consumption_kg_per_cover"])
-    per_cover_source = "hotel profile"
+    per_cover_source = "hotel setup"
     if len(learned) >= HISTORY_NEEDED:
         per_cover = {g: round(mean(x[g] for x in learned), 4) for g in GROUPS}
         per_cover_source = f"learned from the last {len(learned)} {wd} close-outs"

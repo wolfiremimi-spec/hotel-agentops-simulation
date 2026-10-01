@@ -8,11 +8,11 @@ ww = W["weekly_waste"]; mape = W["forecast_mape"]; eco = W["economics"]; guest =
 base_avg = sum(x["kg"] for x in ww if x["phase"] == "Baseline") / 4; last4 = sum(x["kg"] for x in ww[-4:]) / 4
 
 ui.header("01", "Mission control", "Can AI make hospitality waste less, without costing guests or profit?",
-          "A governed, closed-loop multi-agent system for hotel food waste. This control room runs the real simulation code behind the case study.", image="band_control.jpg")
+          "A governed, closed-loop multi-agent system for hotel food waste. The Control Room runs the real simulation code behind the case study.", image="band_control.jpg")
 ui.banner()
 st.markdown("### Try the system yourself")
 st.write(
-    "Step into the role of the hotel operator. Run a service scenario, "
+    "Step into the role of the hotel's F&B manager. Run a service scenario, "
     "review the agents' recommendations, and make the final decision yourself."
 )
 
@@ -22,12 +22,12 @@ if st.button("Run the system →", type="primary", use_container_width=True):
 st.caption("About 60 seconds · No setup required · Uses modeled scenario data")
 with st.container(border=True):
     st.markdown("**Suggested path** · about five minutes, in the order a hotel lives it")
-    path = [("control_room/views/02_live_service.py", "1 · Live service: make the morning's calls"),
-            ("control_room/views/03_scenario_lab.py", "2 · Scenario lab: change the morning"),
-            ("control_room/views/04_failure_lab.py", "3 · Failure lab: try to break it"),
+    path = [("control_room/views/02_live_service.py", "1 · Live Service: make the morning's calls"),
+            ("control_room/views/03_scenario_lab.py", "2 · Scenario Lab: change the morning"),
+            ("control_room/views/04_failure_lab.py", "3 · Failure Lab: try to break it"),
             ("control_room/views/procurement.py", "4 · Procurement: next week's order"),
-            ("control_room/views/05_readiness_gate.py", "5 · Readiness gate: how autonomy is earned"),
-            ("control_room/views/07_business_value.py", "6 · Business value: is it worth it?")]
+            ("control_room/views/05_readiness_gate.py", "5 · Readiness Gate: how autonomy is earned"),
+            ("control_room/views/07_business_value.py", "6 · Business Value: is it worth it?")]
     cols = st.columns(3)
     for i, (pth, label) in enumerate(path):
         with cols[i % 3]:
@@ -35,17 +35,17 @@ with st.container(border=True):
     st.caption("Prefer the product? The pilot app has a guided two-minute tour: https://hotel-agentops.streamlit.app")
 st.markdown("#### Modeled 12-week pilot " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
 k = st.columns(5)
-k[0].metric("Food waste", f"{last4:.0f} kg/wk", f"{(last4/base_avg-1)*100:.1f}% vs {base_avg:.0f} baseline", delta_color="inverse")
+k[0].metric("Food waste", f"{last4:.0f} kg/wk", f"{(last4/base_avg-1)*100:.1f}% vs {base_avg:.1f} baseline", delta_color="inverse")
 k[1].metric("Forecast error (MAPE)", ui.pct(mape[-1]["mape"], 1), f"from {ui.pct(sum(x['mape'] for x in mape[:4])/4, 1)} baseline", delta_color="off")
 k[2].metric("Guest F&B score", f"{guest[-1]['guest_score']:.2f}", "floor 4.60 held every week", delta_color="off")
 k[3].metric("Waste cost avoided", ui.usd(eco["food_cost_avoided"]), "per year", delta_color="off")
-k[4].metric("Payback", f"{eco['payback_months']:.1f} months", f"net {ui.usd(eco['net_annual'])}/yr after AI costs", delta_color="off")
+k[4].metric("Payback", f"{eco['payback_months']:.1f} months", f"net {ui.usd(eco['net_annual'])}/yr after AI costs · modeled pilot result", delta_color="off")
 
 c1, c2 = st.columns([1.35, 1])
 with c1:
     fig = go.Figure(go.Bar(x=[x["week"] for x in ww], y=[x["kg"] for x in ww], marker_color=[ui.GRAY if x["phase"] == "Baseline" else ui.FOREST for x in ww],
                            text=[x["kg"] for x in ww], textposition="outside", hovertemplate="%{x}: %{y} kg<extra></extra>"))
-    fig.add_hline(y=base_avg, line_dash="dot", line_color=ui.SAND, annotation_text=f"baseline avg {base_avg:.0f} kg", annotation_position="top right")
+    fig.add_hline(y=base_avg, line_dash="dot", line_color=ui.SAND, annotation_text=f"baseline avg {base_avg:.1f} kg", annotation_position="top right")
     fig.update_layout(title="Weekly food waste: 4 baseline weeks, then 8 weeks with agents", height=330, yaxis_title="kg per week")
     st.plotly_chart(fig, use_container_width=True)
 with c2:

@@ -427,7 +427,7 @@ def nav() -> None:
 def hero_text() -> None:
     md('<div id="top"></div><span class="ws-eyebrow"><i>AGENTIC AI</i>Four specialist agents · one governed decision</span>'
        '<div class="ws-h1">Cut breakfast waste.<br><em>Keep every guest happy.</em></div>'
-       '<p class="ws-lede">Hotel AgentOps plans each morning\'s food production with four AI specialist agents, then lets '
+       '<p class="ws-lede">Hotel AgentOps plans each morning\'s food production with four specialist agents (AI, with built-in verification), then lets '
        'governance rules decide what can run on its own and what needs your approval. Autonomy is earned from your '
        'hotel\'s own results, never assumed.</p>')
 
@@ -460,7 +460,7 @@ def preview() -> None:
 def stats() -> None:
     s = snapshot()
     md('<div class="ws-stats">'
-       '<div><b>4</b><span>AI specialist agents, each limited to its own data</span></div>'
+       '<div><b>4</b><span>specialist agents, each limited to its own data</span></div>'
        f'<div><b>{s["sources"]}</b><span>data sources checked before any action</span></div>'
        f'<div><b>{s["gate_checks"]}/{s["gate_checks"]}</b><span>readiness checks to earn autonomy</span></div>'
        '<div><b>100%</b><span>of decisions logged with their full rule trace</span></div></div>')
@@ -477,7 +477,7 @@ def how_it_works() -> None:
     steps = [("01", "Perceive", "Enter the morning", "Occupancy, reservations, inventory, events and the team's notes, in one form."),
              ("02", "Reason", "Agents analyze", "Demand, Inventory and Waste run in parallel; Production drafts the plan from their signals."),
              ("03", "Govern", "Rules route it", "Risk, reversibility, confidence and policy decide who may act on each recommendation."),
-             ("04", "Act", "You decide", "Approve, modify, reject or ask for context. The kitchen gets its production sheet."),
+             ("04", "Act", "You decide", "Approve, modify, reject or ask for more context. The kitchen gets its production sheet."),
              ("05", "Learn", "Close out", "Record covers and leftovers. Every service builds the record autonomy is earned from.")]
     md('<div class="ws-steps">' + "".join(
         f'<div class="ws-step"><div class="n">{n}</div><span class="t">{t}</span><h4>{e(h)}</h4><p>{e(p)}</p></div>'
@@ -487,7 +487,7 @@ def how_it_works() -> None:
 def agents() -> None:
     section("agents", "The agents", "Four specialists beat one general model.",
             "Each agent answers one question with only the access its role requires, exactly as the case study specifies. "
-            "Least privilege is enforced in code: a request outside an agent's role is denied.")
+            "Least privilege is enforced in code: a request outside an agent's role is denied. A fifth, the Procurement Agent, drafts next week's supplier order, and a manager approves every order.")
     cards = [("Demand Agent", "What demand should we expect?", ["PMS occupancy", "Reservations", "POS history", "Events", "Front-desk notes"],
               ["Nothing"], ["Cannot purchase"]),
              ("Inventory Agent", "What do we already have?", ["Inventory", "Procurement", "Shelf life", "Kitchen notes"],
@@ -540,7 +540,7 @@ def proof() -> None:
             "Decision D-0418 from the case study, run end to end by the engine behind this product.")
     md('<div class="ws-proof"><div class="lead"><b>Saturday breakfast · 250-room hotel</b><p>Plan approved by the manager, '
        'served, then scored against what the kitchen\'s usual par would have done with the same guests.</p></div>'
-       f'<div><div class="v">−{cut:.0%}</div><div class="l">food waste: {s["waste_kg"]} kg vs {s["standing_kg"]} kg on the standing plan</div></div>'
+       f'<div><div class="v">−{cut:.0%}</div><div class="l">food waste: {s["waste_kg"]} kg vs {s["standing_kg"]} kg at the kitchen&rsquo;s standing par</div></div>'
        f'<div><div class="v">{s["ape"]:.1%}</div><div class="l">forecast error: {s["actual_covers"]} actual vs {s["predicted"]} predicted covers</div></div>'
        f'<div><div class="v">{s["stockouts"]}</div><div class="l">stockouts, with the guest-score floor held</div></div></div>'
        '<div class="ws-note">Modeled implementation simulation · not realized hotel performance</div>')
@@ -586,7 +586,7 @@ def footer() -> None:
        f'<a href="{GITHUB_URL}" target="_blank">Source code ↗</a></div><div><span class="h">Contact</span>'
        f'<a href="{LINKEDIN_URL}" target="_blank">LinkedIn ↗</a><a href="mailto:{EMAIL}">{EMAIL}</a></div></div></div>'
        f'<div class="legal"><span>© 2026 {AUTHOR} · Hospitality · Sustainability · Agentic AI</span>'
-       '<span>Modeled implementation simulation · no live hotel systems are connected · version 2026-09-28 (videos)</span></div></div>')
+       '<span>Modeled implementation simulation · no live hotel systems are connected</span></div></div>')
 
 
 def banner() -> None:
@@ -598,9 +598,9 @@ def banner() -> None:
 
 
 def project() -> None:
-    section("project", "The project", "Learn more about the project",
+    section("project", "The project", "Learn more about the project.",
             "Hotel AgentOps is the working product built from my case study, Agentic AI for Sustainable Hospitality. "
-            "The case study designed the system; the simulation proved it; this application puts it in a hotel's hands.")
+            "The case study designed the system; the simulation tested it; this application is built to put it in a hotel's hands.")
     built = [("Identified the problem", "Hotel food waste and fragmented operational decision-making."),
              ("Designed the system", "A multi-agent architecture coordinating demand, inventory, production and waste."),
              ("Designed the governance", "Decision rights, thresholds, escalation, permissions, reversibility and human oversight."),

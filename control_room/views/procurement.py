@@ -137,7 +137,7 @@ if st.button("Record decision", type="primary", disabled=choice is None, key="pr
 d = st.session_state.get("pr_decision")
 if d:
     status = {"Approve": "EXECUTED · order sent as suggested", "Modify": "EXECUTED · order sent with your changes",
-              "Reject": "NOT EXECUTED · standing par order stands", "Request more context": "ON HOLD · agent asked for more context"}
+              "Reject": "NOT EXECUTED · standing par order stands", "Request more context": "ON HOLD · manager asked the agent for more context"}
     rows = [f"HUMAN          {d['choice'].upper()} by F&B Manager at {d['at']}" + (f" · reason: {d['reason']}" if d["reason"] else ""),
             f"ACTION         {status[d['choice']]}"]
     if d["choice"] in ("Approve", "Modify"):

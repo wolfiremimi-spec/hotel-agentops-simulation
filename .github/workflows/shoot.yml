@@ -17,7 +17,9 @@ jobs:
       - run: |
           streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > streamlit.log 2>&1 &
           for i in $(seq 1 60); do curl -sf http://localhost:8501/_stcore/health && break; sleep 2; done
-          python tools/shoot_videos.py || true
+          streamlit run streamlit_app.py --server.headless true --server.port 8502 --browser.gatherUsageStats false > cr.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:8502/_stcore/health && break; sleep 2; done
+          python tools/shoot_all.py || true
       - if: always()
         run: |
           cp streamlit.log shots/ || true; mkdir -p /tmp/p && cp -r shots/* /tmp/p/

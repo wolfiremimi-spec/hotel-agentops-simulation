@@ -80,7 +80,7 @@ def page():
                    "days an item ran out.")
         so = [d for d in closed if d["closeout"]["stockouts"]]
         if so:
-            st.warning(f"{len(so)} of {len(closed)} closed services had a stockout. Guest experience outranks waste: "
+            st.warning(f"{len(so)} of {len(closed)} closed-out services had a stockout. Guest experience outranks waste: "
                        "review these with the chef.")
 
     if perf["weekly_override_rates"]:

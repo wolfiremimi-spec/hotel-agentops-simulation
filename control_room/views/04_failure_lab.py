@@ -282,7 +282,7 @@ def clear_breaks():
     st.session_state.fl_ran = None
 
 
-section("02", "Break it yourself")
+section("01", "Break it yourself")
 st.write("Choose one failure or several, then run a full breakfast service with all of them present at once. "
          "The engine decides what happens: nothing here is scripted.")
 pick = st.pills("Failures to inject", list(BREAKS), selection_mode="multi", key="fl_pick",
@@ -358,7 +358,7 @@ if ran_breaks:
 # ---------------------------------------------------------------------------
 # 03 · Three failure tests
 # ---------------------------------------------------------------------------
-section("03", "Three failure tests")
+section("02", "Three failure tests")
 st.markdown("Each test breaks one thing the system depends on, then shows what the system did about it. "
             + ui.tag("LIVE SIMULATION"), unsafe_allow_html=True)
 cols = st.columns(3)
@@ -376,7 +376,7 @@ for col, (num, name, r) in zip(cols, results):
 # ---------------------------------------------------------------------------
 # 04 · Requirement traceability: all ten failure modes
 # ---------------------------------------------------------------------------
-section("04", "All ten failure modes: specified vs executed")
+section("03", "All ten failure modes: specified vs executed")
 st.caption("Left: the response the case study requires (page 8). Right: what the simulation actually did, computed now by "
            "`failure_matrix()`. The check is automatic, so a regression in the engine would show here as ✗.")
 
@@ -403,7 +403,7 @@ st.markdown('<div class="fl-quote">Knowing when to abstain is a capability, not 
 # ---------------------------------------------------------------------------
 # 05 · Why this design?
 # ---------------------------------------------------------------------------
-section("05", "Why this design?")
+section("04", "Why this design?")
 ui.why("Missing data leads to abstention, stale data blocks execution, API failures fall back and escalate, event swings go to "
        "humans, and a manager edit that would plan a stockout is blocked by policy.",
        "Failure handling is designed in, not bolted on: every mode has a detection rule and a defined response.",
@@ -413,7 +413,7 @@ ui.why("Missing data leads to abstention, stale data blocks execution, API failu
 # ---------------------------------------------------------------------------
 # 06 · Continue
 # ---------------------------------------------------------------------------
-section("06", "Continue the experience")
+section("05", "Continue the experience")
 cc = st.columns([2, 1])
 cc[0].write("Failures reduce authority. The readiness gate is how authority is earned back: all eight metrics must pass, "
             "week by week, before any action runs without a manager.")

@@ -26,7 +26,7 @@ requests.post = fake
 st.secrets.clear(); st.secrets["GEMINI_API_KEY"] = "k"
 H.session_state.clear(); H.values.clear(); H.nav_target = None
 stlite.run_app("hotel_app.py"); t = "\n".join(" ".join(o[1:]) for o in H.out)
-check("welcome describes AI specialist agents", "four AI" in t and "Demand Agent" in t)
+check("welcome describes AI specialist agents", "four specialist agents (AI, with built-in verification)" in t and "Demand Agent" in t)
 H.clicks.add("ha_demo"); stlite.run_app("hotel_app.py")
 date = "2026-10-03"
 H.values[f"td_fdnotes_{date}"] = "Tour group of 40 arriving tonight, all breakfast-inclusive."

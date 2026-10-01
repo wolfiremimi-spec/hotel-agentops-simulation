@@ -9,7 +9,7 @@ ui.header("07", "AgentOps & learning", "Operating an agent system means measurin
           "Quality, safety, reliability and business value, tracked every week, with every human override turned into a system improvement.")
 ui.banner()
 
-st.markdown("#### Control room KPIs, week A8 " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
+st.markdown("#### Control Room KPIs, week A8 " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
 cats = ["QUALITY", "SAFETY", "RELIABILITY", "BUSINESS"]
 cols = st.columns(4)
 for col, cat in zip(cols, cats):

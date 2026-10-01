@@ -59,7 +59,7 @@ pre, pre_log, pending = sim.run()
 sec = sim.sections(pre_log)
 
 st.success(
-    "✓ Pre-service analysis ready — 8 hotel signals read · "
+    "✓ Pre-service analysis ready — 8 hotel data sources read · "
     "4 specialist agents analyzed the situation · "
     "Orchestrator resolved conflicts · Governance rules applied"
 )

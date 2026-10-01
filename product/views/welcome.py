@@ -58,7 +58,7 @@ with c2:
             approver = st.text_input("Who approves the plan? (name or role)", "F&B Manager", key="ha_new_approver")
             go = st.form_submit_button("Create workspace", type="primary", use_container_width=True, disabled=not db)
         if not db:
-            st.caption("Saving hotels needs the database, which isn't connected on this deployment yet.")
+            st.caption("Creating a workspace isn't available on this deployment. Try the demo instead.")
         if go:
             if not name.strip():
                 st.error("Please enter your hotel's name.")

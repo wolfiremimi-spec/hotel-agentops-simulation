@@ -23,12 +23,12 @@ HOTEL DATA → CONTEXT → SPECIALIST AGENTS → ORCHESTRATOR → RECOMMENDATION
 
 ```bash
 python -m hotel_agentops_sim demo            # full day + 3 failure tests + failure-mode matrix
-python -m hotel_agentops_sim run             # interactive: you are the F&B manager (Approve / Modify / Reject / More context)
+python -m hotel_agentops_sim run             # interactive: you are the F&B manager (Approve / Modify / Reject / Request more context)
 python -m hotel_agentops_sim trace D-0418    # follow one decision: input → agent → governance → human → action → outcome → KPI
 python -m hotel_agentops_sim test tool-reliability   # or missing-context, guest-score
 python -m hotel_agentops_sim failure-matrix  # all 10 failure modes from the case study, executed
 python -m unittest -v                        # 20 tests of the governance guarantees
-python tests/app/run_all.py                  # 125 end-to-end checks of the pilot app and the Control Room
+python tests/app/run_all.py                  # 132 end-to-end checks of the pilot app and the Control Room
 ```
 
 Every run writes the following to `runs/<name>/`:
@@ -44,7 +44,7 @@ A sample run is in [`sample_output/`](sample_output).
 
 The Demand Agent derives **420 expected covers** from 231 of 250 occupied rooms and the last four Saturdays. That is **+12%** on last week.
 
-- **Waste Agent:** finds chronic pastry overproduction (leftover above 20% in 4 of the last 4 Saturdays) and repeated hot-line stockouts.
+- **Waste Agent:** finds chronic pastry overproduction (leftover above 20% on all of the last 4 Saturdays) and repeated hot-line stockouts.
 - **Production Agent:** drafts **−12.2%** overall. It raises the hot line **+14%** and cuts pastry **−34%**.
 - **Orchestrator:** detects that demand and production point in opposite directions. It resolves the conflict with the waste evidence.
 - **Governance:** the change exceeds the ±10% delegated range, so risk is **MEDIUM** and the decision goes to the manager. Confidence is 92.7%, but high confidence does not grant authority.
@@ -54,7 +54,7 @@ The case study's illustration shows −14%. The simulation computes −12.2% fro
 
 ## Interactive Control Room (Streamlit)
 
-**Live app:** [hotel-agentops.streamlit.app](https://hotel-agentops.streamlit.app) · the demo includes a guided two-minute tour
+**Live app:** [hotel-agentops-control-room.streamlit.app](https://hotel-agentops-control-room.streamlit.app) · start from the Suggested path on Mission Control
 
 A browser front end on the same simulation code, built for people who will never open a terminal:
 
@@ -79,12 +79,12 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-## Hotel AgentOps pilot application (for a real hotel)
+## Hotel AgentOps pilot application (built for a hotel's own data)
 
-**Live app:** [hotel-agentops.streamlit.app](https://hotel-agentops.streamlit.app) · the demo includes a guided two-minute tour
+**Live app:** [hotel-agentops-control-room.streamlit.app](https://hotel-agentops-control-room.streamlit.app) · start from the Suggested path on Mission Control
 
 The Control Room demonstrates the operating model on the case study's modeled hotel. The pilot application runs the
-same engine on **a real hotel's own data**, day after day:
+same engine on **figures a hotel enters itself**, one service at a time:
 
 | Screen | What the hotel does |
 |---|---|
@@ -96,7 +96,7 @@ same engine on **a real hotel's own data**, day after day:
 | Performance & autonomy | The eight-check readiness gate computed from the hotel's own last 28 days; autonomy starts SUPERVISED and is earned |
 | Ops copilot (optional) | A Gemini model that answers from the workspace's records and re-runs a morning as a what-if; it never decides who may act |
 
-**AI specialist agents (case study layers 3–5).** With a `GEMINI_API_KEY`, the Demand, Inventory, Waste and Production
+**AI specialist agents (case study layers 3–4).** With a `GEMINI_API_KEY`, the Demand, Inventory, Waste and Production
 agents are language-model agents, and the Orchestrator reviews how their signals combine:
 - Each agent answers its case-study question with tools. It can only read the sources its role grants; reads go through
   the engine's least-privilege view, so a request for anything else is denied in code, not by prompt.
@@ -194,5 +194,5 @@ product/
   schema.sql          database tables, row-level security, append-only audit log
   agent.py            Gemini tool-calling loop (copilot and agents)
   ai_agents.py        AI specialist agents with scoped tools, output verification and rule-based fallback
-  views/              welcome · today · closeout · decision_log · performance · setup · copilot
+  views/              welcome · today · closeout · orders · decision_log · performance · setup · copilot · videos
 ```

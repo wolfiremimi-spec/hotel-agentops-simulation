@@ -52,7 +52,7 @@ with r:
     fig.update_layout(height=300, yaxis_tickprefix="$", title="Annual value, net of the AI's own cost")
     st.plotly_chart(fig, use_container_width=True)
 base = CASES["Base"]
-st.caption(f"Check: the workbook's Base case gives net {ui.usd(base['net_annual'], 1)} and payback {base['payback_months']:.1f} months; "
+st.caption(f"Check: the workbook's Base case gives net {ui.usd(base['net_annual'])} and payback {base['payback_months']:.1f} months; "
            "with the Base preset and default cost lines this calculator reproduces those values. Coordination capacity is redeployed manager time, not a cash saving.")
 
 ui.why(f"In the full modeled pilot, {ui.usd(E['food_cost_avoided'])} of annual food cost is avoided against {ui.usd(E['annual_ai_cost'])} of annual AI operating cost; "

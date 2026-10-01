@@ -166,7 +166,7 @@ ui.flow(["Change the conditions", "Run the same operating model", "See what chan
 # ---------------------------------------------------------------------------
 # 02 · Try a stress test
 # ---------------------------------------------------------------------------
-section("02", "Try a stress test")
+section("01", "Try a stress test")
 st.caption("Each test changes one condition from the case study and runs the real engine. Nothing is pre-calculated.")
 pc = st.columns(len(PRESETS))
 for i, (pid, label, _changes, desc) in enumerate(PRESETS):
@@ -182,7 +182,7 @@ rc[1].button("Reset to case study", key="preset_reset", help="Restore every cont
 # ---------------------------------------------------------------------------
 # 03 · Your assumptions
 # ---------------------------------------------------------------------------
-section("03", "Your assumptions")
+section("02", "Your assumptions")
 st.caption("Scenario Lab isolates system behavior. Manager responses are held constant so changes can be attributed to "
            "scenario inputs and governance rules. Use Live Service: You Decide to make the human decisions yourself.")
 
@@ -306,7 +306,7 @@ changed_keys = {k for k in km if k not in kb or km[k]["Required Authority"] != k
 # ---------------------------------------------------------------------------
 # 05 · What changed?
 # ---------------------------------------------------------------------------
-section("05", "What changed?")
+section("03", "What changed?")
 st.markdown(f"Results for **{ui.e(run_label)}**, compared with the case study. " + ui.tag("MODELED SIMULATION"),
             unsafe_allow_html=True)
 
@@ -395,7 +395,7 @@ if ob and hotel_inputs.intersection(changed_inputs):
 # ---------------------------------------------------------------------------
 # 06 · Why did it change?
 # ---------------------------------------------------------------------------
-section("06", "Why did it change?")
+section("04", "Why did it change?")
 
 if not changed_inputs:
     st.write("Every input matches the case study, so the engine reproduces the case-study decisions exactly.")
@@ -458,7 +458,7 @@ if explain:
 # ---------------------------------------------------------------------------
 # 07 · Case study vs your scenario
 # ---------------------------------------------------------------------------
-section("07", "Case-study scenario vs your scenario")
+section("05", "Case-study scenario vs your scenario")
 
 
 def summary(res):
@@ -491,7 +491,7 @@ st.caption("Both columns are computed by the same engine on this page. " + ui.ta
 # ---------------------------------------------------------------------------
 # 08 · Why this design?
 # ---------------------------------------------------------------------------
-section("08", "Why this design?")
+section("06", "Why this design?")
 bp = next((r for r in base.records if r["Decision Type"] == "production_adjustment"), None)
 if bp is not None:
     bd = base.traces[bp["Decision ID"]]["details"]
@@ -509,7 +509,7 @@ ui.why(evidence_text,
 # ---------------------------------------------------------------------------
 # 09 · Every decision in your scenario
 # ---------------------------------------------------------------------------
-section("09", "Every decision in your scenario")
+section("07", "Every decision in your scenario")
 st.caption("● marks a decision that differs from the case study.")
 for key, r in km.items():
     mark = "● " if key in changed_keys else ""
@@ -533,7 +533,7 @@ for key, r in km.items():
 # ---------------------------------------------------------------------------
 # 10 · Continue the experience
 # ---------------------------------------------------------------------------
-section("10", "Continue the experience")
+section("08", "Continue the experience")
 cc = st.columns([2, 1])
 cc[0].write("Scenario Lab held the manager's responses constant. In Live Service you take the manager's seat: "
             "approve, modify, reject or ask for more context, and see the modeled result of your own calls.")
