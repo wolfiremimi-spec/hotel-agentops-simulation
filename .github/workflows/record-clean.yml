@@ -18,6 +18,7 @@ jobs:
       DEMO_CLEAN: "1"
       DEMO_DSF: "1.5"
       DEMO_CHROME: "87"
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,6 +34,7 @@ jobs:
         run: |
           Xvfb :99 -screen 0 2400x1600x24 -nolisten tcp &
           mkdir -p .streamlit && echo 'APP_SALT = "demo-recording"' > .streamlit/secrets.toml
+          if [ -n "$GEMINI_API_KEY" ]; then echo "GEMINI_API_KEY = \"$GEMINI_API_KEY\"" >> .streamlit/secrets.toml; mkdir -p out; echo "ai=on" > out/ai.txt; else mkdir -p out; echo "ai=off" > out/ai.txt; fi
           echo "DISPLAY=:99" >> $GITHUB_ENV
           HA_LOCAL_DB=1 streamlit run hotel_app.py --server.headless true --server.port 8501 --browser.gatherUsageStats false > app.log 2>&1 &
           HA_LOCAL_DB=1 streamlit run streamlit_app.py --server.headless true --server.port 8502 --browser.gatherUsageStats false > cr.log 2>&1 &

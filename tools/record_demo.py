@@ -206,6 +206,21 @@ def main():
         d.card("How to run through the demo", "How-to video 1 of 2. One full breakfast service in the demo hotel: "
                "plan, decide, close out, audit and order.", 3.5)
 
+        def s_home():
+            time.sleep(1.2)
+            for t in ("How it works", "Agents", "The project", "About", "Videos"):
+                d.move_to(page.locator(".ws-links a").filter(has_text=t).first, steps=16); time.sleep(0.5)
+            d.move_to(page.locator(".ws-eyebrow").first); time.sleep(1.2)
+            for sec in ("how", "system", "agents", "governance", "results", "project", "about"):
+                d.ev("section", name=sec)
+                page.evaluate("(id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'}); }", sec)
+                time.sleep(2.6)
+                box = page.evaluate("(id) => { const el = document.getElementById(id); if (!el) return null; const r = el.getBoundingClientRect(); return [r.x, r.y]; }", sec)
+                d.ev("section_at", name=sec, pos=box)
+            d.to_top(); time.sleep(1.5)
+        if CLEAN:
+            results.append(step(d, "home", s_home))
+
         def s_landing():
             d.cap("Go to <b>hotel-agentops.streamlit.app</b> and click <b>Try the live demo</b>. No sign-up needed.", 1.5)
             d.scroll(450, 1.1); time.sleep(0.3); d.to_top()
