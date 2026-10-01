@@ -139,7 +139,7 @@ def rerun():
 
 
 st_mod = types.ModuleType("streamlit")
-for name in ["markdown", "write", "info", "caption", "success", "error", "warning", "dataframe", "metric", "plotly_chart", "page_link", "video"]:
+for name in ["markdown", "write", "info", "caption", "success", "error", "warning", "dataframe", "metric", "plotly_chart", "page_link", "video", "link_button"]:
     setattr(st_mod, name, _noop_factory(name))
 st_mod.button = button
 st_mod.download_button = download_button

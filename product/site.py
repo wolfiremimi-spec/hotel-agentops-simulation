@@ -241,7 +241,7 @@ div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > [data-testid="stVert
 .ws-foot .brand {{ display: flex; gap: 10px; align-items: center; }}
 .ws-foot .brand b {{ color: {WHITE}; font-size: 1.1rem; }}
 .ws-foot p {{ margin: 10px 0 0; max-width: 34rem; line-height: 1.55; font-size: .9rem; }}
-.ws-foot .cols {{ display: flex; gap: 46px; }}
+.ws-foot .cols {{ display: flex; flex-wrap: wrap; gap: 24px 46px; }}
 .ws-foot .cols div {{ display: flex; flex-direction: column; gap: 8px; font-size: .88rem; }}
 .ws-foot .cols .h {{ color: {SAND}; font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }}
 .ws-foot a {{ color: {WHITE} !important; text-decoration: none !important; }}
@@ -421,7 +421,9 @@ def nav() -> None:
     md(f'<div class="ws-nav"><div class="ws-brandwrap"><a class="ws-brand" href="#top">{LOGO}<b>Hotel AgentOps</b></a>'
        f'<a class="ws-by" href="#about">by <b>{AUTHOR}</b></a></div>'
        '<div class="ws-links"><a href="#how">How it works</a><a href="#agents">Agents</a><a href="#project">The project</a>'
-       '<a href="#about">About</a><a href="#videos">Videos</a><a href="#get-started" class="cta">Get started</a></div></div>')
+       '<a href="#about">About</a><a href="#videos">Videos</a>'
+       f'<a href="{CONTROL_ROOM_URL}" target="_blank" rel="noopener">Control Room ↗</a>'
+       '<a href="#get-started" class="cta">Get started</a></div></div>')
 
 
 def hero_text() -> None:

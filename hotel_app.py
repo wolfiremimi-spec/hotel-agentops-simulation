@@ -62,6 +62,7 @@ with st.sidebar:
         if st.button("Leave workspace", use_container_width=True, key="ha_leave", icon=":material/logout:"):
             S.close_workspace()
             st.rerun()
+    st.link_button("Control Room ↗", site.CONTROL_ROOM_URL, use_container_width=True)
     st.caption("Built by Amelia Wolfire")
 if st.session_state.get("ha_new_code"):
     with st.container(border=True):

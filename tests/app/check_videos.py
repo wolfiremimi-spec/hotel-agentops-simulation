@@ -8,6 +8,7 @@ def text(): return "\n".join(" ".join(map(str, o[1:])) for o in H.out)
 from product import site
 stlite.run_app("hotel_app.py"); t = text()
 check("landing: Videos tab in the top menu", 'href="#videos">Videos</a>' in t)
+check("landing: Control Room tab in the top menu", 'hotel-agentops-control-room.streamlit.app" target="_blank" rel="noopener">Control Room' in t)
 check("landing: how-to videos section with both thumbnails", "Watch how it works first." in t and t.count("<div class=\"ws-vidthumb\">") == 2)
 check("video files exist", all((site.ASSETS / "videos" / v["file"]).is_file() for v in site.HOW_TO_VIDEOS))
 H.clicks.add("ha_play_setup"); stlite.run_app("hotel_app.py"); t = text()
