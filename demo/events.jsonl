@@ -1,0 +1,102 @@
+{"t": 0.008, "kind": "card", "title": "How to run through the demo"}
+{"t": 0.008, "kind": "step", "name": "home"}
+{"t": 1.683, "kind": "move", "box": [721, 101, 78, 23]}
+{"t": 3.257, "kind": "move", "box": [820, 101, 41, 23]}
+{"t": 4.826, "kind": "move", "box": [883, 101, 68, 23]}
+{"t": 6.39, "kind": "move", "box": [973, 101, 36, 23]}
+{"t": 7.956, "kind": "move", "box": [1031, 101, 40, 23]}
+{"t": 9.525, "kind": "move", "box": [290, 187, 346, 32]}
+{"t": 11.542, "kind": "section", "name": "how"}
+{"t": 14.15, "kind": "section_at", "name": "how", "pos": [290, -3.90625]}
+{"t": 14.15, "kind": "section", "name": "system"}
+{"t": 16.755, "kind": "section_at", "name": "system", "pos": [290, 23.78125]}
+{"t": 16.756, "kind": "section", "name": "agents"}
+{"t": 19.361, "kind": "section_at", "name": "agents", "pos": [290, 24.23958396911621]}
+{"t": 19.361, "kind": "section", "name": "governance"}
+{"t": 21.968, "kind": "section_at", "name": "governance", "pos": [290, 24.05208396911621]}
+{"t": 21.968, "kind": "section", "name": "results"}
+{"t": 24.575, "kind": "section_at", "name": "results", "pos": [290, 24.125]}
+{"t": 24.575, "kind": "section", "name": "project"}
+{"t": 27.181, "kind": "section_at", "name": "project", "pos": [290, 24.30208396911621]}
+{"t": 27.181, "kind": "section", "name": "about"}
+{"t": 29.787, "kind": "section_at", "name": "about", "pos": [290, 40.96875]}
+{"t": 32.465, "kind": "step", "name": "landing"}
+{"t": 32.475, "kind": "cap", "text": "Go to <b>hotel-agentops.streamlit.app</b> and click <b>Try the live demo</b>. No sign-up needed."}
+{"t": 33.975, "kind": "scroll", "dy": 450, "secs": 1.1}
+{"t": 38.009, "kind": "move", "box": [290, 537, 205, 43]}
+{"t": 38.826, "kind": "click"}
+{"t": 42.594, "kind": "step", "name": "today_inputs"}
+{"t": 42.598, "kind": "cap", "text": "<b>Step 1 \u00b7 Today's plan.</b> The Saturday morning (D-0418) is prefilled from the case study."}
+{"t": 45.208, "kind": "cap", "text": "Each tab is a data source the agents read: occupancy, inventory, events and guest signal."}
+{"t": 46.254, "kind": "move", "box": [629, 778, 56, 40]}
+{"t": 47.073, "kind": "click"}
+{"t": 49.171, "kind": "move", "box": [474, 778, 151, 40]}
+{"t": 49.973, "kind": "click"}
+{"t": 51.575, "kind": "cap", "text": "Click <b>Save this morning's data and ask the agents</b>."}
+{"t": 52.425, "kind": "move", "box": [474, 638, 989, 43]}
+{"t": 53.224, "kind": "click"}
+{"t": 81.318, "kind": "step", "name": "decide"}
+{"t": 81.323, "kind": "cap", "text": "<b>Step 2 \u00b7 The agents recommend.</b> Four AI specialists analyze the morning, and governance routes each decision."}
+{"t": 83.323, "kind": "scroll", "dy": 700, "secs": 1.8}
+{"t": 87.024, "kind": "cap", "text": "Nothing is pre-selected. For each decision, choose <b>Approve</b>, Modify, Reject or Request more context."}
+{"t": 88.272, "kind": "move", "box": [498, 438, 56, 26]}
+{"t": 89.072, "kind": "click"}
+{"t": 90.903, "kind": "move", "box": [498, 438, 56, 26]}
+{"t": 91.705, "kind": "click"}
+{"t": 93.551, "kind": "move", "box": [498, 534, 56, 26]}
+{"t": 94.338, "kind": "click"}
+{"t": 95.297, "kind": "cap", "text": "Then save the plan."}
+{"t": 96.04, "kind": "move", "box": [458, 726, 1020, 43]}
+{"t": 96.838, "kind": "click"}
+{"t": 100.282, "kind": "step", "name": "saved_plan"}
+{"t": 101.191, "kind": "cap", "text": "The approved plan becomes the kitchen's production sheet: print it or download it."}
+{"t": 102.637, "kind": "move", "box": [522, 876, 374, 26]}
+{"t": 104.838, "kind": "scroll", "dy": 450, "secs": 1.2}
+{"t": 107.523, "kind": "cap", "text": "<b>Step 3 \u00b7 After breakfast,</b> close out the service."}
+{"t": 108.471, "kind": "move", "box": [458, 853, 502, 43]}
+{"t": 109.272, "kind": "click"}
+{"t": 112.444, "kind": "step", "name": "close_out"}
+{"t": 112.455, "kind": "cap", "text": "Record what actually happened. In the demo, fill in the case study's result."}
+{"t": 113.903, "kind": "move", "box": [458, 859, 299, 43]}
+{"t": 114.704, "kind": "click"}
+{"t": 117.137, "kind": "move", "box": [474, 710, 989, 43]}
+{"t": 117.937, "kind": "click"}
+{"t": 120.636, "kind": "cap", "text": "The day is scored against standing par: <b>23.3 kg</b> of waste instead of <b>47.3 kg</b>, and no stockouts."}
+{"t": 121.636, "kind": "scroll", "dy": 400, "secs": 1.2}
+{"t": 125.418, "kind": "step", "name": "decision_log"}
+{"t": 125.422, "kind": "cap", "text": "<b>Step 4 \u00b7 Decision log.</b> Every decision, who made it, and the rule that routed it."}
+{"t": 125.722, "kind": "nav", "text": "Decision log"}
+{"t": 126.165, "kind": "move", "box": [24, 254, 287, 32]}
+{"t": 126.97, "kind": "click"}
+{"t": 129.969, "kind": "scroll", "dy": 650, "secs": 1.6}
+{"t": 133.215, "kind": "move", "box": [458, 246, 1020, 68]}
+{"t": 134.004, "kind": "click"}
+{"t": 135.62, "kind": "move", "box": [458, 314, 1020, 40]}
+{"t": 136.42, "kind": "click"}
+{"t": 138.169, "kind": "cap", "text": "Follow D-0418 end to end: input, agent, governance, human decision, action and outcome."}
+{"t": 139.169, "kind": "scroll", "dy": 350, "secs": 1.0}
+{"t": 143.14, "kind": "step", "name": "performance"}
+{"t": 143.145, "kind": "cap", "text": "<b>Step 5 \u00b7 Performance & autonomy.</b> Autonomy is earned from the hotel's own record through eight readiness checks."}
+{"t": 143.445, "kind": "nav", "text": "Performance"}
+{"t": 143.883, "kind": "move", "box": [24, 290, 287, 32]}
+{"t": 144.687, "kind": "click"}
+{"t": 148.34, "kind": "scroll", "dy": 600, "secs": 1.6}
+{"t": 152.909, "kind": "step", "name": "order"}
+{"t": 152.914, "kind": "cap", "text": "<b>Step 6 \u00b7 Next week's order.</b> Order less of what's left over and more of what runs out."}
+{"t": 153.214, "kind": "nav", "text": "Next week's order"}
+{"t": 153.651, "kind": "move", "box": [24, 185, 287, 32]}
+{"t": 154.458, "kind": "click"}
+{"t": 158.779, "kind": "scroll", "dy": 750, "secs": 1.8}
+{"t": 163.787, "kind": "cap", "text": "Review the suggestion, change any quantity and approve it. A manager approves every order."}
+{"t": 164.83, "kind": "move", "box": [474, 514, 989, 43]}
+{"t": 165.635, "kind": "click"}
+{"t": 168.108, "kind": "step", "name": "videos"}
+{"t": 168.113, "kind": "cap", "text": "How-to videos"}
+{"t": 168.314, "kind": "nav", "text": "How-to videos"}
+{"t": 168.751, "kind": "move", "box": [24, 395, 287, 32]}
+{"t": 169.552, "kind": "click"}
+{"t": 172.92, "kind": "scroll", "dy": 400, "secs": 1.2}
+{"t": 176.536, "kind": "step", "name": "end"}
+{"t": 176.541, "kind": "cap", "text": "The guided tour in the sidebar tracks each step. That's a full governed day."}
+{"t": 179.346, "kind": "cap", "text": ""}
+{"t": 179.647, "kind": "card", "title": "Try it yourself"}

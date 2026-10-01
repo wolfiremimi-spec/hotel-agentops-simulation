@@ -1,0 +1,24 @@
+{"t": 0.01, "kind": "step", "name": "cr_mission"}
+{"t": 1.957, "kind": "move", "box": [464, 565, 106, 21]}
+{"t": 3.958, "kind": "scroll", "dy": 700, "secs": 2.0}
+{"t": 9.019, "kind": "scroll", "dy": 600, "secs": 1.6}
+{"t": 13.708, "kind": "step", "name": "cr_live"}
+{"t": 13.708, "kind": "nav", "text": "Live Service"}
+{"t": 14.168, "kind": "move", "box": [24, 184, 287, 32]}
+{"t": 14.971, "kind": "click"}
+{"t": 18.92, "kind": "scroll", "dy": 600, "secs": 1.8}
+{"t": 23.499, "kind": "step", "name": "cr_procurement"}
+{"t": 23.499, "kind": "nav", "text": "Procurement"}
+{"t": 23.933, "kind": "move", "box": [24, 292, 287, 32]}
+{"t": 24.721, "kind": "click"}
+{"t": 28.423, "kind": "scroll", "dy": 650, "secs": 1.8}
+{"t": 33.432, "kind": "step", "name": "cr_gate"}
+{"t": 33.432, "kind": "nav", "text": "Readiness Gate"}
+{"t": 33.866, "kind": "move", "box": [24, 361, 287, 32]}
+{"t": 34.674, "kind": "click"}
+{"t": 38.387, "kind": "scroll", "dy": 650, "secs": 1.8}
+{"t": 43.955, "kind": "step", "name": "cr_value"}
+{"t": 43.955, "kind": "nav", "text": "Business Value"}
+{"t": 44.388, "kind": "move", "box": [24, 433, 287, 32]}
+{"t": 45.187, "kind": "click"}
+{"t": 48.783, "kind": "scroll", "dy": 650, "secs": 1.8}

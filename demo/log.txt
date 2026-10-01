@@ -1,0 +1,36 @@
+browser chrome height 87 inner [1600, 901]
+OK   home
+CAPTION Go to <b>hotel-agentops.streamlit.app</b> and click <b>Try the live demo</b>. No sign-up needed.
+OK   landing
+CAPTION <b>Step 1 · Today's plan.</b> The Saturday morning (D-0418) is prefilled from the case study.
+CAPTION Each tab is a data source the agents read: occupancy, inventory, events and guest signal.
+CAPTION Click <b>Save this morning's data and ask the agents</b>.
+OK   today_inputs
+CAPTION <b>Step 2 · The agents recommend.</b> Four AI specialists analyze the morning, and governance routes each decision.
+CAPTION Nothing is pre-selected. For each decision, choose <b>Approve</b>, Modify, Reject or Request more context.
+decision groups 3
+CAPTION Then save the plan.
+OK   decide
+CAPTION The approved plan becomes the kitchen's production sheet: print it or download it.
+CAPTION <b>Step 3 · After breakfast,</b> close out the service.
+OK   saved_plan
+CAPTION Record what actually happened. In the demo, fill in the case study's result.
+CAPTION The day is scored against standing par: <b>23.3 kg</b> of waste instead of <b>47.3 kg</b>, and no stockouts.
+OK   close_out
+CAPTION <b>Step 4 · Decision log.</b> Every decision, who made it, and the rule that routed it.
+CAPTION Follow D-0418 end to end: input, agent, governance, human decision, action and outcome.
+OK   decision_log
+CAPTION <b>Step 5 · Performance & autonomy.</b> Autonomy is earned from the hotel's own record through eight readiness checks.
+OK   performance
+CAPTION <b>Step 6 · Next week's order.</b> Order less of what's left over and more of what runs out.
+CAPTION Review the suggestion, change any quantity and approve it. A manager approves every order.
+OK   order
+CAPTION How-to videos
+OK   videos
+CAPTION The guided tour in the sidebar tracks each step. That's a full governed day.
+CAPTION 
+OK   end
+RESULTS [True, True, True, True, True, True, True, True, True, True, True]
+exit=0
+trim 7.15838360786438 -> 187.04908871650696 crop 2400:1352:0:130
+-rw-r--r-- 1 runner runner 20199847 Oct  1 04:23 out/demo/demo.mp4

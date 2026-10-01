@@ -1,0 +1,11 @@
+date,occupied_rooms,covers,forecast_error_pct,leftover_pct_pastry_bread,leftover_pct_hot_line,leftover_pct_fruit_yogurt,leftover_pct_cold_cuts_cheese,ran_out_pastry_bread,ran_out_hot_line,ran_out_fruit_yogurt,ran_out_cold_cuts_cheese
+2026-09-24,146,258,,27,4,16,11,FALSE,TRUE,FALSE,FALSE
+2026-09-17,152,270,,25,3,15,12,FALSE,FALSE,FALSE,FALSE
+2026-09-10,141,249,,29,5,17,10,FALSE,FALSE,FALSE,FALSE
+2026-09-03,149,263,,26,2,14,11,FALSE,TRUE,FALSE,FALSE
+2026-09-30,,,6.2,,,,,,,,
+2026-09-29,,,7.8,,,,,,,,
+2026-09-28,,,5.4,,,,,,,,
+2026-09-27,,,8.1,,,,,,,,
+2026-09-26,,,6.9,,,,,,,,
+2026-09-25,,,7.3,,,,,,,,

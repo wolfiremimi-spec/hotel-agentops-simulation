@@ -1,0 +1,9 @@
+OK   cr_mission
+OK   cr_live
+OK   cr_procurement
+OK   cr_gate
+OK   cr_value
+RESULTS [True, True, True, True, True]
+exit=0
+trim 7.805989742279053 -> 62.12128043174744 crop 2400:1352:0:130
+-rw-r--r-- 1 runner runner 3106989 Oct  1 04:29 out/cr/cr.mp4
