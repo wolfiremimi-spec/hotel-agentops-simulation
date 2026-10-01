@@ -47,7 +47,7 @@ jobs:
                    -c:v libx264 -preset ultrafast -crf 8 -pix_fmt yuv444p raw_$1.mkv &
             FF=$!
             sleep 1
-            DEMO_OUT=out/$1 python $2; echo "exit=$?" >> out/$1/log.txt
+            DEMO_OUT=out/$1 python $2 && echo "exit=0" >> out/$1/log.txt || echo "exit=fail" >> out/$1/log.txt
             sleep 1; kill -INT $FF; sleep 4
             S=$(python -c "print(float(open('out/$1/start.txt').read())-float(open('out/$1/ff_start.txt').read()))")
             E=$(python -c "print(float(open('out/$1/end.txt').read())-float(open('out/$1/ff_start.txt').read()))")
