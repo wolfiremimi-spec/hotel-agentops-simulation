@@ -28,7 +28,7 @@ EMAIL = "wolfiremimi@gmail.com"
 ASSETS = Path(__file__).resolve().parent / "assets"
 # Videos are served from the repo through the jsDelivr CDN (pinned to a commit). Streamlit Cloud's own media endpoint
 # fails for st.video with local files ("not connected to a server").
-VIDEO_CDN = "https://cdn.jsdelivr.net/gh/wolfiremimi-spec/hotel-agentops-simulation@d0dffcb644a706c035a5b36ca1dd96ae75f12560/product/assets/videos/"
+VIDEO_CDN = "https://cdn.jsdelivr.net/gh/wolfiremimi-spec/hotel-agentops-simulation@1d689213843d8a41bc9707ad6fb8035d58b32328/product/assets/videos/"
 HOW_TO_VIDEOS = [
     {"key": "demo", "label": "How-to video 1 of 2", "length": "2:00", "title": "How to run through the demo",
      "file": "how_to_run_the_demo.mp4", "thumb": "videos/thumb_demo.jpg",
