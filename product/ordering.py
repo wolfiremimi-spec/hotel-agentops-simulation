@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import time
 from statistics import mean
 
 from product import core
@@ -178,7 +179,7 @@ def ai_review(rec: dict, covers: list[dict], ev: dict, cfg) -> dict:
     else:
         try:
             data = llm.call_model([{"role": "user", "parts": [{"text": json.dumps(brief, default=str)}]}], SYSTEM,
-                                  _decl(), cfg.api_key, cfg.models, cfg.state)
+                                  _decl(), cfg.api_key, cfg.models, cfg.state, deadline=time.monotonic() + 20, per_call=20)
             parts = ((data.get("candidates") or [{}])[0].get("content") or {}).get("parts") or []
             call = next((p["functionCall"] for p in parts if "functionCall" in p), None)
             if call is None:

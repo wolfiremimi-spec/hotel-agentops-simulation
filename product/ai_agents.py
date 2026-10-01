@@ -14,6 +14,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import time
 from dataclasses import dataclass, field
 
 from hotel_agentops_sim.agents import DemandAgent, InventoryAgent, ProductionAgent, WasteAgent
@@ -39,6 +40,12 @@ class AIConfig:
     cache: dict = field(default_factory=dict)          # proposals keyed by agent + inputs, so reruns are identical
     state: dict = field(default_factory=dict)          # remembers which model answered
     reports: list = field(default_factory=list)        # one entry per agent for the audit trail
+    budget_s: float = 25.0                             # total time the AI agents may take for one morning
+    deadline: float = field(default=0.0)
+
+    def __post_init__(self):
+        if not self.deadline:
+            self.deadline = time.monotonic() + self.budget_s
 
 
 def _key(name, payload) -> str:
@@ -51,7 +58,17 @@ def _ask(cfg: AIConfig, name: str, system: str, brief: dict, tools: dict, submit
     k = _key(name, {"brief": brief, "data": fingerprint})
     if k in cfg.cache:
         hit = cfg.cache[k]
+        if hit.get("error"):                              # failed or timed out before: don't wait again on a re-run
+            raise llm.AgentError(hit["error"])
         return copy.deepcopy(hit["proposal"]), hit["steps"] + [{"tool": "(cached proposal reused)", "args": {}}]
+    try:
+        return _ask_live(cfg, k, system, brief, tools, submit_schema, fingerprint)
+    except llm.AgentError as ex:
+        cfg.cache[k] = {"error": str(ex)}
+        raise
+
+
+def _ask_live(cfg, k, system, brief, tools, submit_schema, fingerprint):
     steps = []
     # Speed: hand the agent everything it is allowed to see in the first message (its own sources, already read through
     # the least-privilege view, plus the rule-based baseline), and require an immediate `submit`. One model round trip
@@ -66,7 +83,8 @@ def _ask(cfg: AIConfig, name: str, system: str, brief: dict, tools: dict, submit
     decls = [{"name": "submit", "description": "Submit your final analysis. Call exactly once.", "parameters": submit_schema}]
     contents = [{"role": "user", "parts": [{"text": json.dumps(brief, default=str)}]}]
     for _ in range(MAX_ROUNDS):
-        data = llm.call_model(contents, system, decls, cfg.api_key, cfg.models, cfg.state, force="submit")
+        data = llm.call_model(contents, system, decls, cfg.api_key, cfg.models, cfg.state, force="submit",
+                              deadline=cfg.deadline, per_call=20)
         cands = data.get("candidates") or []
         if not cands or not cands[0].get("content", {}).get("parts"):
             raise llm.AgentError("the model returned no answer")

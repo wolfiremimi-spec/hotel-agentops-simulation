@@ -237,7 +237,7 @@ def inputs_form(date, base):
 def recommend_and_approve(date, inputs, perf):
     p = S.profile()
     ai = S.ai_config()
-    with st.spinner("The agents are analyzing this morning…" if ai else "Running the agents…"):
+    with st.spinner("The AI agents are analyzing this morning (up to about 25 seconds)…" if ai else "Running the agents…"):
         res, pending, scenario, meta = core.run_morning(p, inputs, S.days(), None, p["approver"], core.gate_tuple(perf), ai=ai)
     agent_panel(meta.get("agent_mode"), meta.get("ai_agents"))
     ctx = res.context

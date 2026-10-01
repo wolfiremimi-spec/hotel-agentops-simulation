@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import time
 
 import requests
 
@@ -36,7 +37,8 @@ def _body(contents, system, declarations, force, thinking):
     return body
 
 
-def call_model(contents, system, declarations, api_key, models, state, force=None):
+def call_model(contents, system, declarations, api_key, models, state, force=None, deadline=None, per_call=60):
+    """`deadline` (time.monotonic() value): never wait past it; raise AgentError so the caller falls back."""
     tried, busy, last = [], False, ""
     plain = state.setdefault("plain_models", [])       # models that rejected the speed settings: call them plainly
     for model in dict.fromkeys([m for m in [state.get("model")] + list(models) if m]):
@@ -44,7 +46,10 @@ def call_model(contents, system, declarations, api_key, models, state, force=Non
         try:
             for attempt in (0, 1):
                 fast = model not in plain
-                r = requests.post(f"{API_ROOT}/{model}:generateContent", timeout=60,
+                left = per_call if deadline is None else min(per_call, deadline - time.monotonic())
+                if left < 2:
+                    raise AgentError("time limit reached; the rule-based analysis was used")
+                r = requests.post(f"{API_ROOT}/{model}:generateContent", timeout=left,
                                   headers={"x-goog-api-key": api_key, "Content-Type": "application/json"},
                                   json=_body(contents, system, declarations, force if fast else None, fast))
                 if r.status_code == 400 and fast and attempt == 0:
@@ -53,6 +58,8 @@ def call_model(contents, system, declarations, api_key, models, state, force=Non
                 break
         except requests.RequestException as ex:
             last = f"could not reach the model service ({type(ex).__name__})"
+            if deadline is not None and deadline - time.monotonic() < 2:
+                raise AgentError("time limit reached; the rule-based analysis was used") from ex
             continue
         if r.status_code in (401, 403):
             raise AgentError("The AI key was rejected (" + (_reason(r) or f"HTTP {r.status_code}") + "). "
