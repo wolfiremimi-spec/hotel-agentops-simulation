@@ -17,6 +17,7 @@ jobs:
     env:
       DEMO_CLEAN: "1"
       DEMO_DSF: "1.5"
+      DEMO_CHROME: "87"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -50,7 +51,7 @@ jobs:
             sleep 1; kill -INT $FF; sleep 4
             S=$(python -c "print(float(open('out/$1/start.txt').read())-float(open('out/$1/ff_start.txt').read()))")
             E=$(python -c "print(float(open('out/$1/end.txt').read())-float(open('out/$1/ff_start.txt').read()))")
-            read IW IH DPR CH < out/$1/viewport.txt
+            read IW IH DPR CH < <(cat out/$1/viewport.txt; echo) || true
             CROP=$(python -c "r=float('$DPR'); print(f'{round(float(\"$IW\")*r)//2*2}:{round(float(\"$IH\")*r)//2*2}:0:{round(float(\"$CH\")*r)}')")
             echo "trim $S -> $E crop $CROP" >> out/$1/log.txt
             ffmpeg -loglevel error -y -ss $S -to $E -i raw_$1.mkv -vf "crop=$CROP" -r 30 \
