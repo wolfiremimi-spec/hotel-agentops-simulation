@@ -11,8 +11,17 @@ def settle(pg, s=2.5):
         if not pg.locator('[data-testid="stStatusWidget"]').count(): break
         time.sleep(0.25)
     time.sleep(s)
-def shot(pg, name):
-    pg.screenshot(path=str(OUT / f"{name}.png"), full_page=True)
+def shot(pg, name, max_screens=14):
+    js_h = "(() => { const m = document.querySelector('[data-testid=stMain]') || document.scrollingElement; return [m.scrollHeight, m.clientHeight]; })()"
+    total, view = pg.evaluate(js_h)
+    i, y = 0, 0
+    while i < max_screens:
+        pg.evaluate(f"(() => {{ const m = document.querySelector('[data-testid=stMain]') || document.scrollingElement; m.scrollTo(0, {y}); }})()")
+        time.sleep(0.7)
+        pg.screenshot(path=str(OUT / f"{name}_{i:02d}.png"))
+        i += 1; y += view - 80
+        if y >= total - 40: break
+    pg.evaluate("(() => { const m = document.querySelector('[data-testid=stMain]') || document.scrollingElement; m.scrollTo(0, 0); })()")
     errs = pg.locator('[data-testid="stException"], [data-testid="stAlertContentError"]').count()
     say(name, "errors on page:", errs)
 with sync_playwright() as pw:
