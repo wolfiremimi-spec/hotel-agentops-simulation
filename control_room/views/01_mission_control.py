@@ -35,7 +35,7 @@ with st.container(border=True):
     st.caption("Prefer the product? The pilot app has a guided two-minute tour: https://hotel-agentops.streamlit.app")
 st.markdown("#### Modeled 12-week pilot " + ui.tag("WORKBOOK"), unsafe_allow_html=True)
 k = st.columns(5)
-k[0].metric("Food waste (kg/week)", f"{last4:.0f}", f"{(last4/base_avg-1)*100:.1f}% vs baseline", delta_color="inverse")
+k[0].metric("Food waste (kg/wk)", f"{last4:.0f}", f"{(last4/base_avg-1)*100:.1f}% vs baseline", delta_color="inverse")
 k[1].metric("Forecast error", ui.pct(mape[-1]["mape"], 1), f"from {ui.pct(sum(x['mape'] for x in mape[:4])/4, 1)}", delta_color="off")
 k[2].metric("Guest F&B score", f"{guest[-1]['guest_score']:.2f}", "floor 4.60 held", delta_color="off")
 k[3].metric("Waste cost avoided", ui.usd(eco["food_cost_avoided"]), "per year", delta_color="off")

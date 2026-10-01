@@ -96,7 +96,7 @@ fig.add_scatter(name="Expected use", x=x, y=[lines[g]["expected_use_kg"] for g i
                 marker=dict(symbol="line-ew-open", size=46, color=ui.SAND, line=dict(width=3)))
 fig.update_layout(title="Next week's order by item group (kg)", barmode="group", height=360, yaxis_title="kg")
 st.plotly_chart(fig, use_container_width=True)
-st.dataframe(pd.DataFrame([{"Item group": l["label"], "Pattern": PATTERN[l["pattern"]][0].title(), "Why": l["why"],
+st.dataframe(pd.DataFrame([{"Item group": l["label"], "Pattern": PATTERN[l["pattern"]][0].capitalize(), "Why": l["why"],
                             "Expected use (kg)": l["expected_use_kg"], "Buffer": f"{l['buffer']:.0%}",
                             "Standing par (kg)": l["standing_par_kg"], "Suggested (kg)": l["suggested_kg"],
                             "Difference (kg)": l["difference_kg"]} for l in lines.values()]),

@@ -102,7 +102,7 @@ def page():
                 st.caption("The AI agent was unavailable, so the rule-based explanation is shown. Why: " + review["error"])
 
     table = pd.DataFrame([{
-        "Item group": l["label"], "Pattern": PATTERN[l["pattern"]][0].title(), "Why": l["why"],
+        "Item group": l["label"], "Pattern": PATTERN[l["pattern"]][0].capitalize(), "Why": l["why"],
         "Expected use (kg)": l["expected_use_kg"], "Safety buffer": f"{l['buffer']:.0%}",
         "Standing par (kg)": l["standing_par_kg"], "Suggested (kg)": l["suggested_kg"],
         "Your order (kg)": l["suggested_kg"]} for l in lines.values()])
