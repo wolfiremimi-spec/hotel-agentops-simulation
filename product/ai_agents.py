@@ -52,12 +52,21 @@ def _ask(cfg: AIConfig, name: str, system: str, brief: dict, tools: dict, submit
     if k in cfg.cache:
         hit = cfg.cache[k]
         return copy.deepcopy(hit["proposal"]), hit["steps"] + [{"tool": "(cached proposal reused)", "args": {}}]
-    decls = [t["decl"] for t in tools.values()] + [{"name": "submit", "description": "Submit your final analysis. Call exactly once.",
-                                                    "parameters": submit_schema}]
-    contents = [{"role": "user", "parts": [{"text": json.dumps(brief, default=str)}]}]
     steps = []
+    # Speed: hand the agent everything it is allowed to see in the first message (its own sources, already read through
+    # the least-privilege view, plus the rule-based baseline), and require an immediate `submit`. One model round trip
+    # per agent instead of three or four. Access control is unchanged: only the role's own sources are prefetched.
+    brief = dict(brief)
+    if "read_source" in tools and fingerprint:
+        brief["your_sources (already read for you; you may read nothing else)"] = fingerprint
+        steps += [{"tool": "read_source", "args": {"source": src}, "result_summary": "prefetched"} for src in fingerprint]
+    if "get_rule_based_analysis" in tools:
+        brief["rule_based_analysis"] = tools["get_rule_based_analysis"]["fn"]({})
+        steps.append({"tool": "get_rule_based_analysis", "args": {}, "result_summary": "prefetched"})
+    decls = [{"name": "submit", "description": "Submit your final analysis. Call exactly once.", "parameters": submit_schema}]
+    contents = [{"role": "user", "parts": [{"text": json.dumps(brief, default=str)}]}]
     for _ in range(MAX_ROUNDS):
-        data = llm.call_model(contents, system, decls, cfg.api_key, cfg.models, cfg.state)
+        data = llm.call_model(contents, system, decls, cfg.api_key, cfg.models, cfg.state, force="submit")
         cands = data.get("candidates") or []
         if not cands or not cands[0].get("content", {}).get("parts"):
             raise llm.AgentError("the model returned no answer")
@@ -111,7 +120,7 @@ def _baseline_tool(name, output):
 def _system(role, question, reads, writes, bounds):
     return (f"You are the {role} in a hotel's governed multi-agent food production system. Your question: \"{question}\" "
             f"You may READ: {reads}. You may WRITE: {writes}. You cannot purchase, execute, or approve anything. "
-            "Use read_source for the data you need and get_rule_based_analysis for the statistical baseline. "
+            "Your permitted sources and the rule-based baseline are in the message. "
             "Look for signals the rules miss, especially free-text notes. Ground every judgment in data you read; "
             f"do not invent numbers. Bounds: {bounds} Then call submit exactly once with a short, specific rationale "
             "(what you saw, what you changed, why). If nothing justifies a change, submit the baseline unchanged.")

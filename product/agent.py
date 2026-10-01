@@ -22,17 +22,35 @@ def _reason(r) -> str:
     return " ".join(msg.split())[:220]
 
 
-def call_model(contents, system, declarations, api_key, models, state):
+THINKING_BUDGET = 512      # short reasoning: these are bounded, well-specified tasks; long thinking only adds seconds
+
+
+def _body(contents, system, declarations, force, thinking):
+    gen = {"temperature": 0.2, "maxOutputTokens": 8192}
+    if thinking:
+        gen["thinkingConfig"] = {"thinkingBudget": THINKING_BUDGET}
+    body = {"systemInstruction": {"parts": [{"text": system}]}, "contents": contents,
+            "tools": [{"functionDeclarations": declarations}], "generationConfig": gen}
+    if force:                                            # answer with this function now, no extra round trips
+        body["toolConfig"] = {"functionCallingConfig": {"mode": "ANY", "allowedFunctionNames": [force]}}
+    return body
+
+
+def call_model(contents, system, declarations, api_key, models, state, force=None):
     tried, busy, last = [], False, ""
+    plain = state.setdefault("plain_models", [])       # models that rejected the speed settings: call them plainly
     for model in dict.fromkeys([m for m in [state.get("model")] + list(models) if m]):
         tried.append(model)
         try:
-            r = requests.post(f"{API_ROOT}/{model}:generateContent", timeout=90,
-                              headers={"x-goog-api-key": api_key, "Content-Type": "application/json"},
-                              json={"systemInstruction": {"parts": [{"text": system}]}, "contents": contents,
-                                    "tools": [{"functionDeclarations": declarations}],
-                                    # thinking models spend part of this budget reasoning, so leave plenty of room
-                                    "generationConfig": {"temperature": 0.2, "maxOutputTokens": 8192}})
+            for attempt in (0, 1):
+                fast = model not in plain
+                r = requests.post(f"{API_ROOT}/{model}:generateContent", timeout=60,
+                                  headers={"x-goog-api-key": api_key, "Content-Type": "application/json"},
+                                  json=_body(contents, system, declarations, force if fast else None, fast))
+                if r.status_code == 400 and fast and attempt == 0:
+                    plain.append(model)                  # e.g. a model without thinking control: retry without
+                    continue
+                break
         except requests.RequestException as ex:
             last = f"could not reach the model service ({type(ex).__name__})"
             continue
