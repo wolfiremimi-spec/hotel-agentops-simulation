@@ -1,0 +1,54 @@
+name: linkcheck
+on:
+  push:
+    branches: [linkcheck]
+permissions:
+  contents: write
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install playwright==1.47.0 && python -m playwright install --with-deps chromium
+      - name: Check links in a real browser
+        run: |
+          cat > c.py <<'PY'
+          import time
+          from playwright.sync_api import sync_playwright
+          urls = ["https://hotel-agentops.streamlit.app", "https://hotel-agentops-control-room.streamlit.app",
+                  "https://drive.google.com/file/d/1u8bSQVWMGhrVsl4loPQ_HzI2uuj6sifU/view"]
+          out = []
+          with sync_playwright() as p:
+              b = p.chromium.launch()
+              for u in urls:
+                  pg = b.new_page(viewport={"width": 1400, "height": 900})
+                  try:
+                      r = pg.goto(u, wait_until="domcontentloaded", timeout=60000)
+                      st = r.status if r else None
+                      # wake a sleeping Streamlit app
+                      for _ in range(3):
+                          btn = pg.get_by_text("Yes, get this app back up", exact=False)
+                          if btn.count():
+                              btn.first.click(); time.sleep(40)
+                      time.sleep(25)
+                      txt = ""
+                      for f in pg.frames:
+                          try: txt += f.inner_text("body")[:600] + " | "
+                          except Exception: pass
+                      pg.screenshot(path=f"shot{urls.index(u)}.png")
+                      out.append(f"{u}\nstatus={st} final={pg.url}\n{txt[:900]}\n")
+                  except Exception as e:
+                      out.append(f"{u}\nERROR {e}\n")
+              b.close()
+          open("result.txt", "w").write("\n".join(out))
+          PY
+          python c.py; cat result.txt
+      - name: Publish
+        if: always()
+        run: |
+          git init -q pub && cp result.txt shot*.png pub/ || true
+          cd pub && git config user.name wolfiremimi-spec && git config user.email wolfiremimi@gmail.com
+          git checkout -q -b linkcheck-out && git add -A && git commit -qm "Link check"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" linkcheck-out
