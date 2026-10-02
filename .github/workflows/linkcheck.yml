@@ -17,8 +17,7 @@ jobs:
           cat > c.py <<'PY'
           import time
           from playwright.sync_api import sync_playwright
-          urls = ["https://hotel-agentops.streamlit.app", "https://hotel-agentops-control-room.streamlit.app",
-                  "https://drive.google.com/file/d/1u8bSQVWMGhrVsl4loPQ_HzI2uuj6sifU/view"]
+          urls = ["https://hotel-agentops-control-room.streamlit.app"]
           out = []
           with sync_playwright() as p:
               b = p.chromium.launch()
@@ -28,10 +27,12 @@ jobs:
                       r = pg.goto(u, wait_until="domcontentloaded", timeout=60000)
                       st = r.status if r else None
                       # wake a sleeping Streamlit app
-                      for _ in range(3):
-                          btn = pg.get_by_text("Yes, get this app back up", exact=False)
+                      for _ in range(4):
+                          btn = pg.locator("button", has_text="get this app back up")
                           if btn.count():
-                              btn.first.click(); time.sleep(40)
+                              btn.first.click(); time.sleep(60); pg.reload(wait_until="domcontentloaded")
+                          else:
+                              break
                       time.sleep(25)
                       txt = ""
                       for f in pg.frames:
